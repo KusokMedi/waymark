@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeFeature, normalizeFeatures, groupIntoDestinations, classifyRecordKinds } from "./normalize";
+import { normalizeFeature, normalizeFeatures, groupIntoDestinations } from "./normalize";
 import { RAW_CODE_MAP } from "./model";
 
 function feat(overrides: Record<string, unknown>) {
@@ -62,9 +62,6 @@ describe("groupIntoDestinations", () => {
       feat({ OBJECTID: 3, NAME: "Yucatán", LEVEL_: 1, ISO_3: "MEX", ADVDATE: 1692745200000 }),
     ];
     const records = normalizeFeatures(features);
-    const classified = classifyRecordKinds(records);
-    const dests = groupIntoDestinations(classified.length ? classified : records);
-    // groupIntoDestinations calls classify internally? It expects raw records; calling classify again okay-ish. Use records.
     const dests2 = groupIntoDestinations(records);
     const mex = dests2.find((d) => d.isoAlpha3 === "MEX");
     expect(mex).toBeDefined();
