@@ -1,0 +1,4538 @@
+{
+  "schemaVersion": 1,
+  "sourceName": "U.S. Department of State Travel Advisories (ArcGIS)",
+  "sourceUrl": "https://travel.state.gov/en/international-travel/travel-advisories.html",
+  "dataServiceUrl": "https://services6.arcgis.com/R6wlO6UHmSzqm9Vs/ArcGIS/rest/services/Travel_Advisory_Levels__%282024%29_View_Layer/FeatureServer/54",
+  "fetchedAt": "2026-11-18T08:25:49.324Z",
+  "recordCount": 283,
+  "features": [
+    {
+      "attributes": {
+        "OBJECTID": 3,
+        "NAME": "Afghanistan",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/afghanistan-advisory.html",
+        "ADVDATE": 1771616650000,
+        "ISO_3": "AFG",
+        "GlobalID": "1fa5012a-afee-40e8-93ac-daf32dc905a9",
+        "EditDate": 1771616652751,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 6,
+        "NAME": "Albania",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/albania-travel-advisory.html",
+        "ADVDATE": 1787716800000,
+        "ISO_3": "ALB",
+        "GlobalID": "0561eb52-9d83-451d-955f-fca7ad3672c4",
+        "EditDate": 1787747700473,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 7,
+        "NAME": "Algeria",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/algeria-travel-advisory.html",
+        "ADVDATE": 1787630400000,
+        "ISO_3": "DZA",
+        "GlobalID": "9db47e07-bbe0-4223-9da0-537da8cdaff6",
+        "EditDate": 1787674193216,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 8,
+        "NAME": "American Samoa",
+        "LEVEL_": null,
+        "URL": " ",
+        "ADVDATE": null,
+        "ISO_3": "ASM",
+        "GlobalID": "fc836552-00ef-4685-a7e2-13dc61ef4eb6",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 9,
+        "NAME": "Andorra",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/andorra-travel-advisory.html",
+        "ADVDATE": 1779336000000,
+        "ISO_3": "AND",
+        "GlobalID": "78e12b99-4321-41cd-9ed6-9aa33dc4628f",
+        "EditDate": 1779393391626,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 10,
+        "NAME": "Angola",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/angola-travel-advisory.html",
+        "ADVDATE": 1772686800000,
+        "ISO_3": "AGO",
+        "GlobalID": "6fde99bd-74dd-438e-80e4-406ffe47aff7",
+        "EditDate": 1772805986145,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 11,
+        "NAME": "Anguilla",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/anguilla-travel-advisory.html",
+        "ADVDATE": 1779422400000,
+        "ISO_3": "AIA",
+        "GlobalID": "f7362521-5f9e-4426-abe5-6acf2f62c58a",
+        "EditDate": 1779471262352,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 12,
+        "NAME": "Antarctica",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/antarctica-travel-advisory.html",
+        "ADVDATE": 1758600000000,
+        "ISO_3": "ATA",
+        "GlobalID": "c5690aca-f8ea-48fc-bded-d0c3c9596381",
+        "EditDate": 1758645963288,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 13,
+        "NAME": "Antigua and Barbuda",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/antigua-and-barbuda-travel-advisory.html",
+        "ADVDATE": 1779249600000,
+        "ISO_3": "ATG",
+        "GlobalID": "bf66fa7c-3fd7-4615-ac37-7570a8506ee7",
+        "EditDate": 1779291105127,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 14,
+        "NAME": "Argentina",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/argentina-travel-advisory.html",
+        "ADVDATE": 1783656000000,
+        "ISO_3": "ARG",
+        "GlobalID": "bd9d884c-45c1-49c8-bbe9-8ce45af8075d",
+        "EditDate": 1783699471213,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 15,
+        "NAME": "Armenia",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/armenia-travel-advisory.html",
+        "ADVDATE": 1757044800000,
+        "ISO_3": "ARM",
+        "GlobalID": "c442ab7a-2aa0-4c26-b731-87810467580d",
+        "EditDate": 1757085598172,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 16,
+        "NAME": "Aruba",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/aruba-travel-advisory.html",
+        "ADVDATE": 1787198400000,
+        "ISO_3": "ABW",
+        "GlobalID": "8b9597dc-283b-4304-b712-edaed2e0488b",
+        "EditDate": 1787250872590,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 18,
+        "NAME": "Australia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/australia-travel-advisory.html",
+        "ADVDATE": 1787025600000,
+        "ISO_3": "AUS",
+        "GlobalID": "3ce5de3d-8ef8-4379-8307-d9c7f2ce6c7b",
+        "EditDate": 1787080209267,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 19,
+        "NAME": "Austria",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/austria-travel-advisory.html",
+        "ADVDATE": 1787284800000,
+        "ISO_3": "AUT",
+        "GlobalID": "7097dfef-ba7e-4b3d-8d05-646f7b9e7bd7",
+        "EditDate": 1787313651373,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 20,
+        "NAME": "Azerbaijan",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/azerbajian-travel-advisory.html",
+        "ADVDATE": 1777348800000,
+        "ISO_3": "AZE",
+        "GlobalID": "1f03d9c1-f5d3-403c-a2c0-f4603e6a36d9",
+        "EditDate": 1793650752943,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 22,
+        "NAME": "Bahrain",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bahrain-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "BHR",
+        "GlobalID": "2533914b-891e-405b-aa5a-c0e292e001fb",
+        "EditDate": 1792810267952,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 24,
+        "NAME": "Bangladesh",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bangladesh-travel-advisory.html",
+        "ADVDATE": 1785384000000,
+        "ISO_3": "BGD",
+        "GlobalID": "ff572f01-5347-4f16-a65b-10d57facf570",
+        "EditDate": 1785420802517,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 25,
+        "NAME": "Barbados",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/barbados-travel-advisory.html",
+        "ADVDATE": 1775793600000,
+        "ISO_3": "BRB",
+        "GlobalID": "ed5d3c46-91ca-4f51-8e9d-7e1affbd29b9",
+        "EditDate": 1775839609332,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 27,
+        "NAME": "Belarus",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/belarus-travel-advisory.html",
+        "ADVDATE": 1766379600000,
+        "ISO_3": "BLR",
+        "GlobalID": "df80b7c1-ba1b-4c13-91c8-1956493b8667",
+        "EditDate": 1766435114601,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 28,
+        "NAME": "Belgium",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/belgium-travel-advisory.html",
+        "ADVDATE": 1784779200000,
+        "ISO_3": "BEL",
+        "GlobalID": "057d096a-4d04-489f-af87-5dc6423b4248",
+        "EditDate": 1784831953433,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 29,
+        "NAME": "Belize",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/belizetravel-advisory.html",
+        "ADVDATE": 1773288000000,
+        "ISO_3": "BLZ",
+        "GlobalID": "f1d70a66-12aa-49fe-80d0-84659ed8a705",
+        "EditDate": 1794333649141,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 30,
+        "NAME": "Benin",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/benin-travel-advisory.html",
+        "ADVDATE": 1767762000000,
+        "ISO_3": "BEN",
+        "GlobalID": "72a7eac4-2e4d-4f5f-b4d9-65ed2a0ebe9b",
+        "EditDate": 1767793327004,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 31,
+        "NAME": "Bermuda",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bermuda-travel-advisory.html",
+        "ADVDATE": 1731387600000,
+        "ISO_3": "BMU",
+        "GlobalID": "ec84e4e5-1916-4e0c-95f2-b57cf2a56b52",
+        "EditDate": 1750088637997,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 32,
+        "NAME": "Bhutan",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bhutan-travel-advisory.html",
+        "ADVDATE": 1788494400000,
+        "ISO_3": "BTN",
+        "GlobalID": "54f115f1-d446-4585-a4a2-2188568724be",
+        "EditDate": 1788555149721,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 34,
+        "NAME": "Bolivia",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bolivia-travel-advisory.html",
+        "ADVDATE": 1787025600000,
+        "ISO_3": "BOL",
+        "GlobalID": "05c4198d-24db-4eb6-9dc9-4218b77ab896",
+        "EditDate": 1787056211503,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 35,
+        "NAME": "Bonaire",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bonaire-travel-advisory.html",
+        "ADVDATE": 1787198400000,
+        "ISO_3": "BES",
+        "GlobalID": "7d7ee02d-56f6-4b45-8d82-4a2eda7162f5",
+        "EditDate": 1787247748697,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 36,
+        "NAME": "Bosnia and Herzegovina",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bosinia-and-herzegovina-travel-advisory.html",
+        "ADVDATE": 1787803200000,
+        "ISO_3": "BIH",
+        "GlobalID": "66828886-9a7e-4953-982d-8595f1424201",
+        "EditDate": 1787838039278,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 37,
+        "NAME": "Botswana",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/botswana-travel-advisory.html",
+        "ADVDATE": 1781668800000,
+        "ISO_3": "BWA",
+        "GlobalID": "c60b83b3-ddfa-478c-8c8b-636a1314a1c7",
+        "EditDate": 1781714260498,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 38,
+        "NAME": "Bouvet Island",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/norway-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "BVT",
+        "GlobalID": "4e007a95-ffc7-49f9-9576-d602c490ddaa",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 39,
+        "NAME": "Brazil",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/brazil-travel-advisory.html",
+        "ADVDATE": 1788148800000,
+        "ISO_3": "BRA",
+        "GlobalID": "031bf12b-39ee-4693-9055-74ea25615b2f",
+        "EditDate": 1788182561908,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 41,
+        "NAME": "British Indian Ocean Territory",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "IOT",
+        "GlobalID": "5567c0e2-fd07-4ae3-bd5b-79904860e1ab",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 43,
+        "NAME": "Bulgaria",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/bulgaria-travel-advisory.html",
+        "ADVDATE": 1759982400000,
+        "ISO_3": "BGR",
+        "GlobalID": "9c775eff-1c85-4dbe-a3b2-01093d0b4508",
+        "EditDate": 1760036181883,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 44,
+        "NAME": "Burkina Faso",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/burkina-faso-travel-advisory.html",
+        "ADVDATE": 1777867200000,
+        "ISO_3": "BFA",
+        "GlobalID": "59981682-98fb-4a87-b8d6-7ce4010e84ec",
+        "EditDate": 1777918345015,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 45,
+        "NAME": "Burma",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/burma-travel-advisory.html",
+        "ADVDATE": 1778212800000,
+        "ISO_3": "MMR",
+        "GlobalID": "7dbc16f4-ed7c-41b7-acfe-31628365b058",
+        "EditDate": 1778416172980,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 46,
+        "NAME": "Burundi",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/burundi-travel-advisory.html",
+        "ADVDATE": 1745899200000,
+        "ISO_3": "BDI",
+        "GlobalID": "90317a45-8697-490c-9fe8-1570644280c3",
+        "EditDate": 1745937019820,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 47,
+        "NAME": "Cabo Verde",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cabo-verde-travel-advisory.html",
+        "ADVDATE": 1765774800000,
+        "ISO_3": "CPV",
+        "GlobalID": "15a50f0e-848f-4ada-b3aa-32642446167b",
+        "EditDate": 1794238291678,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 48,
+        "NAME": "Cambodia",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cambodia-travel-advisory.html",
+        "ADVDATE": 1789444800000,
+        "ISO_3": "KHM",
+        "GlobalID": "a89eaf7a-9ccd-4538-9906-6c941c2840df",
+        "EditDate": 1789506334503,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 49,
+        "NAME": "Cameroon",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cameroon-travel-advisory.html",
+        "ADVDATE": 1778817600000,
+        "ISO_3": "CMR",
+        "GlobalID": "8bd90be2-2094-47c5-aab4-8b41a25d1ad6",
+        "EditDate": 1778859884219,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 50,
+        "NAME": "Canada",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/canada-travel-advisory.html",
+        "ADVDATE": 1749628800000,
+        "ISO_3": "CAN",
+        "GlobalID": "f4dd8f06-c64f-46d0-b36b-c44ca5204c16",
+        "EditDate": 1749672847387,
+        "Editor": "diloner_dostsg",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 52,
+        "NAME": "Cayman Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cayman-islands-travel-advisory.html",
+        "ADVDATE": 1779336000000,
+        "ISO_3": "CYM",
+        "GlobalID": "5a036967-9b35-4889-b311-b07b6538fd94",
+        "EditDate": 1779391854051,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 53,
+        "NAME": "Central African Republic",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/central-african-republic-travel-advisory.html",
+        "ADVDATE": 1762750800000,
+        "ISO_3": "CAF",
+        "GlobalID": "62046d18-13ca-4875-8e5a-cc45962b970b",
+        "EditDate": 1762782356484,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 54,
+        "NAME": "Chad",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/chad-travel-advisory.html",
+        "ADVDATE": 1777348800000,
+        "ISO_3": "TCD",
+        "GlobalID": "6c77113f-b7b7-4add-a5d6-e9326cbd8951",
+        "EditDate": 1777403126366,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 55,
+        "NAME": "Chile",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/chile-travel-advisory.html",
+        "ADVDATE": 1787112000000,
+        "ISO_3": "CHL",
+        "GlobalID": "ac8be60d-8ed9-41d6-9d4e-a203d249d720",
+        "EditDate": 1787153808277,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 56,
+        "NAME": "China",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/china-travel-advisory.html",
+        "ADVDATE": 1792382400000,
+        "ISO_3": "CHN",
+        "GlobalID": "8fce670a-9641-4ee8-a690-e2afb600f2eb",
+        "EditDate": 1792424853184,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 57,
+        "NAME": "Christmas Island",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/australia-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "CXR",
+        "GlobalID": "aa4e3c06-5914-47f9-a7e5-4d60cd4cc7e9",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 60,
+        "NAME": "Clipperton Island",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "CPT",
+        "GlobalID": "f0a977bf-6695-4fd1-b51d-104085693fc7",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 61,
+        "NAME": "Cocos Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/australia-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "CCK",
+        "GlobalID": "495de368-c174-4642-898d-fbcdc7d9f43b",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 62,
+        "NAME": "Colombia",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/colombia-travel-advisory.html",
+        "ADVDATE": 1774976400000,
+        "ISO_3": "COL",
+        "GlobalID": "e1b38e69-f674-4b60-b535-9c5473786c62",
+        "EditDate": 1774961538339,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 63,
+        "NAME": "Comoros",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/comoros-travel-advisory.html",
+        "ADVDATE": 1768194000000,
+        "ISO_3": "COM",
+        "GlobalID": "37e663d3-73a5-445b-89d2-94222ea43596",
+        "EditDate": 1768244527735,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 65,
+        "NAME": "Republic of the Congo",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/republic-of-the-congo-travel-advisory.html",
+        "ADVDATE": 1727841600000,
+        "ISO_3": "COG",
+        "GlobalID": "5be87de4-168a-4c27-b4fa-2a9cc051956d",
+        "EditDate": 1732110715491,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 66,
+        "NAME": "Democratic Republic of the Congo",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/democratic-republic-of-the-congo-travel-advisory.html",
+        "ADVDATE": 1784088000000,
+        "ISO_3": "COD",
+        "GlobalID": "e8a71d96-3a18-4fc1-ac1d-44b7e5de0a52",
+        "EditDate": 1784207014580,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 68,
+        "NAME": "Cook Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/new-zealand-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "COK",
+        "GlobalID": "336fb6d7-2c96-428b-a4e1-d4e29e96e256",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 71,
+        "NAME": "Costa Rica",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/costa-rica-travel-advisory.html",
+        "ADVDATE": 1775102400000,
+        "ISO_3": "CRI",
+        "GlobalID": "4989d16d-482b-4d5a-bc85-d7951d01fba7",
+        "EditDate": 1775150298223,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 72,
+        "NAME": "Côte d'Ivoire",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cote-d-ivoire-travel-advisory.html",
+        "ADVDATE": 1771390800000,
+        "ISO_3": "CIV",
+        "GlobalID": "cb1c67f0-7fd9-4582-a31d-163e7f37314c",
+        "EditDate": 1771429238563,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 73,
+        "NAME": "Croatia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/croatia-travel-advisory.html",
+        "ADVDATE": 1779076800000,
+        "ISO_3": "HRV",
+        "GlobalID": "a0ede174-8c61-4c3e-82ab-2d949fe93231",
+        "EditDate": 1779114006640,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 74,
+        "NAME": "Cuba",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cuba-travel-advisory.html",
+        "ADVDATE": 1746633600000,
+        "ISO_3": "CUB",
+        "GlobalID": "ebeeb232-a1cb-4473-ada1-3339d9ec6d35",
+        "EditDate": 1746648222041,
+        "Editor": "diloner_dostsg",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 76,
+        "NAME": "Cyprus",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cyprus-travel-advisory.html",
+        "ADVDATE": 1780286400000,
+        "ISO_3": "CYP",
+        "GlobalID": "c9b08007-d8ef-41c2-a090-15fe84888ae0",
+        "EditDate": 1780344759021,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 77,
+        "NAME": "Czechia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/czechia-travel-advisory.html",
+        "ADVDATE": 1767848400000,
+        "ISO_3": "CZE",
+        "GlobalID": "708944a1-d873-4f27-8e75-1cf9f5352bf1",
+        "EditDate": 1767902914193,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 79,
+        "NAME": "Denmark",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/denmark-travel-advisory.html",
+        "ADVDATE": 1726545600000,
+        "ISO_3": "DNK",
+        "GlobalID": "43e68d88-031b-4c32-b6ea-d0fdfacd6376",
+        "EditDate": 1732589459263,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 81,
+        "NAME": "Djibouti",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/djibouti-travel-advisory.html",
+        "ADVDATE": 1741237200000,
+        "ISO_3": "DJI",
+        "GlobalID": "3c9b8098-fe4a-480d-a360-04fabce2924b",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 84,
+        "NAME": "Dominica",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/dominica-travel-advisory.html",
+        "ADVDATE": 1779249600000,
+        "ISO_3": "DMA",
+        "GlobalID": "3609a2bf-509d-447f-a15d-5d59795217b5",
+        "EditDate": 1779292378491,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 85,
+        "NAME": "Dominican Republic",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/dominican-republic-travel-advisory.html",
+        "ADVDATE": 1718683200000,
+        "ISO_3": "DOM",
+        "GlobalID": "53992274-d552-4887-92e0-579d759157ed",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 88,
+        "NAME": "Ecuador",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/ecuador-travel-advisory.html",
+        "ADVDATE": 1787025600000,
+        "ISO_3": "ECU",
+        "GlobalID": "2cc260eb-3a32-404f-b3cf-6848189ab0fc",
+        "EditDate": 1787056237233,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 89,
+        "NAME": "Egypt",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/egypt-travel-advisory.html",
+        "ADVDATE": 1752552000000,
+        "ISO_3": "EGY",
+        "GlobalID": "e25741ef-bad6-4a30-bc17-f5609492d7e2",
+        "EditDate": 1787164204190,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 90,
+        "NAME": "El Salvador",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/el-salvador-travel-advisory.html",
+        "ADVDATE": 1782415800000,
+        "ISO_3": "SLV",
+        "GlobalID": "9ddf533b-a42f-4c65-9c47-bc5b1ec58454",
+        "EditDate": 1782393332398,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 91,
+        "NAME": "Equatorial Guinea",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/equatorial-guinea-travel-advisory.html",
+        "ADVDATE": 1741327200000,
+        "ISO_3": "GNQ",
+        "GlobalID": "92b8b958-614c-4853-966b-68d0962ca352",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 92,
+        "NAME": "Eritrea",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/eritrea-travel-advisory.html",
+        "ADVDATE": 1690776000000,
+        "ISO_3": "ERI",
+        "GlobalID": "9e0c7fb5-e5b7-4ac9-af8b-ab9ed8ba9899",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 93,
+        "NAME": "Estonia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/estonia-travel-advisory.html",
+        "ADVDATE": 1774929600000,
+        "ISO_3": "EST",
+        "GlobalID": "f37df4b9-f80c-4c20-884c-c78685e2e0f1",
+        "EditDate": 1774982887287,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 94,
+        "NAME": "Eswatini",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/eswatini-travel-advisory.html",
+        "ADVDATE": 1783656000000,
+        "ISO_3": "SWZ",
+        "GlobalID": "cecdcabc-4e87-4fb9-85af-a035253caf1e",
+        "EditDate": 1783957911223,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 95,
+        "NAME": "Ethiopia",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/ethiopia-travel-advisory.html",
+        "ADVDATE": 1787803200000,
+        "ISO_3": "ETH",
+        "GlobalID": "dc8cbf4e-b18f-4f85-8a8a-f76593fea6c1",
+        "EditDate": 1787851256536,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 97,
+        "NAME": "Falkland Islands (Islas Malvinas)",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1746745200000,
+        "ISO_3": "FLK",
+        "GlobalID": "2eed0139-5ab3-4318-a621-18f800afa71e",
+        "EditDate": 1776100407415,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 98,
+        "NAME": "Faroe Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/denmark-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "FRO",
+        "GlobalID": "7ffc11ae-fc79-4532-8d56-400870953525",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 99,
+        "NAME": "Fiji",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/fiji-travel-advisory.html",
+        "ADVDATE": 1733115600000,
+        "ISO_3": "FJI",
+        "GlobalID": "439a722c-34d6-4fdc-9c6e-7d697106a21b",
+        "EditDate": 1794238970210,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 100,
+        "NAME": "Finland",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/finland-travel-advisory.html",
+        "ADVDATE": 1773374400000,
+        "ISO_3": "FIN",
+        "GlobalID": "d02025e1-8c98-4745-8408-5d49a4e6148b",
+        "EditDate": 1773414274905,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 101,
+        "NAME": "France",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1792555200000,
+        "ISO_3": "FRA",
+        "GlobalID": "dcac0c37-5e25-4fa3-9e40-cd0b93440f74",
+        "EditDate": 1792579562762,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 103,
+        "NAME": "French Guiana",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/french-guiana-travel-advisory.html",
+        "ADVDATE": 1783483200000,
+        "ISO_3": "GUF",
+        "GlobalID": "918fac25-5f9d-431d-adac-ca1839676268",
+        "EditDate": 1783508174269,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 104,
+        "NAME": "French Polynesia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/french-polynesia-travel-advisory.html",
+        "ADVDATE": 1733115600000,
+        "ISO_3": "PYF",
+        "GlobalID": "1abe3439-5f9d-4e31-ac4d-5887904d55b3",
+        "EditDate": 1746129602922,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 106,
+        "NAME": "Gabon",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/gabon-travel-advisory.html",
+        "ADVDATE": 1774843200000,
+        "ISO_3": "GAB",
+        "GlobalID": "a1582e70-f4d5-4a35-914b-05a4e1e1d1df",
+        "EditDate": 1777312559454,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 107,
+        "NAME": "Gaza Strip",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/israel-west-bank-and-gaza-travel-advisory.html",
+        "ADVDATE": 1787749200000,
+        "ISO_3": "XGZ",
+        "GlobalID": "92d0699a-91ad-462b-989d-e0bf8201463a",
+        "EditDate": 1787747058491,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 108,
+        "NAME": "Georgia",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/georgia-travel-advisory.html",
+        "ADVDATE": 1690344000000,
+        "ISO_3": "GEO",
+        "GlobalID": "3d58fc36-6029-44b6-96b6-43e67caec44e",
+        "EditDate": 1764884842589,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 109,
+        "NAME": "Germany",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/germany-travel-advisory.html",
+        "ADVDATE": 1747108800000,
+        "ISO_3": "DEU",
+        "GlobalID": "151d93e0-569c-4e1c-b8b8-93ac77e720be",
+        "EditDate": 1774644930586,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 112,
+        "NAME": "Ghana",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/ghana-travel-advisory.html",
+        "ADVDATE": 1783400400000,
+        "ISO_3": "GHA",
+        "GlobalID": "25d6eac0-0a70-4937-b867-fb8e961d238f",
+        "EditDate": 1783434263966,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 113,
+        "NAME": "Gibraltar",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "GIB",
+        "GlobalID": "1bb6b969-011f-47ed-944e-1510686533ca",
+        "EditDate": 1758561348650,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 114,
+        "NAME": "Glorioso Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "ATF",
+        "GlobalID": "859edc18-486e-449b-a713-efb8d9a571fc",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 115,
+        "NAME": "Greece",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/greece-travel-advisory.html",
+        "ADVDATE": 1761192000000,
+        "ISO_3": "GRC",
+        "GlobalID": "4a1eb3c7-c23d-4e02-b06a-4640d1faa1cc",
+        "EditDate": 1761235413289,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 116,
+        "NAME": "Greenland",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/greenland-travel-advisory.html",
+        "ADVDATE": 1730242800000,
+        "ISO_3": "GRL",
+        "GlobalID": "d254744d-5100-4cf2-a49c-6e125f0047f1",
+        "EditDate": 1745952650400,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 117,
+        "NAME": "Grenada",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/grenada-travel-advisory.html",
+        "ADVDATE": 1767589200000,
+        "ISO_3": "GRD",
+        "GlobalID": "65f74a79-d0b4-4994-9761-2d59bb5076fc",
+        "EditDate": 1767636716072,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 118,
+        "NAME": "Guadeloupe",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/french-west-indies-travel-advisory.html",
+        "ADVDATE": 1787198400000,
+        "ISO_3": "GLP",
+        "GlobalID": "4f5f7a5c-93a8-4818-9ae2-095b4f1205ce",
+        "EditDate": 1787164442558,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 119,
+        "NAME": "Guam",
+        "LEVEL_": null,
+        "URL": " ",
+        "ADVDATE": null,
+        "ISO_3": "GUM",
+        "GlobalID": "936e017a-f389-4fb4-9911-5efa73829dd9",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 120,
+        "NAME": "Guatemala",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/guatemala-travel-advisory.html",
+        "ADVDATE": 1773288000000,
+        "ISO_3": "GTM",
+        "GlobalID": "c70f3701-91f8-4ae4-a4cf-3fb298055415",
+        "EditDate": 1773338783795,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 121,
+        "NAME": "Guernsey",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1746745200000,
+        "ISO_3": "GGY",
+        "GlobalID": "181cd620-a18d-44ad-961a-f8db063c1e04",
+        "EditDate": 1781018570810,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 122,
+        "NAME": "Guinea",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/guinea-travel-advisory.html",
+        "ADVDATE": 1771995600000,
+        "ISO_3": "GIN",
+        "GlobalID": "8f1c5b51-9853-4d02-88c9-5f2d467343b1",
+        "EditDate": 1772032309500,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 123,
+        "NAME": "Guinea-Bissau",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/guinea-bissau-travel-advisory.html",
+        "ADVDATE": 1765429200000,
+        "ISO_3": "GNB",
+        "GlobalID": "ccbc9935-0e87-4757-a122-6355440cca2c",
+        "EditDate": 1765454345355,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 124,
+        "NAME": "Guyana",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/guyana-travel-advisory.html",
+        "ADVDATE": 1747022400000,
+        "ISO_3": "GUY",
+        "GlobalID": "af54e1c2-42f1-427c-927b-ff0ba47cbe16",
+        "EditDate": 1747057518858,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 125,
+        "NAME": "Haiti",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/haiti-travel-advisory.html",
+        "ADVDATE": 1776312000000,
+        "ISO_3": "HTI",
+        "GlobalID": "922a6438-f5f0-49a6-b863-4ffd5fe7b871",
+        "EditDate": 1776362421695,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 128,
+        "NAME": "Heard Island and McDonald Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/australia-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "HMD",
+        "GlobalID": "9303def2-7f1c-41bc-b708-0e0b328072e5",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 130,
+        "NAME": "Honduras",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/honduras-travel-advisory.html",
+        "ADVDATE": 1787630400000,
+        "ISO_3": "HND",
+        "GlobalID": "cfc312b8-806c-4d81-bd82-069a78d54f92",
+        "EditDate": 1787667802171,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 131,
+        "NAME": "Hong Kong",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/hong-kong-travel-advisory.html",
+        "ADVDATE": 1788494400000,
+        "ISO_3": "HKG",
+        "GlobalID": "599b8569-82b1-47f9-a2a7-f66983415720",
+        "EditDate": 1788562020939,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 133,
+        "NAME": "Hungary",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/hungary-travel-advisory.html",
+        "ADVDATE": 1776225600000,
+        "ISO_3": "HUN",
+        "GlobalID": "9ac5e110-bab6-47f5-a0bf-67c198964641",
+        "EditDate": 1776280313737,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 134,
+        "NAME": "Iceland",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/iceland-travel-advisory.html",
+        "ADVDATE": 1778022000000,
+        "ISO_3": "ISL",
+        "GlobalID": "e5e94658-5024-4d85-92ab-be89b3f63360",
+        "EditDate": 1778006055530,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 137,
+        "NAME": "India",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/india-travel-advisory.html",
+        "ADVDATE": 1750046400000,
+        "ISO_3": "IND",
+        "GlobalID": "a8bec846-ee9e-4800-a9d2-e704ab055bf5",
+        "EditDate": 1750090851343,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 138,
+        "NAME": "Indonesia",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/indonesia-travel-advisory.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "IDN",
+        "GlobalID": "d3e3fff6-8d5c-49d1-82a7-bb8254df2233",
+        "EditDate": 1783456177597,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 139,
+        "NAME": "Iran",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/iran-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "IRN",
+        "GlobalID": "5bac38a1-a25c-4c3b-b908-3a381b851101",
+        "EditDate": 1792812238100,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 140,
+        "NAME": "Iraq",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/iraq-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "IRQ",
+        "GlobalID": "6d17edc1-8b08-4d87-957a-29f4ad98e923",
+        "EditDate": 1792813888588,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 141,
+        "NAME": "Ireland",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/ireland-travel-advisory.html",
+        "ADVDATE": 1773979200000,
+        "ISO_3": "IRL",
+        "GlobalID": "9d49b706-8699-414c-8f01-cc26084cf642",
+        "EditDate": 1774020394740,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 143,
+        "NAME": "Israel",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/israel-west-bank-and-gaza-travel-advisory.html",
+        "ADVDATE": 1792760400000,
+        "ISO_3": "ISR",
+        "GlobalID": "19dc9c4e-f9ef-42d6-8bcf-921b09b3f1b1",
+        "EditDate": 1792816769648,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 144,
+        "NAME": "Italy",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/italy-travel-advisory.html",
+        "ADVDATE": 1789012800000,
+        "ISO_3": "ITA",
+        "GlobalID": "eaec12ed-bf00-4d63-95f4-2c92061e3144",
+        "EditDate": 1789045845610,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 146,
+        "NAME": "Jamaica",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/jamaica-travel-advisory.html",
+        "ADVDATE": 1768626000000,
+        "ISO_3": "JAM",
+        "GlobalID": "8421a3b9-00eb-420d-9c5a-c7b23b98e91b",
+        "EditDate": 1768681117866,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 147,
+        "NAME": "Jan Mayen",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/norway-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "SJM",
+        "GlobalID": "23d85132-6259-45cb-b14d-ba700147d03e",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 148,
+        "NAME": "Japan",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/japan-travel-advisory.html",
+        "ADVDATE": 1747317600000,
+        "ISO_3": "JPN",
+        "GlobalID": "ef741147-f0d5-4d76-beed-fc38ae8d2f0f",
+        "EditDate": 1747336872267,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 150,
+        "NAME": "Jersey",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1746745200000,
+        "ISO_3": "JEY",
+        "GlobalID": "564f49f1-e874-480e-846d-f876140455ac",
+        "EditDate": 1781018558758,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 152,
+        "NAME": "Jordan",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/jordan-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "JOR",
+        "GlobalID": "58e9afcb-085c-4fdd-b0d1-c61c24e7ea5e",
+        "EditDate": 1792817518665,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 153,
+        "NAME": "Juan de Nova Island",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1690329600000,
+        "ISO_3": "ATF",
+        "GlobalID": "ecc98343-5a2f-45e0-9b37-dd7587500642",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 156,
+        "NAME": "Kazakhstan",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/kazakhstan-travel-advisory.html",
+        "ADVDATE": 1787025600000,
+        "ISO_3": "KAZ",
+        "GlobalID": "144dc8e4-067e-49e2-9d96-b3f7bd8b5d92",
+        "EditDate": 1787080246425,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 157,
+        "NAME": "Kenya",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/kenya-travel-advisory.html",
+        "ADVDATE": 1792382400000,
+        "ISO_3": "KEN",
+        "GlobalID": "79c71019-7fe8-4676-9f4f-bd2ca5ed8a3c",
+        "EditDate": 1792441447767,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 159,
+        "NAME": "Kiribati",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/kiribati-travel-advisory.html",
+        "ADVDATE": 1733115600000,
+        "ISO_3": "KIR",
+        "GlobalID": "4bd73aa7-fbde-4780-a500-0f6aa7b8a5ce",
+        "EditDate": 1758561792260,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 162,
+        "NAME": "North Korea",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/north-korea-travel-advisory.html",
+        "ADVDATE": 1745899200000,
+        "ISO_3": "PRK",
+        "GlobalID": "7403220f-b934-4365-8d55-1418afeec620",
+        "EditDate": 1750446955388,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 163,
+        "NAME": "South Korea",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/south-korea-travel-advisory.html",
+        "ADVDATE": 1748404800000,
+        "ISO_3": "KOR",
+        "GlobalID": "e97217ac-e128-40be-828c-bb13af916b79",
+        "EditDate": 1749669392267,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 164,
+        "NAME": "Kosovo",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/kosovo-travel-advisory.html",
+        "ADVDATE": 1787630400000,
+        "ISO_3": "XKS",
+        "GlobalID": "837f6088-7eea-4918-8d45-4ee9695299a1",
+        "EditDate": 1787681825452,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 165,
+        "NAME": "Kuwait",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/kuwait-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "KWT",
+        "GlobalID": "87b566ea-4e6f-48b5-9b83-44de05d664e1",
+        "EditDate": 1792818396688,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 166,
+        "NAME": "The Kyrgyz Republic",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/the-kyrgyz-republic-travel-advisory.html",
+        "ADVDATE": 1770699600000,
+        "ISO_3": "KGZ",
+        "GlobalID": "9a000339-cbe7-4e6c-9eb2-fc5c38a5d442",
+        "EditDate": 1779913196255,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 167,
+        "NAME": "Laos",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/laos-travel-advisory.html",
+        "ADVDATE": 1732165200000,
+        "ISO_3": "LAO",
+        "GlobalID": "532a7dbf-e3c9-494b-aac9-1fb7f7959afe",
+        "EditDate": 1732211848929,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 169,
+        "NAME": "Latvia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/latvia-travel-advisory.html",
+        "ADVDATE": 1775016000000,
+        "ISO_3": "LVA",
+        "GlobalID": "38444fcd-a63a-4376-9cc9-e48712ded44d",
+        "EditDate": 1788980148369,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 170,
+        "NAME": "Lebanon",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/lebanon-travel-advisory.html",
+        "ADVDATE": 1787284860000,
+        "ISO_3": "LBN",
+        "GlobalID": "147e9abc-c200-4614-a670-359791abdbea",
+        "EditDate": 1787356498815,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": 2,
+        "AD_OD_Text": "Non-emergency U.S. government employees and their family members ordered to leave.",
+        "AD_OD_Date": "2026-03-02"
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 172,
+        "NAME": "Lesotho",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/lesotho-travel-advisory.html",
+        "ADVDATE": 1781668800000,
+        "ISO_3": "LSO",
+        "GlobalID": "6adef9f1-3802-4048-b5b2-e0b0766db64a",
+        "EditDate": 1781709294559,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 174,
+        "NAME": "Liberia",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/liberia-travel-advisory.html",
+        "ADVDATE": 1765429200000,
+        "ISO_3": "LBR",
+        "GlobalID": "7afda012-190c-4595-a150-06d010b8355f",
+        "EditDate": 1765484579460,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 175,
+        "NAME": "Libya",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/libya-travel-advisory.html",
+        "ADVDATE": 1788148800000,
+        "ISO_3": "LBY",
+        "GlobalID": "405ea5a6-0df7-44d0-923e-fd386dd5037a",
+        "EditDate": 1788181811222,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 176,
+        "NAME": "Liechtenstein",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/Liechtenstein-Travel-Advisory.html",
+        "ADVDATE": 1787025600000,
+        "ISO_3": "LIE",
+        "GlobalID": "bf0c496f-089a-4936-9246-fb2bbdf80d2d",
+        "EditDate": 1787078182237,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 177,
+        "NAME": "Lithuania",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/lithuania-travel-advisory.html",
+        "ADVDATE": 1777348800000,
+        "ISO_3": "LTU",
+        "GlobalID": "e7fbb471-5e5a-47a9-81f2-626eb7408bf3",
+        "EditDate": 1777407394430,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 178,
+        "NAME": "Luxembourg",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/luxembourg-travel-advisory.html",
+        "ADVDATE": 1775620800000,
+        "ISO_3": "LUX",
+        "GlobalID": "75c28303-ed0d-48b2-9ed2-1a70cf999a5c",
+        "EditDate": 1793199572468,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 179,
+        "NAME": "Macau",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/macau-travel-advisory.html",
+        "ADVDATE": 1788494400000,
+        "ISO_3": "MAC",
+        "GlobalID": "329355b7-6aba-4a34-b047-d4a7dd64a3b8",
+        "EditDate": 1788561914750,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 180,
+        "NAME": "Madagascar",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/madagascar-travel-advisory.html",
+        "ADVDATE": 1764885402000,
+        "ISO_3": "MDG",
+        "GlobalID": "bfb530b5-1eee-4c74-8468-dadf7955e8b2",
+        "EditDate": 1764938961828,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 182,
+        "NAME": "Malawi",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/malawi-travel-advisory.html",
+        "ADVDATE": 1771995600000,
+        "ISO_3": "MWI",
+        "GlobalID": "406daab9-9990-4b0c-9a8c-9eed15b86721",
+        "EditDate": 1772051893379,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 183,
+        "NAME": "Malaysia",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/malaysia-travel-advisory.html",
+        "ADVDATE": 1771736400000,
+        "ISO_3": "MYS",
+        "GlobalID": "e906e090-b5fd-47cd-85a8-32730e6adc30",
+        "EditDate": 1771816888569,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 184,
+        "NAME": "Maldives",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/maldives-travel-advisory.html",
+        "ADVDATE": 1759809600000,
+        "ISO_3": "MDV",
+        "GlobalID": "eb0e9476-8fa4-4eec-9df5-d4c8d5a81195",
+        "EditDate": 1760983587307,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 185,
+        "NAME": "Mali",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/mali-travel-advisory.html",
+        "ADVDATE": 1780891200000,
+        "ISO_3": "MLI",
+        "GlobalID": "2fe0371d-2938-44f4-b7bf-51d5f92a01f3",
+        "EditDate": 1780933738239,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 186,
+        "NAME": "Malta",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/malta-travel-advisory.html",
+        "ADVDATE": 1783569600000,
+        "ISO_3": "MLT",
+        "GlobalID": "08fb8d12-c408-4ac9-b8d3-05109954177e",
+        "EditDate": 1783607003268,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 187,
+        "NAME": "Marshall Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/marshall-islands-travel-advisory.html",
+        "ADVDATE": 1779336000000,
+        "ISO_3": "MHL",
+        "GlobalID": "55173ad0-29c9-4bd5-97c2-ec4d73524a37",
+        "EditDate": 1779389581097,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 188,
+        "NAME": "Martinique",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/french-west-indies-travel-advisory.html",
+        "ADVDATE": 1787266800000,
+        "ISO_3": "MTQ",
+        "GlobalID": "236f42a4-8333-41b4-acef-ec337b94f6f1",
+        "EditDate": 1787164413632,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 189,
+        "NAME": "Mauritania",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/mauritania-travel-advisory.html",
+        "ADVDATE": 1787025600000,
+        "ISO_3": "MRT",
+        "GlobalID": "dca34b2e-2066-43a6-8c0e-6530c54aa83b",
+        "EditDate": 1787080053299,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 190,
+        "NAME": "Mauritius",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/mauritius-travel-advisory.html",
+        "ADVDATE": 1765170000000,
+        "ISO_3": "MUS",
+        "GlobalID": "2b47cd8e-e78a-4b7d-bb0e-271d2235c3de",
+        "EditDate": 1765222962064,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 191,
+        "NAME": "Mayotte",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "MYT",
+        "GlobalID": "15bcc4d5-668f-4508-8fae-dacbb15be92d",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 193,
+        "NAME": "Federated States of Micronesia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/federated-states-of-micronesia-travel-advisory.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "FSM",
+        "GlobalID": "bdfab239-814f-42b0-b266-8826aef850c5",
+        "EditDate": 1783457112900,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 196,
+        "NAME": "Moldova",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/moldova-travel-advisory.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "MDA",
+        "GlobalID": "769e9172-dff7-4175-9339-6a6bf2bc1c3c",
+        "EditDate": 1783456152659,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 197,
+        "NAME": "Monaco",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/en/international-travel/travel-advisories/france.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "MCO",
+        "GlobalID": "e403b5ac-8927-4ff8-b53d-ca8357cd31b9",
+        "EditDate": 1758740056828,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 198,
+        "NAME": "Mongolia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/mongolia-travel-advisory.html",
+        "ADVDATE": 1785297600000,
+        "ISO_3": "MNG",
+        "GlobalID": "eee4aa99-fae2-401f-8939-5756df4cd5cf",
+        "EditDate": 1785334200358,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 200,
+        "NAME": "Montenegro",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/montenegro-travel-advisory.html",
+        "ADVDATE": 1787803200000,
+        "ISO_3": "MNE",
+        "GlobalID": "927abf60-e3d7-4fa8-b7d6-ab76d785f395",
+        "EditDate": 1789582682769,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 201,
+        "NAME": "Montserrat",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/montserrat-travel-advisory.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "MSR",
+        "GlobalID": "acf3733f-79e4-4ae9-908d-58d5fc6a0d73",
+        "EditDate": 1783434175919,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 202,
+        "NAME": "Morocco",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/morocco-travel-advisory.html",
+        "ADVDATE": 1788495300000,
+        "ISO_3": "MAR",
+        "GlobalID": "82984b44-8a2f-47c6-809f-288475272eb6",
+        "EditDate": 1793980596101,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 203,
+        "NAME": "Mozambique",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/mozambique-travel-advisory.html",
+        "ADVDATE": 1787284800000,
+        "ISO_3": "MOZ",
+        "GlobalID": "2425f33d-ac86-4e20-8fad-886f7273a23a",
+        "EditDate": 1787329621171,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 205,
+        "NAME": "Namibia",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/namibia-travel-advisory.html",
+        "ADVDATE": 1778817600000,
+        "ISO_3": "NAM",
+        "GlobalID": "45284da0-5061-43df-a8f1-d2c98873efc2",
+        "EditDate": 1778856934186,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 206,
+        "NAME": "Naoero",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/nauru-travel-advisory.html",
+        "ADVDATE": 1733115600000,
+        "ISO_3": "NRU",
+        "GlobalID": "d2df249e-97ec-4fb8-990b-44b2986adc9f",
+        "EditDate": 1792601500242,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 208,
+        "NAME": "Nepal",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/nepal-travel-advisory.html",
+        "ADVDATE": 1788494400000,
+        "ISO_3": "NPL",
+        "GlobalID": "9c08bc8b-9703-4660-aee5-57f82b248359",
+        "EditDate": 1788568766889,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 209,
+        "NAME": "Netherlands",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/netherlands-travel-advisory.html",
+        "ADVDATE": 1787025600000,
+        "ISO_3": "NLD",
+        "GlobalID": "b5fdd963-42aa-4cc6-bf42-9f7a4b1ca340",
+        "EditDate": 1787079993996,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 210,
+        "NAME": "New Caledonia",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/new-caledonia-travel-advisory.html",
+        "ADVDATE": 1779336000000,
+        "ISO_3": "NCL",
+        "GlobalID": "eb5142bd-8ea0-46cb-9d15-afe2a42d76f4",
+        "EditDate": 1779380359909,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 211,
+        "NAME": "New Zealand",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/new-zealand-travel-advisory.html",
+        "ADVDATE": 1777435200000,
+        "ISO_3": "NZL",
+        "GlobalID": "90327271-a9eb-4eb1-91bb-6467a9fe18ff",
+        "EditDate": 1777478618373,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 212,
+        "NAME": "Nicaragua",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/nicaragua-travel-advisory.html",
+        "ADVDATE": 1778731200000,
+        "ISO_3": "NIC",
+        "GlobalID": "f47dd6ec-337e-4cef-a830-e48fc5bdacdd",
+        "EditDate": 1778845138567,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 213,
+        "NAME": "Niger",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/niger-travel-advisory.html",
+        "ADVDATE": 1769706000000,
+        "ISO_3": "NER",
+        "GlobalID": "9a72ca0c-3696-45ab-b2b3-40a36fa7e4dd",
+        "EditDate": 1769743847313,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 214,
+        "NAME": "Nigeria",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/nigeria-travel-advisory.html",
+        "ADVDATE": 1781236800000,
+        "ISO_3": "NGA",
+        "GlobalID": "dd166470-3c53-4be9-8bab-997c03b0dab9",
+        "EditDate": 1781277522243,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 215,
+        "NAME": "Niue",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/new-zealand-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "NIU",
+        "GlobalID": "e9e2059a-1c4d-4815-96d6-e44ca9f3c88c",
+        "EditDate": 1745959172341,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 218,
+        "NAME": "Norfolk Island",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/australia-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "NFK",
+        "GlobalID": "6838a601-9a0c-49f0-bbec-8d0d0dba2b53",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 219,
+        "NAME": "North Macedonia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/north-macedonia-travel-advisory.html",
+        "ADVDATE": 1789012800000,
+        "ISO_3": "MKD",
+        "GlobalID": "15fc345c-0f7c-4635-bb60-ebc2fae3784d",
+        "EditDate": 1789062055645,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 220,
+        "NAME": "Northern Mariana Islands",
+        "LEVEL_": null,
+        "URL": " ",
+        "ADVDATE": null,
+        "ISO_3": "MNP",
+        "GlobalID": "fb9a9114-3fee-4b47-b711-abb45978135d",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 221,
+        "NAME": "Norway",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/norway-travel-advisory.html",
+        "ADVDATE": 1783310400000,
+        "ISO_3": "NOR",
+        "GlobalID": "d75c0827-d73d-44a2-9632-85ada0149c4e",
+        "EditDate": 1783451166192,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 222,
+        "NAME": "Oman",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/oman-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "OMN",
+        "GlobalID": "9b7c4aa1-cca4-4787-a85f-260da34d3583",
+        "EditDate": 1792819360470,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 223,
+        "NAME": "Pakistan",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/pakistan-travel-advisory.html",
+        "ADVDATE": 1772532000000,
+        "ISO_3": "PAK",
+        "GlobalID": "55c1a693-cade-46cf-87a3-59772663b284",
+        "EditDate": 1772600349519,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 224,
+        "NAME": "Palau",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/palau-travel-advisory.html",
+        "ADVDATE": 1722916800000,
+        "ISO_3": "PLW",
+        "GlobalID": "85beb683-bd9c-4e04-a20e-a34ff82f4364",
+        "EditDate": 1750797768462,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 226,
+        "NAME": "Panama",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/panama-travel-advisory.html",
+        "ADVDATE": 1787112000000,
+        "ISO_3": "PAN",
+        "GlobalID": "ff243ee2-205b-44a1-b575-d63b66ed930f",
+        "EditDate": 1787141210721,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 227,
+        "NAME": "Papua New Guinea",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/papua-new-guinea-travel-advisory.html",
+        "ADVDATE": 1745899200000,
+        "ISO_3": "PNG",
+        "GlobalID": "3659662e-b2ca-4e54-9ae0-6ff578707bc3",
+        "EditDate": 1745960037544,
+        "Editor": "diloner_dostsg",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 229,
+        "NAME": "Paraguay",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/paraguay-travel-advisory.html",
+        "ADVDATE": 1787112000000,
+        "ISO_3": "PRY",
+        "GlobalID": "cd9d3108-07b7-4c46-8811-4751ae0e7d2e",
+        "EditDate": 1787138775016,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 231,
+        "NAME": "Peru",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/peru-travel-advisory.html",
+        "ADVDATE": 1788494400000,
+        "ISO_3": "PER",
+        "GlobalID": "d5d060c0-edbd-4a9f-8f0b-37be45a1009c",
+        "EditDate": 1788555048149,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 232,
+        "NAME": "Philippines",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/philippines-travel-advisory.html",
+        "ADVDATE": 1746676800000,
+        "ISO_3": "PHL",
+        "GlobalID": "c925c17c-b8ae-4fbe-a915-d9e440e124b0",
+        "EditDate": 1746709488810,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 233,
+        "NAME": "Pitcairn Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "PCN",
+        "GlobalID": "9d2cd0eb-1446-4de4-9c2b-b907a8681f42",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 234,
+        "NAME": "Poland",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/poland-travel-advisory.html",
+        "ADVDATE": 1749096060000,
+        "ISO_3": "POL",
+        "GlobalID": "099e571b-667a-4ab4-a69e-8650677504f4",
+        "EditDate": 1749137907832,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 235,
+        "NAME": "Portugal",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/portugal-travel-advisory.html",
+        "ADVDATE": 1766466000000,
+        "ISO_3": "PRT",
+        "GlobalID": "bf35e6e1-004d-427f-8c8a-3591bc08b02a",
+        "EditDate": 1766524138264,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 236,
+        "NAME": "Puerto Rico",
+        "LEVEL_": null,
+        "URL": " ",
+        "ADVDATE": null,
+        "ISO_3": "PRI",
+        "GlobalID": "bbb47896-9afd-4d5f-9872-795e14f99fb3",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 237,
+        "NAME": "Qatar",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/qatar-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "QAT",
+        "GlobalID": "c9f1b5e5-caa1-4b6a-a10f-e24796b6f758",
+        "EditDate": 1792818048459,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 238,
+        "NAME": "Réunion",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "REU",
+        "GlobalID": "fe76a66a-a569-4813-b36e-8ed232663ca1",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 239,
+        "NAME": "Romania",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/romania-travel-advisory.html",
+        "ADVDATE": 1760414400000,
+        "ISO_3": "ROU",
+        "GlobalID": "e8dd479b-4c73-419e-95a5-a61f75057a35",
+        "EditDate": 1760466631472,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 240,
+        "NAME": "Russia",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/russia-travel-advisory.html",
+        "ADVDATE": 1756353600000,
+        "ISO_3": "RUS",
+        "GlobalID": "539021a1-ee55-45f6-bf74-72b97ebe3095",
+        "EditDate": 1756405534213,
+        "Editor": "JohnsonLH_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 241,
+        "NAME": "Rwanda",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/rwanda-travel-advisory.html",
+        "ADVDATE": 1778990400000,
+        "ISO_3": "RWA",
+        "GlobalID": "af6694ed-ba14-4f5a-afd1-574869c17616",
+        "EditDate": 1779078786147,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 242,
+        "NAME": "Saba",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/saba-travel-advisory.html",
+        "ADVDATE": 1787266800000,
+        "ISO_3": "BES",
+        "GlobalID": "31be8918-1361-4055-8d25-8ad77c05589a",
+        "EditDate": 1787250934379,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 243,
+        "NAME": "Saint Barthelemy",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/french-west-indies-travel-advisory.html",
+        "ADVDATE": 1787266800000,
+        "ISO_3": "BLM",
+        "GlobalID": "b02fb374-329f-4de5-8e00-b388f20860d3",
+        "EditDate": 1787164334316,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 244,
+        "NAME": "Saint Helena, Ascension, and Tristan da Cunha",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/untied-kingdom-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "SHN",
+        "GlobalID": "6b864e9a-f6aa-48bb-8f6d-f711fb46f46a",
+        "EditDate": 1747245837778,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 245,
+        "NAME": "Saint Kitts and Nevis",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/saint-kitts-and-nevis-travel-advisory.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "KNA",
+        "GlobalID": "f59f8dd8-b3e5-424e-a259-fa320994ca1e",
+        "EditDate": 1787164501610,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 246,
+        "NAME": "Saint Lucia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/saint-lucia-travel-advisory.html",
+        "ADVDATE": 1783656000000,
+        "ISO_3": "LCA",
+        "GlobalID": "554463bd-d2c4-4fb1-9b3c-cad3db696d7a",
+        "EditDate": 1783698091600,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 247,
+        "NAME": "Saint Martin",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/french-west-indies-travel-advisory.html",
+        "ADVDATE": 1665010800000,
+        "ISO_3": "MAF",
+        "GlobalID": "9b05e48a-b40b-4018-a319-b5416f330f84",
+        "EditDate": 1750869790296,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 248,
+        "NAME": "Saint Pierre and Miquelon",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "SPM",
+        "GlobalID": "b6fa6971-24ac-4609-a558-110da59a3dff",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 249,
+        "NAME": "Saint Vincent and the Grenadines",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/saint-vincent-and-the-grenadines.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "VCT",
+        "GlobalID": "ba3ca4d1-f535-43c6-b2ec-285f48b23e2d",
+        "EditDate": 1783433691816,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 250,
+        "NAME": "Samoa",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/samoa-travel-advisory.html",
+        "ADVDATE": 1741579200000,
+        "ISO_3": "WSM",
+        "GlobalID": "de1346d5-2600-47c0-a80c-9629250730c7",
+        "EditDate": 1750866708393,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 251,
+        "NAME": "San Marino",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/italy-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "SMR",
+        "GlobalID": "528f4b9c-490a-4eae-b764-781f003916f3",
+        "EditDate": 1758563833999,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 252,
+        "NAME": "Sao Tome and Principe",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/sao-tome-and-principe-travel-advisory.html",
+        "ADVDATE": 1788494400000,
+        "ISO_3": "STP",
+        "GlobalID": "2737b973-7237-4a99-b921-f95463a7630e",
+        "EditDate": 1788555123641,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 254,
+        "NAME": "Saudi Arabia",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/saudi-arabia-travel-advisory.html",
+        "ADVDATE": 1792785600000,
+        "ISO_3": "SAU",
+        "GlobalID": "79be237a-4d4d-4559-bf72-e7f5fd3bc3c2",
+        "EditDate": 1792811742493,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 256,
+        "NAME": "Senegal",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/senegal-travel-advisory.html",
+        "ADVDATE": 1764565200000,
+        "ISO_3": "SEN",
+        "GlobalID": "f2a6f397-ed26-4708-aa90-141239434c19",
+        "EditDate": 1764606766456,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 258,
+        "NAME": "Serbia",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/serbia-travel-advisory.html",
+        "ADVDATE": 1664856000000,
+        "ISO_3": "SRB",
+        "GlobalID": "fec7d12e-4f91-46af-8eba-08de2b709c36",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 259,
+        "NAME": "Seychelles",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/seychelles-travel-advisory.html",
+        "ADVDATE": 1765256400000,
+        "ISO_3": "SYC",
+        "GlobalID": "839f019b-9735-492f-952c-8c715abeaf7e",
+        "EditDate": 1793980060096,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 262,
+        "NAME": "Sierra Leone",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/sierra-leone-travel-advisory.html",
+        "ADVDATE": 1757908800000,
+        "ISO_3": "SLE",
+        "GlobalID": "d9a5388d-e949-46af-b9d1-81d621bf75f9",
+        "EditDate": 1757953311346,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 263,
+        "NAME": "Singapore",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/singapore-travel-advisory.html",
+        "ADVDATE": 1773028800000,
+        "ISO_3": "SGP",
+        "GlobalID": "21e02071-7ab5-4be8-9498-e6b8e040927e",
+        "EditDate": 1773237999406,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 264,
+        "NAME": "Sint Eustatius",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/sint-eustatius-travel-advisory.html",
+        "ADVDATE": 1787266800000,
+        "ISO_3": "BES",
+        "GlobalID": "553c823b-704e-4c90-b5d5-5082ada0375a",
+        "EditDate": 1787250992443,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 265,
+        "NAME": "Sint Maarten",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/sint-maarten-travel-advisory.html",
+        "ADVDATE": 1787544000000,
+        "ISO_3": "SXM",
+        "GlobalID": "81198321-6378-436b-bb8a-ac17db8e7340",
+        "EditDate": 1787608450499,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 266,
+        "NAME": "Slovakia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/slovakia-travel-advisory.html",
+        "ADVDATE": 1770699600000,
+        "ISO_3": "SVK",
+        "GlobalID": "6d4f11b4-82f2-448d-9040-42d0e06eb809",
+        "EditDate": 1770743484269,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 267,
+        "NAME": "Slovenia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/slovenia-travel-advisory.html",
+        "ADVDATE": 1778817600000,
+        "ISO_3": "SVN",
+        "GlobalID": "6a420235-516f-472c-9ecc-489b699c34d3",
+        "EditDate": 1778857196010,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 268,
+        "NAME": "Solomon Islands",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/solomon-island-travel-advisory.html",
+        "ADVDATE": 1745899200000,
+        "ISO_3": "SLB",
+        "GlobalID": "33d7d488-da73-4df1-9e5b-450d874a1818",
+        "EditDate": 1745960206913,
+        "Editor": "diloner_dostsg",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 269,
+        "NAME": "Somalia",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/somalia-travel-advisory.html",
+        "ADVDATE": 1779336000000,
+        "ISO_3": "SOM",
+        "GlobalID": "4357670b-2f13-412b-941b-5e64583e82c2",
+        "EditDate": 1779386540240,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 270,
+        "NAME": "South Africa",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/south-africa-travel-advisory.html",
+        "ADVDATE": 1748318400000,
+        "ISO_3": "ZAF",
+        "GlobalID": "ea14dc1a-e427-4dff-9eb6-a0a3892f6390",
+        "EditDate": 1748369381104,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 271,
+        "NAME": "South Georgia and the South Sandwich Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "SGS",
+        "GlobalID": "6fccddf4-f71b-49cc-ba50-05716bc48e1e",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 272,
+        "NAME": "South Sudan",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/south-sudan-travel-advisory.html",
+        "ADVDATE": 1778990400000,
+        "ISO_3": "SSD",
+        "GlobalID": "89d8b0b2-9945-41bf-a4eb-7ef5f71dc60f",
+        "EditDate": 1779080110175,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 273,
+        "NAME": "Spain",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/spain-travel-advisory.html",
+        "ADVDATE": 1747022400000,
+        "ISO_3": "ESP",
+        "GlobalID": "dd80eca3-fbbf-430f-ae33-cf8dc8dc40ac",
+        "EditDate": 1793980596101,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 276,
+        "NAME": "Sri Lanka",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/sri-lanka-travel-advisory.html",
+        "ADVDATE": 1760414400000,
+        "ISO_3": "LKA",
+        "GlobalID": "a3f98e17-c9f8-4d2c-bf33-996d9a5c2b7a",
+        "EditDate": 1761228452465,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 277,
+        "NAME": "Sudan",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/sudan-travel-advisory.html",
+        "ADVDATE": 1778817600000,
+        "ISO_3": "SDN",
+        "GlobalID": "b21fdce2-053e-43f6-a161-95fe1a675981",
+        "EditDate": 1787164204190,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 278,
+        "NAME": "Suriname",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/suriname-travel-advisory.html",
+        "ADVDATE": 1788840000000,
+        "ISO_3": "SUR",
+        "GlobalID": "55c3b68e-5437-4f2e-92f5-3a51adcfa62e",
+        "EditDate": 1788889445513,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 279,
+        "NAME": "Svalbard",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/norway-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "SJM",
+        "GlobalID": "bfc1dcae-be06-4342-917a-f07d752bcbbf",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 280,
+        "NAME": "Sweden",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/sweden-travel-advisory.html",
+        "ADVDATE": 1779076800000,
+        "ISO_3": "SWE",
+        "GlobalID": "33feaf6e-1a75-44e0-9502-4670903e3c97",
+        "EditDate": 1779133446043,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 281,
+        "NAME": "Switzerland",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/switzerland-travel-advisory.html",
+        "ADVDATE": 1786680000000,
+        "ISO_3": "CHE",
+        "GlobalID": "f3562fb2-d389-4d0d-bbec-b213674a90f9",
+        "EditDate": 1786720940362,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 282,
+        "NAME": "Syria",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/syria-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "SYR",
+        "GlobalID": "92fce421-384c-46da-9f26-c297ee2bf270",
+        "EditDate": 1792817557367,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 283,
+        "NAME": "Taiwan",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/taiwan-travel-advisory.html",
+        "ADVDATE": 1764046800000,
+        "ISO_3": "TWN",
+        "GlobalID": "03241f35-c3aa-47e1-ab74-ec8ef8a20cd8",
+        "EditDate": 1764096467236,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 284,
+        "NAME": "Tajikistan",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/tajikistan-travel-advisory.html",
+        "ADVDATE": 1788494400000,
+        "ISO_3": "TJK",
+        "GlobalID": "b7c59736-3995-4bd6-a7f8-ef7b316a24e8",
+        "EditDate": 1788554976419,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 285,
+        "NAME": "Tanzania",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/tanzania-travel-advisory.html",
+        "ADVDATE": 1792123260000,
+        "ISO_3": "TZA",
+        "GlobalID": "d6e24f43-9a17-4c7d-b575-1aab2474c2e2",
+        "EditDate": 1792154475916,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 286,
+        "NAME": "Thailand",
+        "LEVEL_": 10,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/thailand-travel-advisory.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "THA",
+        "GlobalID": "96278c55-f219-4270-aa90-804e4c57c0a2",
+        "EditDate": 1783452378748,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 287,
+        "NAME": "The Bahamas",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/the-bahamas-travel-advisory.html",
+        "ADVDATE": 1785211200000,
+        "ISO_3": "BHS",
+        "GlobalID": "38d38766-9376-4df5-8287-062617f8abf1",
+        "EditDate": 1785272415436,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 288,
+        "NAME": "The Gambia",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/the-gambia-travel-advisory.html",
+        "ADVDATE": 1768539600000,
+        "ISO_3": "GMB",
+        "GlobalID": "ea75a194-e6e2-4c97-8252-15f39d8a3df3",
+        "EditDate": 1768583579431,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 289,
+        "NAME": "Timor-Leste",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/timor-leste-travel-advisory.html",
+        "ADVDATE": 1779370868000,
+        "ISO_3": "TLS",
+        "GlobalID": "5dabc23d-addb-4ecf-ab29-6da1f7e39003",
+        "EditDate": 1779391120533,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 290,
+        "NAME": "Togo",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/togo-travel-advisory.html",
+        "ADVDATE": 1773028800000,
+        "ISO_3": "TGO",
+        "GlobalID": "65637a19-ccf5-45dc-823d-6e2ca3818621",
+        "EditDate": 1773060493534,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 291,
+        "NAME": "Tokelau",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/tokelau-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "TKL",
+        "GlobalID": "e0ee554d-c08b-4824-93b9-74bae7cc3077",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 292,
+        "NAME": "Tonga",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/tonga-travel-advisory.html",
+        "ADVDATE": 1733115600000,
+        "ISO_3": "TON",
+        "GlobalID": "1eebf2af-07e9-40e0-b8d8-157fc5516896",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 293,
+        "NAME": "Trinidad and Tobago",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/trinidad-and-tobago-travel-advisory.html",
+        "ADVDATE": 1776052800000,
+        "ISO_3": "TTO",
+        "GlobalID": "3397f2ba-8d3f-435b-b0d8-98de436860c7",
+        "EditDate": 1776109343131,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 295,
+        "NAME": "Tunisia",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/tunisia-travel-advisory.html",
+        "ADVDATE": 1779336000000,
+        "ISO_3": "TUN",
+        "GlobalID": "7c057a67-7430-48be-9456-e25cc13ac119",
+        "EditDate": 1779392761854,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 296,
+        "NAME": "Türkiye",
+        "LEVEL_": 20,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/turkey-travel-advisory.html",
+        "ADVDATE": 1780977600000,
+        "ISO_3": "TUR",
+        "GlobalID": "234cf270-1637-4401-8c3d-efa2658bee37",
+        "EditDate": 1792600186010,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 297,
+        "NAME": "Turkmenistan",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/turkmenistan-travel-advisory.html",
+        "ADVDATE": 1787284800000,
+        "ISO_3": "TKM",
+        "GlobalID": "25f333dd-9583-4a8b-82ef-843f69c0457e",
+        "EditDate": 1787317046985,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 298,
+        "NAME": "Turks and Caicos Islands",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/turks-and-caicos-travel-advisory.html",
+        "ADVDATE": 1783396800000,
+        "ISO_3": "TCA",
+        "GlobalID": "720910ec-84a2-4b82-a4ae-881f16d7b7ef",
+        "EditDate": 1783432307576,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 299,
+        "NAME": "Tuvalu",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/tuvalu-travel-advisory.html",
+        "ADVDATE": 1733115600000,
+        "ISO_3": "TUV",
+        "GlobalID": "490cfb29-22be-4a73-a5d5-32d3aead04ab",
+        "EditDate": 1750878486695,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 301,
+        "NAME": "Uganda",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/uganda-travel-advisory.html",
+        "ADVDATE": 1779023580000,
+        "ISO_3": "UGA",
+        "GlobalID": "c6848659-e172-4401-97d9-9acfa1757236",
+        "EditDate": 1779075330922,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 302,
+        "NAME": "Ukraine",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/ukraine-travel-advisory.html",
+        "ADVDATE": 1787889600000,
+        "ISO_3": "UKR",
+        "GlobalID": "49cd5255-8eb6-40ca-b760-ee0216bd2dd6",
+        "EditDate": 1787941287692,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 305,
+        "NAME": "United Arab Emirates",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-arab-emirates-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "ARE",
+        "GlobalID": "4352ddce-685a-4bae-beee-5f3292b86a3a",
+        "EditDate": 1792816756598,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 306,
+        "NAME": "United Kingdom",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-kingdom-travel-advisory.html",
+        "ADVDATE": 1788926400000,
+        "ISO_3": "GBR",
+        "GlobalID": "7d38a396-eb0f-4bb6-a3ae-d39222be43a3",
+        "EditDate": 1788980099508,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 307,
+        "NAME": "Uruguay",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/uruguay-travel-advisory.html",
+        "ADVDATE": 1785211200000,
+        "ISO_3": "URY",
+        "GlobalID": "bb4ddab9-2b3a-4f7a-bfd3-d72cb104cfc0",
+        "EditDate": 1785273103638,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 308,
+        "NAME": "Uzbekistan",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/uzbekistan-travel-advisory.html",
+        "ADVDATE": 1769058000000,
+        "ISO_3": "UZB",
+        "GlobalID": "3b968f74-f97a-4d6d-885f-fc58583a402b",
+        "EditDate": 1769105946817,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 309,
+        "NAME": "Vanuatu",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/vanuatu-travel-advisory.html",
+        "ADVDATE": 1747713600000,
+        "ISO_3": "VUT",
+        "GlobalID": "c66b677d-ffa0-4dc2-99e4-25ae79430e9f",
+        "EditDate": 1747764172451,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 310,
+        "NAME": "Vatican City",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/en/international-travel/travel-advisories/italy.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "VAT",
+        "GlobalID": "455c0400-15ba-435d-95f9-7569982298d7",
+        "EditDate": 1758742071046,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 311,
+        "NAME": "Venezuela",
+        "LEVEL_": 30,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/venezuela-travel-advisory.html",
+        "ADVDATE": 1782558000000,
+        "ISO_3": "VEN",
+        "GlobalID": "14a08894-d1df-4d9e-bd34-eefd30516a25",
+        "EditDate": 1782583344948,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 312,
+        "NAME": "Vietnam",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/vietnam-travel-advisory.html",
+        "ADVDATE": 1734325200000,
+        "ISO_3": "VNM",
+        "GlobalID": "90792724-c3f6-430e-8a5e-eecc6ab568e5",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 313,
+        "NAME": "British Virgin Islands",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/british-virgin-islands-travel-advisory.html",
+        "ADVDATE": 1779422400000,
+        "ISO_3": "VGB",
+        "GlobalID": "30dfe90a-720a-4245-b53e-bfa81f0fc283",
+        "EditDate": 1779471847192,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 314,
+        "NAME": "U.S. Virgin Islands",
+        "LEVEL_": null,
+        "URL": " ",
+        "ADVDATE": null,
+        "ISO_3": "VIR",
+        "GlobalID": "5a304e49-9511-4623-8506-903523862b64",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 317,
+        "NAME": "Wallis and Futuna",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/france-travel-advisory.html",
+        "ADVDATE": 1515628800000,
+        "ISO_3": "WLF",
+        "GlobalID": "65607f5f-b29c-464d-b87c-e55956d2882c",
+        "EditDate": 1745959537377,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 318,
+        "NAME": "West Bank",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/israel-west-bank-and-gaza-travel-advisory.html",
+        "ADVDATE": 1772200800000,
+        "ISO_3": "XWB",
+        "GlobalID": "6669e01e-2e5c-4b76-b2ba-d89c1d69d182",
+        "EditDate": 1787747199065,
+        "Editor": "OliPhantCE_OCS",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 319,
+        "NAME": "Yemen",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/yemen-travel-advisory.html",
+        "ADVDATE": 1792728000000,
+        "ISO_3": "YEM",
+        "GlobalID": "931d4a31-66a2-4430-ae0c-dc6d9e4361ca",
+        "EditDate": 1792811829058,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 320,
+        "NAME": "Zambia",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/zambia-travel-advisory.html",
+        "ADVDATE": 1690776000000,
+        "ISO_3": "ZMB",
+        "GlobalID": "2e05be92-861b-4ca5-a5db-ce6700b9d230",
+        "EditDate": 1781192829054,
+        "Editor": "bryantek_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 321,
+        "NAME": "Zimbabwe",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/zimbabwe-travel-advisory.html",
+        "ADVDATE": 1687838400000,
+        "ISO_3": "ZWE",
+        "GlobalID": "c9c5c17a-b52c-4387-95cc-3eb0d76028e7",
+        "EditDate": 1730390398446,
+        "Editor": "raoelisonfh_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 322,
+        "NAME": "Aguascalientes",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "431e470b-3493-49ee-91e1-c23f32c03ca3",
+        "EditDate": 1750704298117,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 323,
+        "NAME": "Baja California",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "6f466432-aa1c-4698-9ce2-5051567e7bed",
+        "EditDate": 1750704299894,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 324,
+        "NAME": "Baja California Sur",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "ed3170a8-ef8d-48fc-9882-2465f706c766",
+        "EditDate": 1750704302840,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 325,
+        "NAME": "Campeche",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "86157f4d-040a-4b18-8577-4e43a4a34ee2",
+        "EditDate": 1750704304196,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 326,
+        "NAME": "Chiapas",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1725642000000,
+        "ISO_3": "MEX",
+        "GlobalID": "11c51f69-a65e-415c-97f8-52c120a2944d",
+        "EditDate": 1750704306025,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 327,
+        "NAME": "Chihuahua",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "98ced74b-c001-4a94-bd8d-302c236dc693",
+        "EditDate": 1750704308068,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 328,
+        "NAME": "Coahuila",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "4d1eccac-85c9-4227-94df-4dfa1c52c7cb",
+        "EditDate": 1750704308855,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 329,
+        "NAME": "Colima",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "5f659fa3-de91-4bd4-8037-ba6313de78ec",
+        "EditDate": 1750704311242,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 330,
+        "NAME": "México City",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692676800000,
+        "ISO_3": "MEX",
+        "GlobalID": "bad4f5e2-7525-4717-a97b-14a961a14829",
+        "EditDate": 1755280051002,
+        "Editor": "FreudenwaldDJ_PPT",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 331,
+        "NAME": "Durango",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1725663600000,
+        "ISO_3": "MEX",
+        "GlobalID": "7f088ae6-8a8e-4a39-9778-d54e98f2c384",
+        "EditDate": 1750704314939,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 332,
+        "NAME": "Guanajuato",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "2293bb8a-0bc8-4023-8760-de0bf2b04d47",
+        "EditDate": 1750704316856,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 333,
+        "NAME": "Guerrero",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692676800000,
+        "ISO_3": "MEX",
+        "GlobalID": "09b4d128-21c6-46f5-b8c6-c8ae6f8bfc00",
+        "EditDate": 1750704317504,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 334,
+        "NAME": "Hidalgo",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "5a8cc670-709d-4639-8244-79093b75b154",
+        "EditDate": 1750704319843,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 335,
+        "NAME": "Jalisco",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "836969c7-b9bb-4827-8e95-939f0071fb7d",
+        "EditDate": 1750704320903,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 336,
+        "NAME": "México",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692676800000,
+        "ISO_3": "MEX",
+        "GlobalID": "a6c75111-2a2b-4f93-91de-1eaf4429c6de",
+        "EditDate": 1750704321625,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 337,
+        "NAME": "Michoacán",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "c0958c0e-645e-459e-9cfa-87ce15cbbdb2",
+        "EditDate": 1750704323945,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 338,
+        "NAME": "Morelos",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692718273000,
+        "ISO_3": "MEX",
+        "GlobalID": "f262d142-ad41-4a19-8331-0af4fd0c9746",
+        "EditDate": 1750704324692,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 339,
+        "NAME": "Nayarit",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "618d00b4-7ddb-4826-9087-2b54c05f1fdc",
+        "EditDate": 1750704326497,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 340,
+        "NAME": "Nuevo León",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "45ee9bcb-a186-4d4c-9fda-99007bd97e5a",
+        "EditDate": 1750704327407,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 341,
+        "NAME": "Oaxaca",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692676800000,
+        "ISO_3": "MEX",
+        "GlobalID": "2077f3d6-f931-4652-a59e-a92da6ff1290",
+        "EditDate": 1750704329414,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 342,
+        "NAME": "Puebla",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "391d6b6f-2960-415c-80a0-b3254d9d2e3e",
+        "EditDate": 1750704330532,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 343,
+        "NAME": "Querétaro",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "1da488d6-4da4-4fed-8528-66beba58b9dc",
+        "EditDate": 1750704333177,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 344,
+        "NAME": "Quintana Roo",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "acd9b3aa-4600-4dd2-b1f6-0a21b78f80ca",
+        "EditDate": 1750704334743,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 345,
+        "NAME": "San Luis Potosí",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "c3c7eb8f-c544-42b1-8ef6-4b6da61a5c68",
+        "EditDate": 1750704335467,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 346,
+        "NAME": "Sinaloa",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "1d093af9-d0bd-4580-a6b8-8af56d5f09bd",
+        "EditDate": 1750704337166,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 347,
+        "NAME": "Sonora",
+        "LEVEL_": 3,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "fea91617-bcec-4e14-8456-0919d09469ad",
+        "EditDate": 1750704337997,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 348,
+        "NAME": "Tabasco",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "adf2fefa-8de2-4d11-8b04-3c05f2cd5fd3",
+        "EditDate": 1750704341005,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 349,
+        "NAME": "Tamaulipas",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "5438be4c-0deb-4b49-962e-e09770bc8289",
+        "EditDate": 1750704341807,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 350,
+        "NAME": "Tlaxcala",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "adddde98-dc91-4cf9-8b4b-0732c18abff6",
+        "EditDate": 1750704344543,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 351,
+        "NAME": "Veracruz",
+        "LEVEL_": 2,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692676800000,
+        "ISO_3": "MEX",
+        "GlobalID": "528ef05e-8c92-4c0b-b3b7-4433e00f43fa",
+        "EditDate": 1750704345404,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 352,
+        "NAME": "Yucatán",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "f53ca16f-aa7e-4008-9017-dc4ba0081aeb",
+        "EditDate": 1750704347147,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 353,
+        "NAME": "Zacatecas",
+        "LEVEL_": 4,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1692745200000,
+        "ISO_3": "MEX",
+        "GlobalID": "64d2fa05-2317-4fee-9bfc-65a68c1142a7",
+        "EditDate": 1750704348036,
+        "Editor": "matthew.osborn_TSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 354,
+        "NAME": "Brunei",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/brunei-travel-advisory.html",
+        "ADVDATE": 1778799600000,
+        "ISO_3": "BRN",
+        "GlobalID": "1d525a53-a082-4288-a780-3aa12c318d4f",
+        "EditDate": 1778844817396,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 358,
+        "NAME": "Curacao",
+        "LEVEL_": 1,
+        "URL": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/curacao-travel-advisory.html",
+        "ADVDATE": 1787270400000,
+        "ISO_3": "CUW",
+        "GlobalID": "39bc7562-c318-49c7-a445-212e43a2a4a8",
+        "EditDate": 1787247770342,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 648,
+        "NAME": "Mexico",
+        "LEVEL_": null,
+        "URL": "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/Mexico.html",
+        "ADVDATE": 1780081872000,
+        "ISO_3": "MEX",
+        "GlobalID": "31467d96-7509-4722-bc58-66241573372b",
+        "EditDate": 1780081874203,
+        "Editor": "PowellA2_DOSTSG",
+        "AD_OD_Status": null,
+        "AD_OD_Text": null,
+        "AD_OD_Date": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#6750A4" />
+    <title>Waymark — Travel Advisory Dashboard</title>
+    <meta name="description" content="A modern, open-source dashboard for U.S. Department of State travel advisories." />
+  </head>
+  <body>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("waymark:theme:v1") || "system";
+          var dark = false;
+          if (t === "dark") dark = true;
+          else if (t === "system") dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme-pref", t);
+        } catch (e) {}
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
