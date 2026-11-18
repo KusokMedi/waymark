@@ -1,306 +1,185 @@
 # AGENTS.md — Waymark
 
-> This file defines the permanent engineering rules, project constraints, architecture principles, development standards, and autonomy boundaries for all AI agents working on Waymark.
->
-> Every agent must read this file before making changes. These instructions apply to the entire repository unless a more specific instruction file overrides them without contradicting the project-wide requirements.
+## 1. Project Overview
 
----
+Waymark is an independent, local-first Android application for monitoring official U.S. Department of State Travel Advisories.
 
-# 1. Project Identity
+The project consists of:
 
-## 1.1. Basic information
+- A native Android application.
+- Real configurable Android home-screen widgets.
+- A static project website hosted on GitHub Pages.
+- Technical and user documentation.
+- Automated build, testing, and release workflows.
 
-- **Project name:** Waymark
-- **Repository slug:** `waymark`
-- **Project type:** Open-source Travel Advisory Dashboard
-- **Repository visibility:** Public
-- **License:** GNU General Public License v3.0 (GPL-3.0)
-- **Primary language:** English
-- **Primary data provider:** U.S. Department of State Travel Advisories
-- **Hosting:** GitHub Pages
-- **Backend:** None required
-- **Infrastructure budget:** Zero-cost by default
-- **Primary design direction:** Modern Android UI, inspired by Material Design 3 and Material You
-- **Development environment:** OpenCode with autonomous AI-assisted engineering
+**Android Application ID:** `com.kusokmedi.waymark`
 
-## 1.2. Project purpose
+**License:** GPL-3.0.
 
-Waymark is an open-source application that displays travel advisory information published by the U.S. Department of State.
+**Primary repository:** The existing Waymark GitHub repository.
 
-Its primary purpose is to let users quickly understand the current advisory level for destinations, inspect the original advisory, and maintain a personal list of destinations they care about.
+**Primary language:** English.
 
-Waymark must be more than a simple static table. It should be a polished, reliable, responsive dashboard with:
+The project must not require Waymark-operated backend infrastructure, user accounts, subscriptions, or paid services.
 
-- A global destination directory.
-- Search and filtering.
-- Multiple presentation modes.
-- Advisory details.
-- Regional risk indicators where supported by source data.
-- Favorites and a personal watchlist.
-- Automatic data updates.
-- Manual refresh functionality where technically supported.
-- Light, dark, and system themes.
-- A separate project website.
-- Public documentation and transparent data provenance.
+## 2. Core Principles
 
-## 1.3. Product positioning
+These principles are mandatory and take priority over implementation convenience.
 
-Suggested tagline:
+### 2.1 Local-first architecture
 
-**Know before you go.**
+All user-specific information must remain on the user's device.
 
-Suggested short description:
+This includes:
 
-**A modern, open-source dashboard for U.S. Department of State travel advisories.**
+- Watchlists.
+- Favorite countries.
+- Application settings.
+- Widget configurations.
+- Notification preferences.
+- Advisory history.
+- Synchronization metadata.
+- Locally generated data.
 
-The project must be presented as an independent application, not as an official U.S. government product.
+Never introduce:
 
-Never imply that Waymark is affiliated with, endorsed by, or operated by the U.S. Department of State.
+- User accounts.
+- Waymark backend services.
+- Cloud synchronization.
+- Remote analytics.
+- Tracking or telemetry.
+- Advertising SDKs.
+- Third-party services that receive user-specific information.
 
----
+The application may communicate directly with the official public data source to retrieve Travel Advisory information.
 
-# 2. Non-Negotiable Project Decisions
+Do not use GitHub Actions, GitHub Pages, Vercel, or another hosting service as a proxy or backend for user data.
 
-The following decisions are confirmed and must not be silently changed.
+### 2.2 Data integrity
 
-| Decision | Requirement |
+Never invent advisory information.
+
+Never interpret missing, malformed, unavailable, or unknown data as Level 1.
+
+Keep these states distinct:
+
+- Valid current advisory.
+- Cached advisory.
+- Unknown advisory.
+- Synchronization failure.
+- No available advisory record.
+
+When synchronization fails, preserve the last valid cached information and display its last successful update time.
+
+If no valid information exists, display `Unknown`.
+
+Never destroy previously downloaded information because a network request failed.
+
+### 2.3 Official sources
+
+The primary source is the official U.S. Department of State Travel Advisories website and its verified public data services.
+
+Known research candidates:
+
+- https://travel.state.gov/en/international-travel/travel-advisories.html
+- https://services6.arcgis.com/R6wlO6UHmSzqm9Vs/ArcGIS/rest/services/Travel_Advisory_Levels__%282024%29_View_Layer/FeatureServer
+- https://cadataapi.state.gov/
+
+These are research starting points, not guaranteed permanent API contracts.
+
+Verify current availability, endpoints, schema, pagination, rate limits, update behavior, and licensing before implementation.
+
+Do not use unofficial fallback sources.
+
+### 2.4 Preserve existing work
+
+Before modifying the repository:
+
+1. Inspect the entire repository.
+2. Inspect the current Git state.
+3. Read existing documentation and project instructions.
+4. Identify the existing website, assets, workflows, and application code.
+5. Identify useful components that can be reused.
+6. Prepare a migration plan.
+
+Do not blindly delete or replace existing project files.
+
+Never rewrite Git history, delete user data, remove branches, force-push, or perform destructive Git operations without explicit authorization.
+
+## 3. Technology and Architecture
+
+Use native Android development.
+
+Preferred technologies:
+
+- Kotlin.
+- Jetpack Compose.
+- AndroidX.
+- Room.
+- DataStore.
+- WorkManager.
+- Kotlin Coroutines and Flow.
+- A maintained HTTP client.
+- Jetpack Glance or RemoteViews for home-screen widgets.
+
+Select the best implementation after evaluating actual platform requirements.
+
+Do not adopt a technology merely because it is familiar.
+
+The application must support Android 8.0 (API 26) and later.
+
+Use current stable compatible dependencies and avoid unnecessary libraries.
+
+Keep dependency versions centralized where appropriate.
+
+### Architecture requirements
+
+Use a maintainable layered architecture.
+
+Separate:
+
+- Presentation.
+- Domain logic.
+- Data access.
+- Network communication.
+- Local persistence.
+- Background synchronization.
+- Widget configuration and rendering.
+- Notification handling.
+
+Keep business logic independent of Android UI components wherever practical.
+
+Use dependency injection only if it provides meaningful architectural value.
+
+Avoid unnecessary abstraction and overengineering.
+
+## 4. Travel Advisory Data Model
+
+The application must support all countries available in the verified official source.
+
+The data model should accommodate:
+
+- Country name.
+- ISO identifiers.
+- Flag asset mapping.
+- Advisory level.
+- Advisory title.
+- Advisory summary.
+- Official advisory URL.
+- Official publication or update date.
+- Regional warnings.
+- Regional warning descriptions.
+- Source metadata.
+- Last successful synchronization timestamp.
+
+Preserve the distinction between official advisory publication dates and local synchronization timestamps.
+
+### Advisory level semantics
+
+Known level codes include:
+
+| Code | Meaning |
 |---|---|
-| Project name | Waymark |
-| Repository slug | waymark |
-| Repository visibility | Public |
-| License | GPL-3.0 |
-| Interface language | English |
-| Website language | English |
-| Hosting | One GitHub Pages deployment |
-| Website location | Repository Pages root |
-| Application location | `/app/` |
-| Default destinations | Finland, Estonia, Latvia, Lithuania |
-| Design direction | Material 3-inspired modern Android UI |
-| Theme behavior | System by default, with Light and Dark options |
-| Hosting budget | Free |
-| Backend requirement | No permanent backend |
-| Initial application data | All destinations supported by the verified data source |
-
-The GitHub Pages URLs must follow this structure:
-
-```text
-https://<github-username>.github.io/waymark/
-https://<github-username>.github.io/waymark/app/
-```
-
-Do not hardcode a personal GitHub username or custom domain into application logic.
-
-The application and website must work under the repository subpath. Do not assume that the application is hosted at `/`.
-
----
-
-# 3. Agent Autonomy
-
-## 3.1. General principle
-
-Operate as an autonomous senior software engineer.
-
-Do not behave as a passive assistant that merely suggests solutions, writes isolated snippets, or waits for instructions after every implementation step.
-
-You are expected to investigate, plan, implement, test, debug, document, commit, and deploy the project.
-
-Prefer completing a technically sound task independently over interrupting the user with unnecessary questions.
-
-## 3.2. Authorized autonomous actions
-
-You may independently:
-
-- Inspect and modify the repository.
-- Choose the technology stack.
-- Design the application architecture.
-- Create, edit, move, and remove project files when necessary.
-- Install and update dependencies.
-- Implement application features.
-- Implement the project website.
-- Write and run tests.
-- Perform refactoring.
-- Fix bugs and type errors.
-- Configure formatting and linting.
-- Create GitHub Actions workflows.
-- Configure GitHub Pages.
-- Create a public GitHub repository named `waymark`, provided the authenticated account is the intended destination and the repository name is available.
-- Create Git commits.
-- Push project changes.
-- Prepare and publish GitHub releases.
-- Maintain README, changelog, and developer documentation.
-- Research official data sources and update data integration when necessary.
-
-Use the available GitHub integration or authenticated GitHub CLI when appropriate.
-
-Before creating a remote repository, check whether it already exists. Never overwrite or repurpose an unrelated repository.
-
-## 3.3. Actions that are prohibited without explicit authorization
-
-Never:
-
-- Purchase services or subscriptions.
-- Enable paid infrastructure.
-- Create paid API usage.
-- Introduce paid dependencies or external services that require billing.
-- Publish private credentials or secrets.
-- Publish personal information.
-- Replace the selected GPL-3.0 license.
-- Force-push or rewrite shared Git history.
-- Delete the remote repository.
-- Delete unrelated branches or tags.
-- Run destructive commands against an unknown working directory.
-- Use `git reset --hard`, `git clean -fd`, or equivalent destructive operations without first establishing that the affected changes are disposable and user-owned work will not be lost.
-- Modify unrelated projects.
-- Claim that a deployment, release, or repository creation succeeded unless it has been verified.
-
-Full autonomy does not mean permission to spend money, destroy user data, or misrepresent results.
-
-## 3.4. Handling blockers
-
-When an external dependency or permission is unavailable:
-
-1. Identify the exact blocker.
-2. Complete every independent task that can still be completed.
-3. Do not invent credentials, API responses, or deployment results.
-4. Do not repeatedly ask the user for the same information.
-5. Explain what remains blocked and what action is required.
-
-A missing GitHub permission must not prevent local development, testing, or documentation.
-
----
-
-# 4. Communication and Language
-
-Use these language rules:
-
-| Area | Language |
-|---|---|
-| Conversations with the user | Russian |
-| Application interface | English |
-| Website | English |
-| README | English |
-| Documentation | English |
-| Code comments | English |
-| Variable and function names | English |
-| Commit messages | English |
-| Release notes | English |
-
-Do not translate application copy into Russian unless explicitly requested.
-
-When reporting technical work to the user, explain important architectural decisions in Russian using clear language.
-
-Do not send long progress messages after every small change. Report meaningful milestones, blockers, architectural changes, and completed phases.
-
----
-
-# 5. Data Sources and Trustworthiness
-
-## 5.1. Official source
-
-The primary reference is the U.S. Department of State Travel Advisories website:
-
-https://travel.state.gov/en/international-travel/travel-advisories.html
-
-The official site describes Travel Advisories as assessments of risks and recommended precautions for U.S. citizens, nationals, and legal residents.
-
-This distinction is important.
-
-Waymark must display a clear explanation that the advisories are designed for U.S. travelers and do not necessarily represent the risk assessment applicable to travelers of every nationality.
-
-The application must not claim to provide a universal or personalized safety assessment.
-
-## 5.2. ArcGIS source candidate
-
-The following ArcGIS FeatureServer is a known candidate for structured advisory data:
-
-```text
-https://services6.arcgis.com/R6wlO6UHmSzqm9Vs/ArcGIS/rest/services/Travel_Advisory_Levels__%282024%29_View_Layer/FeatureServer
-```
-
-A layer currently visible in this service is:
-
-```text
-Layer ID: 54
-Layer name: Travel Advisory Levels (NEW)
-```
-
-Layer metadata currently exposes fields including:
-
-- `OBJECTID`
-- `NAME`
-- `LEVEL_`
-- `URL`
-- `ADVDATE`
-- `ISO_3`
-- `GlobalID`
-- `EditDate`
-- `Editor`
-- `AD_OD_Status`
-- `AD_OD_Text`
-- `AD_OD_Date`
-
-These fields are a research starting point, not a guarantee that the schema will remain unchanged.
-
-The agent must inspect the live service before relying on it.
-
-Do not assume that a URL, field, layer ID, domain, or response format will remain available forever.
-
-## 5.3. Other sources
-
-Investigate whether the following source provides a suitable supported API:
-
-https://cadataapi.state.gov/
-
-Inspect available official documentation and determine whether it is appropriate for the application.
-
-Do not introduce an unofficial scraping service when an official structured source is available.
-
-## 5.4. Source selection requirements
-
-Before implementing the production adapter, establish:
-
-1. Whether the source is operated or maintained by the relevant official organization.
-2. Whether the data actually represents the advisories shown on the official website.
-3. Whether every destination can be retrieved.
-4. Whether records contain stable identifiers.
-5. Whether dates can be reliably interpreted.
-6. Whether all known advisory codes are represented.
-7. Whether there are multiple records per destination.
-8. Whether country and subnational records can be distinguished.
-9. Whether CORS allows direct browser access.
-10. Whether request limits or usage restrictions apply.
-11. Whether the source requires attribution.
-12. Whether the source exposes changes or update timestamps.
-
-Document the findings in:
-
-`docs/DATA_SOURCES.md`
-
-If there are several plausible sources, compare their reliability, completeness, accessibility, and maintenance characteristics.
-
-Choose a primary source and document any fallback.
-
-Never silently combine incompatible sources or make their records look interchangeable.
-
----
-
-# 6. Advisory Data Model
-
-## 6.1. Standard advisory levels
-
-The familiar U.S. Department of State advisory levels are:
-
-| Level | Official description |
-|---:|---|
-| 1 | Exercise Normal Precautions |
-| 2 | Exercise Increased Caution |
-| 3 | Reconsider Travel |
-| 4 | Do Not Travel |
-
-The ArcGIS data currently exposes the following coded values:
-
-| Source code | Source description |
-|---:|---|
 | 1 | Exercise Normal Precautions |
 | 10 | Exercise Normal Precautions - Contains Areas with Higher Security Risk |
 | 2 | Exercise Increased Caution |
@@ -309,975 +188,425 @@ The ArcGIS data currently exposes the following coded values:
 | 30 | Reconsider Travel - Contains Areas with Higher Security Risk |
 | 4 | Do Not Travel |
 
-Do not treat these seven codes as seven ordinary advisory levels.
+Codes 10, 20, and 30 are special semantic values. They must not be interpreted as ordinary numerical advisory levels.
 
-Values `10`, `20`, and `30` are special coded values whose descriptions explicitly mention areas with higher security risk.
+Implement explicit, documented mapping logic.
 
-Preserve their additional meaning.
+Do not rely on naive numeric sorting.
 
-Do not rely on numeric sorting or blindly divide a code by ten.
+Unknown future values must be handled safely and must not be silently converted into another level.
 
-Use an explicit mapping with tests.
+Regional information must retain its relationship to the relevant country and source record. Never invent geographic relationships.
 
-## 6.2. Required normalized fields
+## 5. Synchronization
 
-Design a normalized internal model that can preserve at least:
-
-```ts
-type AdvisoryLevel = 1 | 2 | 3 | 4;
-
-interface AdvisoryRecord {
-  id: string;
-
-  destinationName: string;
-  isoAlpha3: string | null;
-  isoAlpha2: string | null;
-
-  rawLevelCode: number | null;
-  level: AdvisoryLevel | null;
-
-  containsHigherRiskAreas: boolean;
-  officialLabel: string | null;
-
-  advisoryUrl: string | null;
-  advisoryDate: string | null;
-
-  sourceName: string;
-  sourceRecordId: string | null;
-
-  recordKind: "country" | "region" | "unknown";
-}
-```
-
-This is a conceptual baseline, not an instruction to copy the exact interface without examining the real data.
-
-Expand or adjust it when the live source requires additional distinctions.
-
-Preserve meaningful source fields, especially information related to regional risk and assisted or ordered departure.
-
-## 6.3. Regional and subnational information
-
-A source feature may represent a country, state, region, or other geographic record.
-
-Never assume that every row is one independent country.
-
-Investigate how records relate to one another using:
-
-- `ISO_3`
-- `NAME`
-- `LEVEL_`
-- Feature identifiers
-- Geometry or other geographic relationships
-- Additional source metadata
-
-If regional warnings are represented separately, preserve them in the model and show them in the corresponding destination details.
-
-If the source supplies only a country-level special code, show the special regional-risk indication without inventing names or locations for the affected areas.
-
-Do not fabricate a country-to-region relationship.
-
-If a safe country-level aggregation is not possible, show the source records distinctly and explain their classification.
-
-## 6.4. Unknown and missing data
-
-The following states must remain distinct:
-
-- A valid Level 1 advisory.
-- A valid Level 2 advisory.
-- A valid Level 3 advisory.
-- A valid Level 4 advisory.
-- A special regional-risk advisory.
-- No matching record.
-- Unknown source code.
-- Missing advisory date.
-- Unavailable source.
-- Stale cached data.
-- Invalid source response.
-
-Never convert missing data, `null`, an unknown code, or an API failure into Level 1.
-
-If a record contains an unknown level code, preserve the raw value and show an understandable unknown or unsupported state.
-
-Do not hide it, silently discard it, or invent a mapping.
-
-## 6.5. Dates
-
-Treat source dates carefully.
-
-For ArcGIS date fields, inspect the actual returned JSON and determine whether the value is a Unix timestamp in milliseconds.
-
-Use tested conversion logic.
-
-Do not allow UTC-to-local-time conversion to accidentally move a date-only advisory to the previous or next calendar day.
-
-Display:
-
-- Advisory publication/update date.
-- Last successful data synchronization time.
-- Last attempted synchronization time, where relevant.
-
-These values must not be confused with one another.
-
----
-
-# 7. Country and Territory Identity
-
-Country names are not sufficiently reliable as unique identifiers.
-
-Prefer stable ISO codes when valid.
+Use WorkManager for persistent background synchronization.
 
 Requirements:
 
-- Use ISO Alpha-3 from the source when available and valid.
-- Resolve Alpha-3 to Alpha-2 using a maintained and tested mapping library.
-- Never derive a flag from an unverified or malformed code.
-- Provide a neutral fallback icon for destinations without a supported flag.
-- Preserve source names.
-- Handle duplicate or ambiguous names.
-- Handle territories and destinations that do not have a standard country code.
-- Search should support common country names and the official source name where possible.
+- Synchronize when the application starts.
+- Provide manual synchronization.
+- Support background synchronization.
+- Use any available network connection, including mobile data and metered connections.
+- Retry recoverable failures with exponential backoff.
+- Balance battery usage and data freshness.
+- Respect Android background execution restrictions.
 
-Do not hardcode only the four initial countries.
+Do not promise exact background execution times.
 
-Finland, Estonia, Latvia, and Lithuania are the initial dashboard destinations, not the complete supported directory.
+Remember that Android may delay WorkManager jobs.
 
----
+The first synchronization must:
 
-# 8. Application Features
+1. Retrieve the available country catalogue.
+2. Retrieve detailed information for selected countries.
+3. Store valid records locally.
+4. Establish a baseline for future change detection.
+5. Avoid sending initial synchronization notifications.
 
-The application must include the following functional areas.
+Use incremental updates when supported by the source.
 
-## 8.1. Dashboard
+Do not assume that the source supports incremental updates. Verify this first.
 
-The initial screen should present the user's selected destinations.
+Synchronization must be safe against duplicate execution and partial failures.
 
-Initial default destinations:
+Use transactions where appropriate.
 
-- Finland
-- Estonia
-- Latvia
-- Lithuania
+## 6. Local Storage and History
 
-Users must be able to add and remove destinations.
+Use Room for structured local data and DataStore for application preferences.
 
-The application should provide a clear overview without requiring the user to open every destination individually.
+Persist:
 
-## 8.2. All destinations
+- Country catalogue.
+- Selected countries.
+- Advisory records.
+- Regional warnings.
+- Advisory history.
+- Synchronization state.
+- Notification preferences.
+- Widget configurations.
 
-Provide a complete directory of destinations available from the verified source.
+History retention is indefinite.
+
+Do not automatically remove historical records.
+
+Database migrations must be implemented and tested.
+
+Never introduce destructive database migrations that erase user data without a deliberate migration strategy.
+
+### Backup and restore
+
+Support manual backup and restore.
+
+Required formats:
+
+- JSON.
+- ZIP.
+
+Backups should contain the relevant local application data and a schema/version identifier.
+
+Validate imported files before modifying the database.
+
+Use safe, transactional import behavior.
+
+Never silently overwrite existing information.
+
+Provide clear error messages for invalid or incompatible backups.
+
+## 7. Notifications
+
+Notifications are optional and must be enabled through user consent.
+
+Ask the user whether they want notifications during onboarding or the first appropriate setup flow.
+
+Request the Android notification permission when required.
+
+Support:
+
+- Advisory worsening.
+- Advisory improvement.
+- New regional warnings.
+- Significant advisory detail changes.
+
+Requirements:
+
+- Independent notification preferences per country.
+- One notification per country and event.
+- Short, understandable messages.
+- Standard Android notification sound.
+- Event-specific notification priority.
+- No notifications during initial synchronization.
+- No quiet-hours feature.
+
+Implement reliable event deduplication.
+
+Do not repeatedly notify about unchanged records.
+
+Do not send notifications when the application cannot establish that a meaningful change occurred.
+
+## 8. Android Home-Screen Widgets
+
+Real Android App Widgets are a central Waymark feature.
+
+Do not implement widgets as web pages, browser shortcuts, or simulated in-app components.
+
+Support:
+
+- Compact.
+- Medium.
+- Large.
+- Customizable widget configurations.
+
+Each widget instance must maintain independent configuration.
+
+Users must be able to configure:
+
+- Selected countries.
+- Country order.
+- Colors.
+- Background.
+- Visible date information.
+- Layout.
+- Displayed elements.
+
+Provide two customization levels:
+
+1. Preset layouts with configurable properties.
+2. A more advanced widget builder that allows users to select available elements and arrange their presentation within Android widget limitations.
+
+Do not promise arbitrary layouts or interactions that the Android launcher API cannot support.
+
+Every widget should display:
+
+- Country flag.
+- Advisory level.
+- Country name.
+- Advisory date.
+- Last update information.
+
+Large widgets should display all selected countries when the available space permits.
+
+Support:
+
+- System theme.
+- Launcher resizing.
+- Automatic refresh.
+- Manual refresh.
+- Tapping a country to open its detail page.
+- An appropriate empty state prompting the user to add countries.
+
+Widget configurations must survive process restarts and device reboots.
+
+Use the widget ID as the identity of each independent configuration.
+
+Test widget behavior on different sizes and Android versions.
+
+## 9. User Interface and Experience
+
+The interface must be in English.
+
+Design direction:
+
+- Modern Seal-inspired visual language.
+- Native Android experience.
+- Jetpack Compose.
+- System-controlled light and dark themes.
+- Dynamic colors where supported.
+- Bottom navigation.
+- Comfortable information density.
+- Custom flag assets.
+- Rich but restrained animations.
+- Simple settings screens.
+
+Do not copy third-party logos, proprietary assets, or protected designs.
+
+Create original Waymark branding and a coherent visual identity.
+
+### Main navigation
+
+The application should include appropriate sections for:
+
+- Watchlist.
+- Country catalogue / Search.
+- History.
+- Settings.
+
+The primary screen is the user's watchlist.
+
+### Country details
+
+Provide a country dashboard containing:
+
+- Current advisory.
+- Advisory publication date.
+- Summary.
+- Official source link.
+- Regional information.
+- Last synchronization time.
+- Historical changes.
+- Charts.
+
+Use accessible colors, typography, touch targets, and descriptions.
+
+Never communicate risk using color alone.
+
+## 10. Website
+
+Keep the project website as part of the repository.
+
+Deploy it through GitHub Pages.
+
+The website must be a modern product presentation website with an interactive demonstration.
+
+The website must not require a backend.
+
+The demonstration must use clearly labeled sample data.
+
+Never present sample information as real current travel advice.
+
+The website should include:
+
+- Project introduction.
+- Features.
+- Application screenshots.
+- Interactive sample demonstration.
+- Data sources.
+- Privacy Policy.
+- Documentation.
+- Changelog.
+- Download / Releases links.
+- GitHub repository link.
+- About section.
+
+Use actual screenshots supplied by the project owner.
+
+Do not fabricate screenshots or pretend that an unfinished application is complete.
+
+Keep the website responsive and accessible.
+
+## 11. Documentation
+
+All project documentation must be written in English.
+
+Maintain:
+
+- README.md.
+- Architecture documentation.
+- Privacy Policy.
+- User Guide.
+- Contributing guide.
+- Changelog.
+- Data Sources / API documentation.
+
+Documentation must describe actual implemented behavior.
+
+Do not document planned features as completed.
+
+Update documentation when architecture or behavior changes.
+
+## 12. GitHub Actions and Releases
+
+Use GitHub Actions for:
+
+- Android build.
+- Automated tests.
+- Lint and code quality checks.
+- Release builds.
+- Release artifact publication.
+
+Use Semantic Versioning.
+
+A Git tag should trigger the appropriate release workflow.
+
+Release APKs through GitHub Releases.
+
+Keep the GitHub Pages deployment workflow separate where practical.
+
+Do not introduce paid CI services.
+
+Never expose secrets in logs or commit them to the repository.
+
+Do not use CI as a runtime backend.
+
+## 13. Testing and Quality
+
+Aim for comprehensive automated testing.
 
 Include:
 
-- Search.
-- Sorting.
-- Filtering.
-- Level indicators.
-- Country flags where possible.
-- A clear state for unknown or missing data.
-
-## 8.3. Search
-
-Support searching by destination name.
-
-The search should be:
-
-- Case-insensitive.
-- Responsive.
-- Able to handle minor differences in input.
-- Consistent across list and card views.
-
-Do not add fuzzy-search dependencies unless they provide a meaningful improvement.
-
-## 8.4. Sorting and filtering
-
-Support:
-
-- Sorting alphabetically.
-- Sorting by advisory severity.
-- Filtering by levels 1–4.
-- Filtering for entries with higher-risk-area indicators.
-- Showing favorites only.
-
-Severity ordering must use normalized advisory meaning, not raw numeric codes.
-
-At the same level, a special regional-risk indication must remain distinguishable.
-
-## 8.5. Presentation modes
-
-Provide at least two views:
-
-**List View**
-
-A compact, information-dense view with flags, names, advisory levels, dates, and relevant indicators.
-
-**Card View**
-
-A more visual view with clearer surfaces, spacing, and a stronger information hierarchy.
-
-Users must be able to switch between the views.
-
-Persist the preference locally.
-
-## 8.6. Destination details
-
-A destination detail view should show available information such as:
-
-- Destination name.
-- Flag or fallback icon.
-- Advisory level.
-- Official advisory description.
-- Higher-risk-area indicator, if applicable.
-- Advisory date.
-- Relevant regional records, if reliably available.
-- Additional departure-related information, if supplied and verified by the source.
-- Link to the original advisory.
-- Source attribution.
-
-Never fabricate descriptions or regional details.
-
-## 8.7. Favorites
-
-Users must be able to save destinations to a personal favorites list.
-
-Use browser-local persistence.
-
-Favorites must survive ordinary page reloads.
-
-Handle malformed, outdated, or unavailable local data safely.
-
-Do not introduce accounts or authentication.
-
-## 8.8. Themes
-
-Support:
-
-- System
-- Light
-- Dark
-
-System must be the default.
-
-The selected explicit theme must remain selected after reload.
-
-Avoid flashing the wrong theme before the application initializes.
-
----
-
-# 9. Data Synchronization and Offline Resilience
-
-## 9.1. Architecture
-
-The preferred deployment is a static application.
-
-There must be no mandatory application backend.
-
-First investigate direct browser access to the source.
-
-If browser CORS prevents reliable access, use a static data synchronization strategy powered by GitHub Actions.
-
-Do not solve CORS by introducing an unknown public proxy.
-
-## 9.2. Recommended fallback strategy
-
-Where direct access is unavailable, implement a scheduled data update pipeline:
-
-1. GitHub Actions periodically retrieves source data.
-2. A validation script checks the response.
-3. The normalized snapshot is generated.
-4. The snapshot is committed only when its meaningful content changes.
-5. The regular deployment workflow publishes the updated data with the application.
-6. The application loads its same-origin snapshot.
-
-The data pipeline must not require a secret API key when the official source does not require one.
-
-The sync process must fail safely.
-
-An unsuccessful fetch must never replace a valid snapshot with an empty file.
-
-## 9.3. Refresh behavior
-
-The UI must offer a way to refresh or recheck available data.
-
-If the browser can directly refresh the official source, use that ability.
-
-If the application only has access to a static snapshot, do not pretend that reloading the same file forces an upstream update.
-
-Clearly distinguish:
-
-- Reloading the currently published snapshot.
-- Fetching new data from the source.
-- Waiting for the scheduled synchronization pipeline.
-
-## 9.4. Cache
-
-Use a small, versioned local cache where useful.
-
-Requirements:
-
-- Store the last successful data response.
-- Record when it was retrieved.
-- Validate cached data before using it.
-- Prefer fresh data.
-- Allow stale cached data when the source is temporarily unavailable.
-- Clearly indicate when displayed data is stale.
-- Never mark stale data as freshly synchronized.
-- Avoid uncontrolled growth of local storage.
-
-A cache must never override a newer verified server snapshot without a clear reason.
-
-## 9.5. Retry and rate limiting
-
-Implement conservative request behavior:
-
-- Reasonable request timeouts.
-- Bounded retries.
-- Exponential backoff when appropriate.
-- Respect source rate limits.
-- Avoid repeated duplicate requests.
-- Avoid polling at unnecessarily high frequency.
-
-Document the selected synchronization interval and why it is appropriate.
-
-Do not advertise the application as an emergency-alerting service.
-
----
-
-# 10. Design System and User Experience
-
-## 10.1. Visual direction
-
-The design must follow a modern Android-inspired approach.
-
-Reference direction:
-
-- Material Design 3.
-- Material You.
-- Modern Android application layouts.
-- The general visual cleanliness and usability of applications such as Seal.
-
-These are design references, not assets or interfaces to copy literally.
-
-Do not duplicate third-party branding, logos, proprietary graphics, or complete layouts.
-
-## 10.2. Visual principles
-
-Use:
-
-- Rounded surfaces.
-- Clear hierarchy.
-- Modern typography.
-- Consistent spacing.
-- Carefully selected accent colors.
-- Subtle animation.
-- Clear icons.
-- Balanced density.
-- Responsive layouts.
-- Well-designed empty and error states.
-
-Avoid:
-
-- Generic dashboard templates.
-- Excessive gradients.
-- Excessive glassmorphism.
-- Unnecessary shadows.
-- Extremely large unused spaces.
-- Excessive animation.
-- Too many competing accent colors.
-- Unnecessary borders around every element.
-- Desktop-only assumptions.
-
-## 10.3. Advisory color system
-
-Use a consistent accessible visual language for Level 1–4.
-
-Colors must remain understandable in both themes.
-
-Never rely on color alone.
-
-Every level must also have text or another visual indicator.
-
-Special regional-risk codes need a separate visual indication that is not confused with a different ordinary advisory level.
-
-## 10.4. Responsive behavior
+- Unit tests.
+- Repository and data-layer tests.
+- Database tests.
+- Migration tests.
+- Synchronization tests.
+- API parsing tests.
+- Error-handling tests.
+- Notification tests.
+- Widget tests.
+- UI tests.
+- Backup and restore tests.
+- Compatibility tests.
+- Performance checks.
 
 Test at least:
 
-- Small mobile screens.
-- Typical mobile screens.
-- Tablet layouts.
-- Laptop screens.
-- Wide desktop screens.
+- No internet connection.
+- Slow connections.
+- HTTP errors.
+- Malformed responses.
+- Missing fields.
+- Unknown advisory codes.
+- Duplicate source records.
+- Partial synchronization.
+- Application process termination.
+- Database migration.
+- Widget recreation.
+- Empty watchlists.
+- Android notification permission denial.
 
-The app must remain functional without horizontal overflow.
+Tests must not depend on live external APIs unless explicitly designed as separate integration checks.
 
-Do not let responsive styling break the list/card switch, search, or destination details.
+Use fixtures and mocked network responses for deterministic tests.
 
-## 10.5. Accessibility
+Do not claim a test passed unless it actually ran successfully.
 
-Implement:
+## 14. Privacy and Legal Accuracy
 
-- Semantic HTML.
-- Keyboard accessibility.
-- Visible focus states.
-- Appropriate contrast.
-- Accessible labels.
-- Screen-reader-friendly controls.
-- Reduced-motion support.
-- Appropriate heading hierarchy.
+Waymark is independent and is not affiliated with or endorsed by the U.S. Department of State.
 
-Avoid custom interactive elements when semantic native controls are sufficient.
+Clearly explain that U.S. Travel Advisories are designed for U.S. citizens and are not universal safety ratings for citizens of every country.
 
----
+Link to official source material.
 
-# 11. Technology Stack and Architecture
+Avoid presenting the advisory level as a guarantee of safety or danger.
 
-## 11.1. Stack autonomy
+The Privacy Policy must accurately describe all network communication and local storage.
 
-The agent is free to choose an appropriate stack.
+## 15. Development Workflow
 
-Do not select technologies merely because they are fashionable.
+Work autonomously within the project's established requirements.
 
-Evaluate:
+For every substantial task:
 
-- Static hosting compatibility.
-- GitHub Pages support.
-- Maintainability.
-- Build speed.
-- Type safety.
-- Testability.
-- Accessibility.
-- Bundle size.
-- Dependency quality.
-- Long-term maintenance cost.
+1. Inspect relevant existing code.
+2. Understand the current architecture.
+3. Identify affected components.
+4. Implement the smallest coherent solution.
+5. Add or update tests.
+6. Run relevant checks.
+7. Review the result.
+8. Update documentation.
 
-A TypeScript-based stack with a static build tool is a reasonable candidate.
+Prefer complete, working features over placeholder implementations.
 
-The choice must be justified in `docs/ARCHITECTURE.md`.
+Do not leave important functionality as TODOs while claiming the project is finished.
 
-## 11.2. Architecture principles
+Do not hide failures or weaken tests to make CI pass.
 
-Keep the following concerns separated:
+Do not introduce unnecessary dependencies.
 
-1. Source API integration.
-2. Raw response validation.
-3. Data normalization.
-4. Data persistence and caching.
-5. Application state.
-6. UI components.
-7. Presentation and formatting.
-8. Website.
+Use clear naming and maintainable code.
 
-Do not put all business logic into UI components.
+Keep changes focused and avoid unrelated rewrites.
 
-Do not mix source-specific codes directly into random presentation components.
+## 16. User Communication
 
-Use a dedicated mapping and normalization layer.
+The project owner expects high autonomy.
 
-Keep interfaces small and understandable.
+Do not request approval for every routine implementation decision.
 
-Prefer straightforward architecture over speculative abstractions.
+Make reasonable technical decisions independently and document important trade-offs.
 
-Do not introduce a complex state-management library if simpler tools are sufficient.
+Ask for clarification only when a genuinely blocking ambiguity exists or when an action would be destructive, irreversible, costly, or outside the stated requirements.
 
-## 11.3. Dependency policy
+Do not purchase services, create paid infrastructure, or incur costs.
 
-Every dependency should have a reason.
+Do not delete user data or rewrite Git history.
 
-Before adding a library, consider:
+## 17. Definition of Done
 
-- Whether native platform functionality is sufficient.
-- Whether the library is maintained.
-- Whether the license is compatible with GPL-3.0 distribution.
-- Whether the package is disproportionately large.
-- Whether it introduces security or maintenance concerns.
+A feature is not complete merely because its UI exists.
 
-Avoid multiple libraries that solve the same problem.
+A feature is complete only when:
 
-Maintain a lockfile.
+- Its behavior is implemented.
+- Its data handling is correct.
+- Relevant error cases are handled.
+- Relevant tests exist and pass.
+- Documentation is updated.
+- It integrates correctly with the rest of the application.
 
----
+The project is ready for release only when:
 
-# 12. GitHub Pages and Repository Structure
+- The Android application builds successfully.
+- The website builds successfully.
+- Automated tests pass.
+- Lint and quality checks pass.
+- Widgets work on supported Android versions.
+- Local-only requirements are verified.
+- Backup and restore work.
+- No critical TODOs or placeholder functionality remain.
+- Release artifacts can be generated through the documented workflow.
 
-## 12.1. Required routes
-
-The intended deployment structure is:
-
-```text
-/waymark/       -> Project website
-/waymark/app/   -> Application
-```
-
-The actual GitHub Pages hostname depends on the authenticated repository owner.
-
-## 12.2. Base path requirements
-
-Both builds must be configured correctly for the repository subpath.
-
-The site must not assume `/` is the deployment root.
-
-The application must not assume `/app/` exists at the hostname root.
-
-Test:
-
-- JavaScript assets.
-- CSS assets.
-- Icons and fonts.
-- Images.
-- Data files.
-- Internal links.
-- Application routes.
-- Refreshing nested routes.
-- Direct access to `/waymark/app/`.
-
-Use a robust routing strategy compatible with GitHub Pages.
-
-A hash-based application router or a correctly configured static fallback may be used, depending on the chosen framework.
-
-## 12.3. Deployment workflow
-
-Use GitHub Actions as the publishing source.
-
-Follow the current official GitHub Pages workflow guidance:
-
-https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
-
-Use a secure workflow that:
-
-- Builds the website.
-- Builds the application.
-- Combines both outputs.
-- Uploads one Pages artifact.
-- Deploys only from the intended branch.
-- Does not deploy pull requests from untrusted contexts.
-- Uses the minimum required workflow permissions.
-
-Do not use deprecated deployment mechanisms when the official Actions-based method is available.
-
-## 12.4. Repository structure
-
-Choose a structure that fits the selected stack.
-
-A reasonable starting point is:
-
-```text
-waymark/
-├── .github/
-│   ├── workflows/
-│   ├── ISSUE_TEMPLATE/
-│   └── dependabot.yml
-├── app/
-├── website/
-├── data/
-├── docs/
-│   ├── ARCHITECTURE.md
-│   ├── DATA_SOURCES.md
-│   ├── DEVELOPMENT.md
-│   └── RELEASES.md
-├── screenshots/
-├── AGENTS.md
-├── README.md
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── LICENSE
-└── package.json
-```
-
-Adapt this structure if necessary.
-
-Do not create empty directories and unnecessary files simply to match a diagram.
-
----
-
-# 13. Website Requirements
-
-The project website is part of the deliverable, not an optional future idea.
-
-It must include:
-
-1. Home.
-2. Features.
-3. Screenshots.
-4. Data Sources.
-5. Documentation.
-6. Changelog.
-7. About.
-8. A clear link to open the application.
-
-## 13.1. Home
-
-Explain:
-
-- What Waymark does.
-- Where its data comes from.
-- Why the application exists.
-- How to open the dashboard.
-
-Use the tagline:
-
-**Know before you go.**
-
-## 13.2. Screenshots
-
-The user will provide genuine application screenshots separately.
-
-Do not generate fake screenshots or represent mockups as real product screenshots.
-
-Before the user provides screenshots, create a deliberate placeholder state that can be replaced later.
-
-## 13.3. Data Sources
-
-Explain the source, the meaning of advisory levels, update behavior, and limitations.
-
-Include the official source link.
-
-## 13.4. About
-
-State clearly that Waymark is an independent open-source project and is not an official U.S. Department of State product.
-
----
-
-# 14. Documentation Requirements
-
-Maintain the following files:
-
-## README.md
-
-Must include:
-
-- Project description.
-- Main features.
-- Screenshots or clearly marked placeholders.
-- Online application link when deployed.
-- Website link when deployed.
-- Data-source attribution.
-- Technology overview.
-- Development instructions.
-- License.
-- Disclaimer.
-
-## CHANGELOG.md
-
-Use a consistent versioned changelog.
-
-Do not list features that are not actually implemented.
-
-## CONTRIBUTING.md
-
-Explain:
-
-- How to set up the project.
-- How to run it locally.
-- How to run checks.
-- Commit message expectations.
-- Pull request expectations.
-- General contribution guidelines.
-
-## docs/ARCHITECTURE.md
-
-Explain:
-
-- Technology decisions.
-- Application structure.
-- Data flow.
-- Normalization.
-- Persistence.
-- Static hosting approach.
-- Deployment architecture.
-
-## docs/DATA_SOURCES.md
-
-Explain:
-
-- Official sources.
-- Source URLs.
-- API endpoints.
-- Verified schema.
-- Known limitations.
-- Advisory code mapping.
-- Update frequency.
-- Regional data handling.
-- Attribution.
-
-## docs/DEVELOPMENT.md
-
-Explain setup, local development, build commands, tests, and troubleshooting.
-
-## docs/RELEASES.md
-
-Document the release process and versioning.
-
----
-
-# 15. Licensing and Third-Party Assets
-
-The project license is GPL-3.0.
-
-Use the complete official license text, not a manually shortened summary.
-
-Official source:
-
-https://www.gnu.org/licenses/gpl-3.0.html
-
-Check the licenses of:
-
-- Dependencies.
-- Icons.
-- Fonts.
-- Flag assets.
-- Images.
-- UI components.
-- Build tools.
-
-Do not copy assets from other projects without checking their licenses.
-
-Keep license and attribution information where required.
-
-Do not claim that the government's data, external maps, or third-party assets are automatically covered by the Waymark software license.
-
----
-
-# 16. Testing and Quality Assurance
-
-Testing is mandatory.
-
-At minimum, implement tests for:
-
-## 16.1. Data normalization
-
-- Every known standard advisory code.
-- Special regional-risk codes.
-- Unknown codes.
-- Null values.
-- Invalid records.
-- Duplicate records.
-- Missing names.
-- Missing ISO codes.
-- Invalid advisory URLs.
-- Invalid dates.
-- Regional and country record relationships.
-- Safe grouping and sorting.
-
-## 16.2. Data integration
-
-- Successful source responses.
-- Empty responses.
-- Unexpected response structures.
-- Network errors.
-- Timeout handling.
-- Rate-limit responses.
-- Stale cached data.
-- Failed cache parsing.
-- Successful replacement of cached data.
-
-## 16.3. User functionality
-
-- Search.
-- Sorting.
-- Filtering.
-- Favorites.
-- View switching.
-- Theme persistence.
-- Refresh behavior.
-- Empty states.
-- Error states.
-- Destination details.
-
-## 16.4. Build and deployment
-
-- Production build.
-- Correct application base path.
-- Correct website base path.
-- Data asset location.
-- Asset URL resolution.
-- Nested route handling.
-- Deployment artifact structure.
-
-Do not declare a task complete merely because it compiles.
-
-Run the relevant tests after each meaningful implementation phase.
-
----
-
-# 17. Security and Reliability
-
-Follow least-privilege principles.
-
-- Never expose tokens in frontend code.
-- Never commit secrets.
-- Never use `dangerouslySetInnerHTML` for untrusted data without an explicit, secure sanitization strategy.
-- Treat all source responses as untrusted input.
-- Validate and normalize source records.
-- Validate external links.
-- Prefer HTTPS.
-- Avoid adding unnecessary browser permissions.
-- Avoid unnecessary third-party scripts.
-- Keep workflow permissions minimal.
-- Keep dependencies updated responsibly.
-
-Never let source data execute as HTML or JavaScript.
-
-Never allow an invalid response to overwrite the last known valid snapshot.
-
----
-
-# 18. Git and Commit Standards
-
-Use Conventional Commits.
-
-Examples:
-
-```text
-feat: add destination search
-feat: implement advisory details
-fix: preserve special regional risk codes
-fix: resolve github pages base path
-docs: document source data architecture
-test: add advisory normalization coverage
-refactor: separate source adapter from UI
-chore: update dependencies
-ci: add scheduled data synchronization
-```
-
-Rules:
-
-- Commit logically related changes together.
-- Avoid meaningless commits.
-- Do not commit temporary logs or build artifacts.
-- Do not commit secrets.
-- Keep the working tree clean when practical.
-- Do not amend or rewrite pushed commits unless the user explicitly asks.
-- Inspect `git status` before destructive operations.
-
-Create meaningful milestones in Git history.
-
----
-
-# 19. Releases
-
-Use Semantic Versioning:
-
-```text
-MAJOR.MINOR.PATCH
-```
-
-Suggested development progression:
-
-- `v0.1.0` — Project foundation.
-- `v0.2.0` — Data integration.
-- `v0.3.0` — Core dashboard.
-- `v0.4.0` — Destination details and regional information.
-- `v0.5.0` — Favorites and preferences.
-- `v0.6.0` — Website and documentation.
-- `v0.8.0` — Feature-complete beta.
-- `v1.0.0` — Stable public release.
-
-These are suggestions, not mandatory release dates or a requirement to create every intermediate tag.
-
-You are allowed to publish releases autonomously when the relevant quality gates are satisfied.
-
-Never label an incomplete or unverified build as stable.
-
----
-
-# 20. Definition of Done
-
-A task is complete only when:
-
-- The implementation exists.
-- The relevant tests pass.
-- Type checks pass where applicable.
-- The production build succeeds.
-- No known regression has been introduced.
-- Documentation is updated when necessary.
-- Relevant accessibility and responsive behavior have been checked.
-- The change is committed when appropriate.
-
-The project is ready for `v1.0.0` only when:
-
-- Real source data is integrated.
-- All known level codes are handled correctly.
-- Missing data is not misrepresented.
-- Regional-risk information is preserved.
-- Search and filtering work.
-- List and card views work.
-- Destination details work.
-- Favorites work.
-- Theme selection works.
-- Data synchronization is reliable.
-- The static application works on GitHub Pages.
-- The website works on GitHub Pages.
-- CI and deployment workflows pass.
-- Documentation is complete.
-- Licensing is correct.
-- The application includes a clear source disclaimer.
-
----
-
-# 21. Mandatory Agent Workflow
-
-Before implementation:
-
-1. Read this file.
-2. Inspect the repository and its current Git state.
-3. Identify the existing environment and available tools.
-4. Research the source data.
-5. Write down uncertainties.
-6. Select a suitable architecture.
-7. Document significant technical decisions.
-
-During implementation:
-
-1. Work in small, coherent stages.
-2. Keep business logic separated from UI.
-3. Add tests with implementation.
-4. Update documentation.
-5. Run relevant checks.
-6. Commit meaningful milestones.
-
-Before publishing:
-
-1. Inspect Git status.
-2. Run tests.
-3. Run type checks.
-4. Run production builds.
-5. Verify the generated deployment artifact.
-6. Verify the application base path.
-7. Verify data provenance and timestamps.
-8. Verify no secrets or unintended files are included.
-9. Verify the deployment target.
-
-After publishing:
-
-1. Verify the actual deployed URLs.
-2. Verify the site loads.
-3. Verify the application loads.
-4. Verify data is accessible.
-5. Verify browser console errors.
-6. Verify the release information, if a release was created.
-7. Report completed work and remaining limitations.
-
----
-
-# 22. Final Engineering Principle
-
-Build Waymark as a real, maintainable open-source product.
-
-Prioritize:
-
-1. Correct data.
-2. Trustworthy presentation.
-3. Reliability.
-4. Accessibility.
-5. Excellent user experience.
-6. Maintainable code.
-7. Simple infrastructure.
-8. Clear documentation.
-
-Do not sacrifice correctness for speed or visual polish.
-
-Do not sacrifice maintainability for unnecessary complexity.
-
-Do not invent functionality, data, sources, or successful deployment results.
-
-When uncertain, investigate first, choose the safest technically sound approach, document the decision, and continue autonomously.
+**Primary objective: Build a reliable, polished, fully functional native Android application and preserve the Waymark website as a separate, useful project website.**
