@@ -165,10 +165,24 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
                 )
             } else {
                 Spacer(GlanceModifier.height(6.dp))
+                val cardCount = snapshot.cards.size
                 LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
-                    items(snapshot.cards, itemId = { it.id.hashCode().toLong() }) { card ->
-                        CountryItem(card = card, config = snapshot.config, colors = colors)
-                        Spacer(GlanceModifier.height(10.dp))
+                    items(
+                        count = cardCount,
+                        itemId = { index -> snapshot.cards[index].id.hashCode().toLong() },
+                    ) { index ->
+                        val card = snapshot.cards[index]
+                        CountryItem(
+                            card = card,
+                            config = snapshot.config,
+                            colors = colors,
+                            isFirst = index == 0,
+                            isLast = index == cardCount - 1,
+                            isSingle = cardCount == 1,
+                        )
+                        if (index < cardCount - 1) {
+                            Spacer(GlanceModifier.height(2.dp))
+                        }
                     }
                 }
             }
@@ -224,60 +238,142 @@ private fun IconButton(
 }
 
 @Composable
-private fun CountryItem(card: CountryCard, config: WidgetConfigEntity, colors: WidgetColors) {
+private fun CountryItemContent(card: CountryCard, config: WidgetConfigEntity, colors: WidgetColors, columnModifier: GlanceModifier = GlanceModifier.fillMaxWidth()) {
+    if (config.showFlag) {
+        Box(
+            modifier = GlanceModifier
+                .size(30.dp)
+                .cornerRadius(10.dp)
+                .background(colors.chip),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = flagEmoji(card.isoAlpha2),
+                style = TextStyle(fontSize = 16.sp),
+            )
+        }
+        Spacer(GlanceModifier.width(8.dp))
+    }
+
+    Column(modifier = columnModifier) {
+        if (config.showCountryName) {
+            Text(
+                text = card.name,
+                style = TextStyle(
+                    color = colors.foreground,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                ),
+                maxLines = 1,
+            )
+        }
+        if (config.showLevel) {
+            Text(
+                text = levelText(card),
+                style = TextStyle(color = levelColor(card), fontWeight = FontWeight.Medium, fontSize = 12.sp),
+                maxLines = 1,
+            )
+        }
+        if (config.showDate) {
+            Text(
+                text = dateText(card.advisoryDate),
+                style = TextStyle(color = colors.muted, fontSize = 11.sp),
+                maxLines = 1,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CountryItem(
+    card: CountryCard,
+    config: WidgetConfigEntity,
+    colors: WidgetColors,
+    isFirst: Boolean,
+    isLast: Boolean,
+    isSingle: Boolean,
+) {
+    val r = config.cornerRadius.coerceIn(0, 20)
+
+    if (isSingle) {
+        // Single card: round all corners.
+        Row(
+            modifier = GlanceModifier
+                .fillMaxWidth()
+                .let { m -> if (r > 0) m.cornerRadius(r.dp).background(colors.row) else m.background(colors.row) }
+                .padding(horizontal = 10.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
+        }
+        return
+    }
+
+    if (isFirst) {
+        // Top card: round top corners only. Use a Box with bottom-aligned filler.
+        Box(
+            modifier = GlanceModifier.fillMaxWidth(),
+            contentAlignment = Alignment.BottomCenter,
+        ) {
+            Row(
+                modifier = GlanceModifier
+                    .fillMaxWidth()
+                    .let { m -> if (r > 0) m.cornerRadius(r.dp).background(colors.row) else m.background(colors.row) }
+                    .padding(horizontal = 10.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
+            }
+            if (r > 0) {
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(r.dp)
+                        .background(colors.row),
+                ) {}
+            }
+        }
+        return
+    }
+
+    if (isLast) {
+        // Bottom card: round bottom corners only. Use a Box with top-aligned filler.
+        Box(
+            modifier = GlanceModifier.fillMaxWidth(),
+            contentAlignment = Alignment.TopCenter,
+        ) {
+            if (r > 0) {
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(r.dp)
+                        .background(colors.row),
+                ) {}
+            }
+            Row(
+                modifier = GlanceModifier
+                    .fillMaxWidth()
+                    .let { m -> if (r > 0) m.cornerRadius(r.dp).background(colors.row) else m.background(colors.row) }
+                    .padding(horizontal = 10.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
+            }
+        }
+        return
+    }
+
+    // Middle card: no rounding.
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .cornerRadius(14.dp)
             .background(colors.row)
-            .clickable(actionStartActivity<MainActivity>(actionParametersOf(COUNTRY_ID_KEY to card.id)))
             .padding(horizontal = 10.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (config.showFlag) {
-            Box(
-                modifier = GlanceModifier
-                    .size(30.dp)
-                    .cornerRadius(10.dp)
-                    .background(colors.chip),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = flagEmoji(card.isoAlpha2),
-                    style = TextStyle(fontSize = 16.sp),
-                )
-            }
-            Spacer(GlanceModifier.width(8.dp))
-        }
-
-        Column(modifier = GlanceModifier.defaultWeight()) {
-            if (config.showCountryName) {
-                Text(
-                    text = card.name,
-                    style = TextStyle(
-                        color = colors.foreground,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                    ),
-                    maxLines = 1,
-                )
-            }
-            if (config.showLevel) {
-                Text(
-                    text = levelText(card),
-                    style = TextStyle(color = levelColor(card), fontWeight = FontWeight.Medium, fontSize = 12.sp),
-                    maxLines = 1,
-                )
-            }
-            if (config.showDate) {
-                Text(
-                    text = dateText(card.advisoryDate),
-                    style = TextStyle(color = colors.muted, fontSize = 11.sp),
-                    maxLines = 1,
-                )
-            }
-        }
+        CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
     }
+    return
 }
 
 internal data class WidgetColors(

@@ -174,7 +174,7 @@ private fun WidgetSettingsScreen(
             Text("Background opacity: ${backgroundAlpha.roundToInt()}%", style = MaterialTheme.typography.bodyMedium)
             Slider(
                 value = backgroundAlpha,
-                onValueChange = { backgroundAlpha = it },
+                onValueChange = { backgroundAlpha = (it / 5f).roundToInt() * 5f },
                 valueRange = 0f..100f,
                 steps = 20,
             )

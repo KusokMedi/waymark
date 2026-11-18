@@ -5,6 +5,15 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.6] - 2026-11-18
+
+### Changed
+
+- Widget country cards now have per-position corner rounding: top card rounds
+  top corners, bottom card rounds bottom corners, middle cards are square,
+  single card rounds all corners.
+- Widget transparency slider now snaps to 5% increments (0, 5, 10, …, 100).
+
 ## [1.3.5] - 2026-11-18
 
 ### Changed
