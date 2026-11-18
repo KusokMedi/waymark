@@ -187,7 +187,7 @@ fun CountryCardView(
 }
 
 @Composable
-fun AdvisoryDateText(value: String?, modifier: Modifier = Modifier) {
+fun AdvisoryDateText(value: String?, modifier: Modifier = Modifier, showYear: Boolean = false) {
     val parts = advisoryDateParts(value)
     val year = parts.second
     Column(modifier = modifier) {
@@ -196,7 +196,7 @@ fun AdvisoryDateText(value: String?, modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        if (year != null) {
+        if (showYear && year != null) {
             Text(
                 year,
                 style = MaterialTheme.typography.labelSmall,

@@ -59,7 +59,7 @@ object SyncScheduler {
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork(
             UNIQUE_ONE_TIME,
-            ExistingWorkPolicy.KEEP,
+            ExistingWorkPolicy.REPLACE,
             request,
         )
     }

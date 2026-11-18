@@ -119,7 +119,7 @@ fun ExploreScreen(
                     CountryCardView(
                         card = card,
                         onClick = { onOpenCountry(card.id) },
-                        onFavorite = { onToggleFavorite(card) },
+                        onFavorite = null,
                         onWatchlist = { onToggleWatchlist(card) },
                         showWatchlistAction = true,
                     )

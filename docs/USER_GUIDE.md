@@ -24,7 +24,7 @@ The Watchlist tab is the home screen. Each card shows:
 - The official advisory publication date.
 - A star for favorites.
 
-You can sort the watchlist (Default, Favorites, A–Z, Z–A, Level 1–4, Level 4–1).
+You can sort the watchlist (A–Z by default, Z–A, Favorites, Level 1–4, Level 4–1).
 Tap the refresh action in the top bar, or use **Settings → Synchronisation →
 Sync now**, to request an update. If a sync fails, tap the status banner to view
 synchronization details. Android may delay background work.
@@ -36,7 +36,6 @@ Explore lists every destination in the downloaded catalogue.
 - Search by name, ISO alpha-2 or ISO alpha-3.
 - Sort by A–Z, Z–A, Level 1–4 or Level 4–1.
 - Tap the add/check button to add or remove a country.
-- Tap the star to mark a favorite.
 
 When you add a country to your watchlist and advisory notifications are enabled,
 per-country notifications are enabled by default for that country.

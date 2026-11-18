@@ -107,10 +107,7 @@ internal suspend fun loadWidgetData(context: Context, widgetId: Int): WidgetData
 
     val ids = db.watchlistDao().getAll().map { it.countryId }
     val cards = AdvisoryRepository(db).countryCardsByIds(ids)
-    val syncState = normalizeSyncState(db.syncStateDao().get())
-    if (syncState != null && syncState != db.syncStateDao().get()) {
-        db.syncStateDao().upsert(syncState)
-    }
+    val syncState = db.syncStateDao().get()
     return WidgetData(widgetId, config, cards, syncState, appSettings.dynamicColor)
 }
 
@@ -155,7 +152,10 @@ internal fun WatchlistWidgetContent(data: WidgetData) {
                 Spacer(GlanceModifier.height(6.dp))
                 LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                     items(data.cards, itemId = { it.id.hashCode().toLong() }) { card ->
-                        CountryRow(card, data.config, palette)
+                        Column {
+                            CountryRow(card, data.config, palette)
+                            Spacer(GlanceModifier.height(6.dp))
+                        }
                     }
                 }
             }
@@ -318,7 +318,7 @@ class OpenWidgetSettingsAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val widgetId = GlanceAppWidgetManager(context).getAppWidgetId(glanceId)
         val intent = Intent(context, WidgetConfigActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
         }
         context.startActivity(intent)
@@ -377,7 +377,7 @@ internal fun advisoryDateLine(card: CountryCard): String {
     if (value.isNullOrBlank()) return "Advisory date unknown"
     return try {
         val parsed = java.time.LocalDate.parse(value)
-        "Advisory " + parsed.format(java.time.format.DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault()))
+        "Advisory " + parsed.format(java.time.format.DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
     } catch (_: Exception) {
         "Advisory date unknown"
     }

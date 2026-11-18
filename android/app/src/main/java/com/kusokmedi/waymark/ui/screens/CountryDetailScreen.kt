@@ -54,7 +54,6 @@ import com.kusokmedi.waymark.domain.CountryDetailData
 import com.kusokmedi.waymark.ui.AppViewModel
 import com.kusokmedi.waymark.ui.components.CountryFlag
 import com.kusokmedi.waymark.ui.components.LevelChip
-import com.kusokmedi.waymark.ui.components.formatAdvisoryDate
 import com.kusokmedi.waymark.ui.components.formatTimestamp
 import com.kusokmedi.waymark.ui.components.levelColor
 import java.time.Instant
@@ -190,7 +189,7 @@ private fun AdvisoryCard(detail: CountryDetailData, context: android.content.Con
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text("Official advisory", style = MaterialTheme.typography.labelLarge)
-            com.kusokmedi.waymark.ui.components.AdvisoryDateText(detail.advisoryDate)
+            com.kusokmedi.waymark.ui.components.AdvisoryDateText(detail.advisoryDate, showYear = true)
             val record = detail.countryRecord
             if (!record?.assistedDepartureText.isNullOrBlank()) {
                 Spacer(Modifier.height(8.dp))
@@ -280,7 +279,7 @@ private fun RegionRow(region: com.kusokmedi.waymark.data.local.AdvisoryEntity) {
         Row(modifier = Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(region.destinationName, fontWeight = FontWeight.SemiBold)
-                com.kusokmedi.waymark.ui.components.AdvisoryDateText(region.advisoryDate)
+                com.kusokmedi.waymark.ui.components.AdvisoryDateText(region.advisoryDate, showYear = true)
             }
             LevelChip(region.level, region.containsHigherRiskAreas, compact = true)
         }

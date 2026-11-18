@@ -40,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,8 +50,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.kusokmedi.waymark.BuildConfig
 import com.kusokmedi.waymark.data.local.SyncStateEntity
 import com.kusokmedi.waymark.data.local.ThemeMode
@@ -59,6 +63,7 @@ import com.kusokmedi.waymark.ui.AppViewModel
 import com.kusokmedi.waymark.ui.components.SyncBanner
 import com.kusokmedi.waymark.ui.components.formatTimestamp
 import com.kusokmedi.waymark.waymarkContainer
+import android.os.PowerManager
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -206,7 +211,12 @@ fun NotificationSettingsScreen(viewModel: AppViewModel, onBack: () -> Unit) {
                 @Suppress("DEPRECATION")
                 result.data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
             }
-            val value = uri?.toString() ?: "silent"
+            val defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val value = when {
+                uri == null -> "silent"
+                uri == defaultUri || uri == Settings.System.DEFAULT_NOTIFICATION_URI -> ""
+                else -> uri.toString()
+            }
             viewModel.setNotificationSoundUri(value)
             container.notifier.applySettings(value, settings.notificationImportance)
         }
@@ -262,7 +272,7 @@ fun NotificationSettingsScreen(viewModel: AppViewModel, onBack: () -> Unit) {
                     putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
                     val existing = settings.notificationSoundUri
                     val existingUri = when {
-                        existing.isBlank() -> Settings.System.DEFAULT_NOTIFICATION_URI
+                        existing.isBlank() -> RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                         existing == "silent" -> null
                         else -> runCatching { Uri.parse(existing) }.getOrNull()
                     }
@@ -274,7 +284,10 @@ fun NotificationSettingsScreen(viewModel: AppViewModel, onBack: () -> Unit) {
             val soundLabel = when {
                 settings.notificationSoundUri.isBlank() -> "Default system sound"
                 settings.notificationSoundUri == "silent" -> "Silent"
-                else -> "Custom sound selected"
+                else -> runCatching {
+                    RingtoneManager.getRingtone(context, Uri.parse(settings.notificationSoundUri))
+                        ?.getTitle(context)
+                }.getOrNull() ?: "Custom sound"
             }
             Text("Current: $soundLabel", style = MaterialTheme.typography.bodySmall)
 
@@ -285,7 +298,27 @@ fun NotificationSettingsScreen(viewModel: AppViewModel, onBack: () -> Unit) {
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedButton(onClick = { requestBatteryExemption(context) }) { Text("Battery optimization settings") }
+            val lifecycleOwner = LocalLifecycleOwner.current
+            var ignoringBattery by remember { mutableStateOf(isIgnoringBatteryOptimizations(context)) }
+            DisposableEffect(lifecycleOwner) {
+                val observer = LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_RESUME) {
+                        ignoringBattery = isIgnoringBatteryOptimizations(context)
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+            }
+            if (ignoringBattery) {
+                OutlinedButton(onClick = {}, enabled = false) { Text("Battery optimization allowed") }
+                Text(
+                    "Battery optimization exemption is already allowed for Waymark.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            } else {
+                OutlinedButton(onClick = { requestBatteryExemption(context) }) { Text("Allow background updates") }
+            }
         }
     }
 }
@@ -441,6 +474,12 @@ private fun DetailRow(label: String, value: String) {
         Text(label, fontWeight = FontWeight.SemiBold)
         Text(value, style = MaterialTheme.typography.bodyMedium)
     }
+}
+
+private fun isIgnoringBatteryOptimizations(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true
+    val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager ?: return false
+    return pm.isIgnoringBatteryOptimizations(context.packageName)
 }
 
 private fun requestBatteryExemption(context: Context) {

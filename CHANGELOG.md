@@ -5,6 +5,34 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-18
+
+### Changed
+
+- Onboarding country selection shows **Skip** when no countries are selected.
+- Watchlist sorting defaults to A–Z with options A–Z, Z–A, Favorites, Level 1–4,
+  Level 4–1.
+- Advisory date year is shown in country overview/detail; cards, lists and
+  widgets show advisory date without year.
+- Widget rows have clearer spacing between countries.
+
+### Removed
+
+- Favorite (star) action from Explore/search cards.
+- “Default” watchlist sort option.
+
+### Fixed
+
+- Notification sound label updates correctly when switching between default,
+  silent and custom sounds.
+- Battery optimization action reflects when exemption is already allowed in
+  Settings and onboarding.
+- Widget settings save and apply reliably and return to the home screen instead
+  of the app.
+- Widget refresh/update behavior and syncing indicator are more reliable; manual
+  refresh is no longer ignored when a sync request is already queued.
+- Spacing between countries in widgets when multiple are shown.
+
 ## [1.2.0] - 2026-11-18
 
 ### Added

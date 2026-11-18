@@ -58,6 +58,7 @@ class WidgetConfigActivity : ComponentActivity() {
             finish()
             return
         }
+        setResult(RESULT_CANCELED, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
         val container = application.waymarkContainer()
         setContent {
             WaymarkTheme {

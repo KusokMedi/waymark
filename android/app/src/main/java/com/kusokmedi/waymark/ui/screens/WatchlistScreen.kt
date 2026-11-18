@@ -38,10 +38,9 @@ import com.kusokmedi.waymark.ui.components.CountryCardView
 import com.kusokmedi.waymark.ui.components.SyncBanner
 
 private enum class WatchlistSort(val label: String) {
-    DEFAULT("Default"),
-    FAVORITES("Favorites"),
     NAME_ASC("A–Z"),
     NAME_DESC("Z–A"),
+    FAVORITES("Favorites"),
     LEVEL_ASC("Level 1–4"),
     LEVEL_DESC("Level 4–1"),
 }
@@ -57,15 +56,14 @@ fun WatchlistScreen(
     onExplore: () -> Unit,
     onOpenSyncDetails: () -> Unit,
 ) {
-    var sort by remember { mutableStateOf(WatchlistSort.DEFAULT) }
+    var sort by remember { mutableStateOf(WatchlistSort.NAME_ASC) }
     val sorted = remember(countries, sort) {
         when (sort) {
-            WatchlistSort.DEFAULT -> countries.sortedBy { it.position }
-            WatchlistSort.FAVORITES -> countries.sortedWith(
-                compareByDescending<CountryCard> { it.isFavorite }.thenBy { it.position }
-            )
             WatchlistSort.NAME_ASC -> countries.sortedBy { it.name.lowercase() }
             WatchlistSort.NAME_DESC -> countries.sortedByDescending { it.name.lowercase() }
+            WatchlistSort.FAVORITES -> countries.sortedWith(
+                compareByDescending<CountryCard> { it.isFavorite }.thenBy { it.name.lowercase() }
+            )
             WatchlistSort.LEVEL_ASC -> countries.sortedWith(
                 compareBy<CountryCard> { it.level?.number ?: Int.MAX_VALUE }.thenBy { it.name.lowercase() }
             )

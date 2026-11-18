@@ -29,6 +29,8 @@
         <activity
             android:name=".widget.WidgetConfigActivity"
             android:exported="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
             android:theme="@style/Theme.Waymark">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
