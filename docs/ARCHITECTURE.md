@@ -119,8 +119,8 @@ the periodic request.
 
 ## Known limitations
 
-- Country flags render as styled ISO monograms; a bundled flag asset set is not
-  yet included.
+- Country flags are rendered as emoji derived from ISO country codes; their
+  appearance depends on the device and system font.
 - Glance/RemoteViews cannot express arbitrary layouts; the widget builder is
   limited to supported element toggles and 1–3 columns.
 - The official ArcGIS layer is the only source. If it changes shape or

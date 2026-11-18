@@ -163,4 +163,6 @@ data class WidgetConfigEntity(
     val backgroundStyle: String = "surface",
     val columns: Int = 1,
     val updatedAt: Long = 0,
+    val widgetType: String = "watchlist",
+    val singleCountryId: String? = null,
 )

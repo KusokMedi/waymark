@@ -54,6 +54,7 @@ class SyncEngine(
         val state = db.syncStateDao().get() ?: SyncStateEntity()
         val attemptAt = System.currentTimeMillis()
         db.syncStateDao().upsert(state.copy(lastAttemptAt = attemptAt, status = "running", message = null))
+        WaymarkWidgetUpdater.updateAll(context)
 
         try {
             val fetched = client.fetchAll(etag = state.etag, lastModified = state.lastModified)
@@ -67,6 +68,7 @@ class SyncEngine(
                         firstSyncCompleted = true,
                     )
                 )
+                WaymarkWidgetUpdater.updateAll(context)
                 return SyncOutcome.Success(changeCount = 0, notModified = true)
             }
 
@@ -164,16 +166,18 @@ class SyncEngine(
             db.syncStateDao().upsert(
                 state.copy(lastAttemptAt = attemptAt, status = "idle", message = "Synchronization cancelled")
             )
+            WaymarkWidgetUpdater.updateAll(context)
             throw e
         } catch (e: Exception) {
             val message = e.message ?: "Synchronization failed"
             db.syncStateDao().upsert(
                 state.copy(
                     lastAttemptAt = attemptAt,
-                    status = if (e is SourceException) "failed" else "failed",
+                    status = "failed",
                     message = message,
                 )
             )
+            WaymarkWidgetUpdater.updateAll(context)
             notifier.notifySyncProblem(message)
             SyncOutcome.Failure(message)
         }

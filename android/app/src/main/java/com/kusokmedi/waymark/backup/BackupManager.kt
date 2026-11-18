@@ -99,6 +99,8 @@ data class BackupWidget(
     val showCountryName: Boolean = true,
     val backgroundStyle: String = "surface",
     val columns: Int = 1,
+    val widgetType: String = "watchlist",
+    val singleCountryId: String? = null,
 )
 
 @Serializable
@@ -215,6 +217,8 @@ class BackupManager(
                     showCountryName = it.showCountryName,
                     backgroundStyle = it.backgroundStyle,
                     columns = it.columns,
+                    widgetType = it.widgetType,
+                    singleCountryId = it.singleCountryId,
                 )
             },
             settings = BackupSettings(
@@ -368,6 +372,8 @@ class BackupManager(
                             backgroundStyle = it.backgroundStyle,
                             columns = it.columns.coerceIn(1, 3),
                             updatedAt = System.currentTimeMillis(),
+                            widgetType = it.widgetType.ifBlank { "watchlist" },
+                            singleCountryId = it.singleCountryId,
                         )
                     }
                 )

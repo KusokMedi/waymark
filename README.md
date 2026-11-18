@@ -25,8 +25,9 @@ advertising.
   offline states and preserved cached data.
 - Optional notifications for worsening, improvement, new regional records and
   significant detail changes. The first synchronization never notifies.
-- Real App Widgets (Jetpack Glance): compact, list and grid layouts, each
-  instance with independent configuration.
+- Real App Widgets (Jetpack Glance): a 2×2 resizable watchlist widget and a
+  4×2 resizable single-country widget, each instance with independent
+  configuration.
 - JSON and ZIP backup/restore with validation and merge/replace modes.
 - System light/dark theme and dynamic color on Android 12+.
 

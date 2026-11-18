@@ -5,6 +5,24 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-18
+
+### Added
+
+- Emoji country flags across the app and widgets.
+- A single-country home screen widget (default 4×2, resizable) with country selection when added.
+- Widget sync status text showing when data is updating and when it was last updated.
+
+### Changed
+
+- The watchlist widget is now 2×2 by default, resizable, shows only countries from your watchlist, and is added without a configuration screen.
+- Widget refresh now triggers synchronization so update status is visible.
+- Refreshed widget appearance with rounded corners and clearer layout.
+
+### Removed
+
+- The separate 3×1 compact widget (replaced by the resizable watchlist widget).
+
 ## [1.0.0] - 2026-11-18
 
 ### Added

@@ -17,7 +17,7 @@ It establishes the baseline for history and never sends notifications.
 
 The Watchlist tab is the home screen. Each card shows:
 
-- Country name and ISO monogram.
+- Country flag and name.
 - Advisory level with its official wording.
 - A note when the country contains areas with a higher security risk.
 - The official advisory publication date.

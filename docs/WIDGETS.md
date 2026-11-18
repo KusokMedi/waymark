@@ -5,72 +5,60 @@ not web views, shortcuts or in-app simulations.
 
 ## Available widgets
 
-| Widget | Typical size | Behavior |
+| Widget | Default size | Behavior |
 |---|---|---|
-| Waymark Watchlist | 4×2 and larger | List or grid of selected countries, with a refresh action |
-| Waymark Compact | 3×1 | A single country card |
+| Waymark Watchlist | 2×2 (resizable) | Shows countries from your watchlist with current advisory levels and sync status |
+| Waymark Country | 4×2 (resizable) | Shows the current advisory for one selected country |
 
 Both widgets are resizable. Because Glance uses `SizeMode.Responsive`, content
-adapts to the launcher-provided size rather than assuming one fixed layout.
+adapts to the launcher-provided size.
 
 ## Configuration
 
-Adding a widget opens **Widget settings**:
+- **Waymark Watchlist** has no configuration screen. It is added immediately and
+  always shows the countries in your current watchlist, in watchlist order.
+  Manage which countries appear by editing your watchlist in the app.
+- **Waymark Country** opens a country picker when added. Choose one country to
+  display. To change the country, remove and re-add the widget.
 
-- **Layout** — compact, list or grid.
-- **Columns** — 1 to 3 for grid layouts.
-- **Show advisory date** — official publication date.
-- **Show advisory level** — level number and wording.
-- **Show flag monogram** — ISO monogram (see limitations).
-- **Show country name**.
-- **Transparent background** — translucent surface.
-- **Selected countries** — search, select, reorder with up/down buttons.
-- If no countries are selected, the widget follows your current watchlist.
-
-Every widget instance stores its own configuration keyed by App Widget ID, so
-two widgets on the same home screen can show different countries and layouts.
+Every widget instance stores its own configuration keyed by App Widget ID.
 Configuration survives process restarts and device reboots because it lives in
-the Room database.
+the local Room database.
 
 ## Behavior
 
-- Widgets read from the local database only; they never start network work.
-- Content refreshes after a successful synchronization and after configuration
-  changes.
-- The refresh icon in the widget header triggers a redraw from local data.
+- Widgets read from the local database; the refresh action triggers a
+  synchronization so new data can be fetched and the status updates.
+- The header shows sync status: `Updating…` while a sync is running, or the last
+  successful update time when idle (for example `Updated 14:32`).
 - Tapping a country opens its dashboard in the app.
-- With an empty database the widget shows a clear empty state instead of a
-  fabricated advisory.
+- With an empty watchlist (or no country selected for the single-country
+  widget) the widget shows a clear empty state instead of a fabricated advisory.
 - Deleting a widget removes its stored configuration.
 
 ## Data shown
 
-Every country row can show:
+- Country flag (emoji, derived from the country code).
+- Country name.
+- Advisory level with official wording, or `Unknown` when unavailable.
+- Advisory publication date when available.
+- Regional advisory count on the single-country widget when present.
 
-- Country name (optional).
-- Flag monogram (optional).
-- Advisory level with official wording (optional).
-- Advisory publication date (optional).
-
-The widget never shows a level when the source data is unknown; it shows
-`Unknown`.
+The widget never invents an advisory level; unknown data is shown as unknown.
 
 ## Limitations
 
 Android's widget APIs constrain what is possible. Waymark does not promise
 arbitrary layouts or interactions:
 
-- Glance/RemoteViews supports a limited set of views; scrolling lists are
-  supported through Glance's `LazyColumn`, but nested scrolling and free-form
-  positioning are not.
-- Columns are limited to 1–3.
+- Glance/RemoteViews supports a limited set of views; rich scrolling and
+  free-form positioning are constrained by the platform.
 - Exact dimensions are controlled by the launcher; `SizeMode.Responsive`
-  provides sensible breakpoints rather than pixel-perfect layouts.
+  provides breakpoints rather than pixel-perfect layouts.
 - Widget updates are subject to Android scheduling. There is no guaranteed
-  refresh time.
-- Country flags currently render as styled ISO monograms. A bundled flag asset
-  set is not yet included; the asset contract is documented in
-  [ARCHITECTURE.md](ARCHITECTURE.md).
+  refresh time, and continuous animations are not available in App Widgets.
+- Flags are rendered as emoji based on ISO country codes. Appearance may vary
+  slightly by device and system font.
 
 ## Testing
 

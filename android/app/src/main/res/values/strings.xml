@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Waymark</string>
-    <string name="widget_default_name">Waymark Watchlist</string>
-    <string name="widget_compact_name">Waymark Compact</string>
-    <string name="widget_description">Your travel advisory watchlist</string>
-    <string name="widget_compact_description">A single-country advisory card</string>
+    <string name="widget_watchlist_name">Waymark Watchlist</string>
+    <string name="widget_single_name">Waymark Country</string>
+    <string name="widget_watchlist_description">Shows countries from your watchlist with current advisory levels.</string>
+    <string name="widget_single_description">Shows the current advisory for one selected country.</string>
     <string name="notification_channel_changes">Advisory changes</string>
     <string name="notification_channel_changes_description">Notifies you about meaningful changes for countries you watch.</string>
     <string name="notification_channel_sync">Synchronization</string>

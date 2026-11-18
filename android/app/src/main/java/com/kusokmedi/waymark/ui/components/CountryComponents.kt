@@ -89,24 +89,17 @@ fun LevelChip(
 
 @Composable
 fun CountryFlag(isoAlpha2: String?, isoAlpha3: String?, modifier: Modifier = Modifier) {
-    val label = isoAlpha2 ?: isoAlpha3?.take(2) ?: "?"
-    val palette = listOf(
-        Color(0xFF335F52), Color(0xFF5B4B8A), Color(0xFF8A4B3D),
-        Color(0xFF2F5D8A), Color(0xFF6A5B00), Color(0xFF4E6359),
-    )
-    val color = palette[(isoAlpha2?.hashCode() ?: label.hashCode()).let { if (it == Int.MIN_VALUE) 0 else kotlin.math.abs(it) } % palette.size]
+    val emoji = com.kusokmedi.waymark.domain.flagEmoji(isoAlpha2 ?: isoAlpha3?.let { com.kusokmedi.waymark.domain.IsoCountries.alpha2(it) })
     Box(
         modifier = modifier
             .size(width = 46.dp, height = 34.dp)
-            .background(color, RoundedCornerShape(6.dp))
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.35f), RoundedCornerShape(6.dp)),
+            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            label,
-            color = Color.White,
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold,
+            emoji,
+            style = MaterialTheme.typography.titleLarge,
         )
     }
 }

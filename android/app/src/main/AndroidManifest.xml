@@ -35,12 +35,11 @@
         </activity>
 
         <receiver
-            android:name=".widget.WaymarkWidgetReceiver"
+            android:name=".widget.WatchlistWidgetReceiver"
             android:exported="true"
-            android:label="@string/widget_default_name">
+            android:label="@string/widget_watchlist_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.kusokmedi.waymark.widget.REFRESH" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
@@ -48,16 +47,15 @@
         </receiver>
 
         <receiver
-            android:name=".widget.CompactWidgetReceiver"
+            android:name=".widget.SingleCountryWidgetReceiver"
             android:exported="true"
-            android:label="@string/widget_compact_name">
+            android:label="@string/widget_single_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.kusokmedi.waymark.widget.REFRESH" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/waymark_widget_compact_info" />
+                android:resource="@xml/waymark_widget_single_info" />
         </receiver>
 
     </application>
