@@ -101,8 +101,8 @@ private fun WidgetSettingsScreen(
 
     var showFlag by remember { mutableStateOf(true) }
     var showName by remember { mutableStateOf(true) }
-    var showLevel by remember { mutableStateOf(false) }
-    var showDate by remember { mutableStateOf(true) }
+    var showLevel by remember { mutableStateOf(true) }
+    var showDate by remember { mutableStateOf(false) }
     var cornerRadius by remember { mutableFloatStateOf(12f) }
     var backgroundAlpha by remember { mutableFloatStateOf(100f) }
 

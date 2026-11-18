@@ -117,7 +117,8 @@ fun CountryCardView(
     onFavorite: (() -> Unit)? = null,
     onWatchlist: (() -> Unit)? = null,
     showWatchlistAction: Boolean = false,
-    showLevel: Boolean = false,
+    showLevel: Boolean = true,
+    showDate: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -164,7 +165,9 @@ fun CountryCardView(
                             compact = true,
                         )
                     }
-                    AdvisoryDateText(card.advisoryDate)
+                    if (showDate) {
+                        AdvisoryDateText(card.advisoryDate)
+                    }
                 }
             }
             if (onFavorite != null) {

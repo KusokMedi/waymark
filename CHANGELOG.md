@@ -5,6 +5,13 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.5] - 2026-11-18
+
+### Changed
+
+- Widget now shows advisory level by default (instead of advisory date).
+- Watchlist and Explore cards now show advisory level instead of advisory date.
+
 ## [1.3.4] - 2026-11-18
 
 ### Changed
