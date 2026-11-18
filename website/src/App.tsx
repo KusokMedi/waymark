@@ -1,9 +1,7 @@
-import { useMemo, useState } from "react";
 import {
   ArrowRight,
   Bell,
   Check,
-  ChevronRight,
   Database,
   Download,
   Github,
@@ -20,61 +18,7 @@ import {
   WifiOff,
 } from "lucide-react";
 
-type Level = 1 | 2 | 3 | 4;
-
-interface SampleCountry {
-  id: string;
-  name: string;
-  iso: string;
-  level: Level;
-  higherRisk?: boolean;
-  date: string;
-  region?: string;
-  favorite?: boolean;
-}
-
-const SAMPLE_COUNTRIES: SampleCountry[] = [
-  { id: "FIN", name: "Finland", iso: "FI", level: 1, date: "13 Mar 2026", favorite: true },
-  { id: "EST", name: "Estonia", iso: "EE", level: 1, date: "4 Feb 2026" },
-  { id: "LVA", name: "Latvia", iso: "LV", level: 2, date: "19 Jan 2026" },
-  { id: "LTU", name: "Lithuania", iso: "LT", level: 1, date: "2 Mar 2026" },
-  { id: "MEX", name: "Mexico", iso: "MX", level: 2, higherRisk: true, date: "27 Feb 2026", region: "Jalisco — Reconsider Travel" },
-  { id: "JPN", name: "Japan", iso: "JP", level: 1, date: "10 Mar 2026", favorite: true },
-  { id: "COL", name: "Colombia", iso: "CO", level: 3, higherRisk: true, date: "6 Feb 2026", region: "Arauca — Do Not Travel" },
-  { id: "EGY", name: "Egypt", iso: "EG", level: 2, higherRisk: true, date: "30 Jan 2026", region: "Sinai — Reconsider Travel" },
-];
-
-const LEVEL_LABELS: Record<Level, string> = {
-  1: "Exercise Normal Precautions",
-  2: "Exercise Increased Caution",
-  3: "Reconsider Travel",
-  4: "Do Not Travel",
-};
-
-const LEVEL_NOTES: Record<Level, string> = {
-  1: "The lowest advisory level. Ordinary precautions still apply.",
-  2: "Stay alert and avoid areas with elevated risk.",
-  3: "Avoid travel unless essential. Review official guidance carefully.",
-  4: "Do not travel. The highest advisory level.",
-};
-
-function levelClass(level: Level) {
-  return `level level-${level}`;
-}
-
 export default function App() {
-  const [selectedId, setSelectedId] = useState("FIN");
-  const [tab, setTab] = useState<"watchlist" | "explore">("watchlist");
-  const [query, setQuery] = useState("");
-  const selected = SAMPLE_COUNTRIES.find((c) => c.id === selectedId) ?? SAMPLE_COUNTRIES[0];
-
-  const visible = useMemo(() => {
-    const base = tab === "watchlist" ? SAMPLE_COUNTRIES.slice(0, 5) : SAMPLE_COUNTRIES;
-    return query.trim()
-      ? base.filter((c) => c.name.toLowerCase().includes(query.trim().toLowerCase()))
-      : base;
-  }, [tab, query]);
-
   return (
     <div className="site">
       <header className="site-header">
@@ -83,17 +27,10 @@ export default function App() {
           <span>Waymark</span>
         </a>
         <nav aria-label="Primary">
-          <a href="#demo">Demo</a>
           <a href="#features">Features</a>
           <a href="#widgets">Widgets</a>
           <a href="#data">Data</a>
           <a href="#docs">Docs</a>
-          <a className="header-github" href="https://github.com/KusokMedi/waymark" target="_blank" rel="noopener noreferrer">
-            <Github size={16} /> GitHub
-          </a>
-          <a className="btn btn-small" href="https://github.com/KusokMedi/waymark/releases/latest" target="_blank" rel="noopener noreferrer">
-            <Download size={15} /> Get the app
-          </a>
         </nav>
       </header>
 
@@ -110,9 +47,6 @@ export default function App() {
             <div className="hero-actions">
               <a className="btn" href="https://github.com/KusokMedi/waymark/releases/latest" target="_blank" rel="noopener noreferrer">
                 <Download size={17} /> Download for Android
-              </a>
-              <a className="btn secondary" href="#demo">
-                Try the demo <ArrowRight size={16} />
               </a>
             </div>
             <dl className="hero-facts">
@@ -143,81 +77,6 @@ export default function App() {
                 <div className="phone-nav"><Star size={15} /><Globe2 size={15} /><History size={15} /><LayoutGrid size={15} /></div>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section id="demo" className="section demo-section">
-          <div className="section-heading">
-            <div>
-              <div className="eyebrow"><Smartphone size={14} /> Interactive preview</div>
-              <h2>See how Waymark feels</h2>
-              <p>Explore a sample watchlist and country dashboard. Everything here is demonstration data, not live travel advice.</p>
-            </div>
-            <span className="sample-badge">Sample data — not live advisories</span>
-          </div>
-          <div className="demo-shell">
-            <div className="demo-app">
-              <div className="demo-tabs" role="tablist" aria-label="Demo sections">
-                <button role="tab" aria-selected={tab === "watchlist"} className={tab === "watchlist" ? "active" : ""} onClick={() => setTab("watchlist")}>
-                  <Star size={15} /> Watchlist
-                </button>
-                <button role="tab" aria-selected={tab === "explore"} className={tab === "explore" ? "active" : ""} onClick={() => setTab("explore")}>
-                  <Globe2 size={15} /> Explore
-                </button>
-                <input
-                  type="search"
-                  placeholder="Search sample countries"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  aria-label="Search sample countries"
-                />
-              </div>
-              <div className="demo-list">
-                {visible.map((country) => (
-                  <button
-                    key={country.id}
-                    className={`demo-country ${country.id === selectedId ? "selected" : ""}`}
-                    onClick={() => setSelectedId(country.id)}
-                  >
-                    <span className="demo-flag">{country.iso}</span>
-                    <span className="demo-country-text">
-                      <strong>{country.name}</strong>
-                      <small>{LEVEL_LABELS[country.level]}</small>
-                    </span>
-                    <span className="demo-country-meta">
-                      {country.favorite && <Star size={14} className="favorite-star" aria-label="Favorite sample country" />}
-                      <span className={levelClass(country.level)}>L{country.level}</span>
-                      <ChevronRight size={16} />
-                    </span>
-                  </button>
-                ))}
-                {visible.length === 0 && <p className="demo-empty">No sample country matches that search.</p>}
-              </div>
-            </div>
-            <article className="demo-detail" aria-live="polite">
-              <div className="demo-detail-head">
-                <span className="demo-flag large">{selected.iso}</span>
-                <div>
-                  <h3>{selected.name}</h3>
-                  <small>ISO {selected.id} · Sample destination</small>
-                </div>
-              </div>
-              <div className={`advisory-banner ${levelClass(selected.level)}`}>
-                <strong>Level {selected.level}</strong>
-                <span>{LEVEL_LABELS[selected.level]}</span>
-                {selected.higherRisk && <em>Contains areas with higher security risk</em>}
-              </div>
-              <p className="demo-note">{LEVEL_NOTES[selected.level]}</p>
-              <dl className="demo-facts">
-                <div><dt>Official advisory date</dt><dd>{selected.date}</dd></div>
-                <div><dt>Regional note</dt><dd>{selected.region ?? "No separate regional note in this sample"}</dd></div>
-                <div><dt>Last sync</dt><dd>Demonstration only</dd></div>
-              </dl>
-              <p className="demo-disclaimer">
-                Sample interface data. Waymark never presents demonstration values as current official advisories.
-                The real app retrieves public data from the U.S. Department of State.
-              </p>
-            </article>
           </div>
         </section>
 
