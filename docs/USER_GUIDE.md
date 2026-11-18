@@ -6,11 +6,13 @@ Waymark walks you through four short steps:
 
 1. **Welcome** — what the app does and what it does not do.
 2. **Advisory levels** — how Levels 1–4 work and the higher-risk area note.
-3. **Choose countries** — search and select the destinations you want to follow.
-4. **Permissions** — optional. Enable advisory notifications (Android may ask for
-   notification permission), choose whether to allow mobile data for updates
-   (default is Wi-Fi only), and, if you want, allow Waymark to ignore battery
-   optimizations to reduce delays in background updates.
+3. **Permissions & network** — optional. Enable advisory notifications (Android
+   may ask for notification permission), choose whether to allow mobile data for
+   updates (default is Wi-Fi only, useful if you do not have Wi-Fi yet), and, if
+   you want, allow Waymark to ignore battery optimizations to reduce delays in
+   background updates.
+4. **Choose countries** — search and select the destinations you want to follow.
+   You can skip this and add countries later from Explore.
 
 The first synchronization downloads the country catalogue and advisory records.
 It establishes the baseline for history and never sends notifications.

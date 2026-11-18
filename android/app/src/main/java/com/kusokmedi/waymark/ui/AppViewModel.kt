@@ -11,6 +11,7 @@ import com.kusokmedi.waymark.data.local.ThemeMode
 import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.domain.CountryDetailData
 import com.kusokmedi.waymark.domain.HistoryItem
+import com.kusokmedi.waymark.widget.WaymarkWidgetUpdater
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -54,19 +55,23 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun addToWatchlist(countryId: String) = viewModelScope.launch {
         container.repository.addToWatchlist(countryId, settings.value.notificationsEnabled)
+        WaymarkWidgetUpdater.updateAll(container.context)
     }
 
     fun removeFromWatchlist(countryId: String) = viewModelScope.launch {
         container.repository.removeFromWatchlist(countryId)
+        WaymarkWidgetUpdater.updateAll(container.context)
     }
 
     fun toggleWatchlist(countryId: String, currentlyInWatchlist: Boolean) = viewModelScope.launch {
         if (currentlyInWatchlist) container.repository.removeFromWatchlist(countryId)
         else container.repository.addToWatchlist(countryId, settings.value.notificationsEnabled)
+        WaymarkWidgetUpdater.updateAll(container.context)
     }
 
     fun setFavorite(countryId: String, favorite: Boolean) = viewModelScope.launch {
         container.repository.setFavorite(countryId, favorite)
+        WaymarkWidgetUpdater.updateAll(container.context)
     }
 
     fun setNotifications(countryId: String, enabled: Boolean) = viewModelScope.launch {
@@ -75,6 +80,7 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun reorderWatchlist(ids: List<String>) = viewModelScope.launch {
         container.repository.reorderWatchlist(ids)
+        WaymarkWidgetUpdater.updateAll(container.context)
     }
 
     fun completeOnboarding(

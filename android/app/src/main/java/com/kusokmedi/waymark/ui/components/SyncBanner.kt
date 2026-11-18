@@ -1,13 +1,19 @@
 package com.kusokmedi.waymark.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,6 +32,7 @@ fun SyncBanner(
     val status = effectiveStatus(state)
     val lastSuccess = state?.lastSuccessAt
     val isProblem = status == "failed" || status == "offline"
+    val isRunning = status == "running"
     val title = when (status) {
         "running" -> "Updating advisories…"
         "success" -> "Advisories updated"
@@ -33,19 +40,18 @@ fun SyncBanner(
         "failed" -> "Error, last update at ${lastSuccess?.let(::formatTimestampShort) ?: "never"}"
         else -> "Not updated yet"
     }
-    val surfaceModifier = if (onClick != null && isProblem) {
-        modifier.fillMaxWidth().let { androidx.compose.ui.Modifier.then(it) }
-    } else modifier.fillMaxWidth()
 
     Surface(
-        modifier = surfaceModifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .animateContentSize(),
         color = if (isProblem) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceVariant,
         contentColor = if (isProblem) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurfaceVariant,
         onClick = { if (onClick != null && isProblem) onClick() },
         enabled = onClick != null && isProblem,
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            Row {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     title,
                     style = MaterialTheme.typography.labelLarge,
@@ -59,15 +65,27 @@ fun SyncBanner(
                     )
                 }
             }
-            if (isProblem) {
+
+            AnimatedVisibility(visible = isRunning) {
+                Column {
+                    Spacer(Modifier.height(8.dp))
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+            }
+
+            AnimatedVisibility(visible = isProblem) {
                 Text(
                     "Tap to view synchronization details.",
                     style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 2.dp),
                 )
-            } else if (status == "success") {
+            }
+
+            AnimatedVisibility(visible = status == "success") {
                 Text(
                     "Data is cached on this device. Advisories may be delayed by Android background scheduling.",
                     style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(top = 2.dp),
                 )
             }
         }

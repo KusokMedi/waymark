@@ -6,6 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Checklist
@@ -136,6 +140,15 @@ private fun MainNavigation(
     val route = backStackEntry?.destination?.route
     val showBottomBar = route == "watchlist" || route == "explore" || route == "history" || route == "settings"
 
+    fun navigateTopLevel(target: String) {
+        if (route == target) return
+        navController.navigate(target) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
     LaunchedEffect(deepLinkCountry) {
         val id = deepLinkCountry
         if (!id.isNullOrBlank()) {
@@ -151,13 +164,7 @@ private fun MainNavigation(
                     destinations.forEach { destination ->
                         NavigationBarItem(
                             selected = route == destination.route,
-                            onClick = {
-                                navController.navigate(destination.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
+                            onClick = { navigateTopLevel(destination.route) },
                             icon = { Icon(destination.icon, contentDescription = null) },
                             label = { Text(destination.label) },
                         )
@@ -170,6 +177,30 @@ private fun MainNavigation(
             navController = navController,
             startDestination = "watchlist",
             modifier = Modifier.padding(padding),
+            enterTransition = {
+                fadeIn(animationSpec = tween(220)) + slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(220),
+                    initialOffset = { it / 6 },
+                )
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(180))
+            },
+            popEnterTransition = {
+                fadeIn(animationSpec = tween(220)) + slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(220),
+                    initialOffset = { it / 6 },
+                )
+            },
+            popExitTransition = {
+                fadeOut(animationSpec = tween(180)) + slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(220),
+                    targetOffset = { it / 6 },
+                )
+            },
         ) {
             composable("watchlist") {
                 WatchlistScreen(
@@ -178,7 +209,7 @@ private fun MainNavigation(
                     onOpenCountry = { navController.navigate("country/$it") },
                     onToggleFavorite = { card -> viewModel.setFavorite(card.id, !card.isFavorite) },
                     onRefresh = viewModel::syncNow,
-                    onExplore = { navController.navigate("explore") },
+                    onExplore = { navigateTopLevel("explore") },
                     onOpenSyncDetails = { navController.navigate("settings/sync_details") },
                 )
             }

@@ -5,6 +5,26 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.2] - 2026-11-18
+
+### Changed
+
+- Onboarding order updated so **Permissions & network** (including mobile data
+  option) comes before **Choose countries**, making country selection the final
+  step.
+- Watchlist, Explore and country detail screens have smoother transitions and
+  loading states, with clearer progress/empty-state feedback.
+- Home screen widget rewritten for more reliable updates and a cleaner layout,
+  with in-widget refresh/settings actions and improved spacing.
+
+### Fixed
+
+- Navigation issue that could prevent returning to Watchlist and send users back
+  to Explore.
+- Widget refresh, status updates and settings/configuration reliability (save,
+  apply and return behavior).
+- Minor documentation updates for the current onboarding flow.
+
 ## [1.3.1] - 2026-11-18
 
 ### Added

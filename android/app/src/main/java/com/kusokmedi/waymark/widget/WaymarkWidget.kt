@@ -43,7 +43,7 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.kusokmedi.waymark.SyncScheduler
 import com.kusokmedi.waymark.data.AdvisoryRepository
-import com.kusokmedi.waymark.data.local.AppSettings
+import com.kusokmedi.waymark.data.local.SettingsRepository
 import com.kusokmedi.waymark.data.local.SyncStateEntity
 import com.kusokmedi.waymark.data.local.WaymarkDatabase
 import com.kusokmedi.waymark.data.local.WidgetConfigEntity
@@ -53,6 +53,7 @@ import com.kusokmedi.waymark.domain.flagEmoji
 import com.kusokmedi.waymark.ui.MainActivity
 import kotlinx.coroutines.flow.first
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -61,101 +62,111 @@ import java.util.concurrent.TimeUnit
 internal val COUNTRY_ID_KEY = ActionParameters.Key<String>("countryId")
 
 class WatchlistWidget : GlanceAppWidget() {
+
     override val sizeMode = SizeMode.Responsive(
         setOf(
             DpSize(110.dp, 110.dp),
             DpSize(180.dp, 110.dp),
             DpSize(250.dp, 180.dp),
             DpSize(320.dp, 280.dp),
+            DpSize(250.dp, 320.dp),
         )
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val widgetId = GlanceAppWidgetManager(context).getAppWidgetId(id)
-        val data = loadWidgetData(context, widgetId)
-        provideContent { WatchlistWidgetContent(data) }
+        val snapshot = WidgetSnapshot.load(context, widgetId)
+        provideContent { WatchlistWidgetContent(snapshot) }
     }
 }
 
-internal data class WidgetData(
+internal data class WidgetSnapshot(
     val widgetId: Int,
     val config: WidgetConfigEntity,
     val cards: List<CountryCard>,
     val syncState: SyncStateEntity?,
     val dynamicColor: Boolean,
-)
+) {
+    companion object {
+        suspend fun load(context: Context, widgetId: Int): WidgetSnapshot {
+            val db = WaymarkDatabase.get(context)
+            val settings = SettingsRepository(context).settings.first()
 
-internal suspend fun loadWidgetData(context: Context, widgetId: Int): WidgetData {
-    val db = WaymarkDatabase.get(context)
-    val appSettings = com.kusokmedi.waymark.data.local.SettingsRepository(context).settings.first()
-    val existing = db.widgetConfigDao().get(widgetId)
-    val config = (existing ?: WidgetConfigEntity(
-        widgetId = widgetId,
-        preset = "watchlist",
-        widgetType = "watchlist",
-        updatedAt = System.currentTimeMillis(),
-    )).let { cfg ->
-        val normalized = cfg.copy(
-            widgetType = "watchlist",
-            singleCountryId = null,
-            cornerRadius = cfg.cornerRadius.coerceIn(8, 36),
-            backgroundStyle = if (cfg.backgroundStyle == "transparent") "transparent" else "surface",
-        )
-        if (existing == null || existing != normalized) db.widgetConfigDao().upsert(normalized)
-        normalized
+            val existing = db.widgetConfigDao().get(widgetId)
+            val config = normalizeConfig(existing, widgetId)
+            if (existing == null || existing != config) {
+                db.widgetConfigDao().upsert(config)
+            }
+
+            val watchlistIds = db.watchlistDao().getAll().map { it.countryId }
+            val cards = AdvisoryRepository(db).countryCardsByIds(watchlistIds)
+            val syncState = db.syncStateDao().get()
+
+            return WidgetSnapshot(
+                widgetId = widgetId,
+                config = config,
+                cards = cards,
+                syncState = syncState,
+                dynamicColor = settings.dynamicColor,
+            )
+        }
+
+        private fun normalizeConfig(existing: WidgetConfigEntity?, widgetId: Int): WidgetConfigEntity {
+            val base = existing ?: WidgetConfigEntity(
+                widgetId = widgetId,
+                preset = "watchlist",
+                widgetType = "watchlist",
+                updatedAt = System.currentTimeMillis(),
+            )
+            return base.copy(
+                preset = "watchlist",
+                widgetType = "watchlist",
+                singleCountryId = null,
+                cornerRadius = base.cornerRadius.coerceIn(8, 36),
+                columns = 1,
+                backgroundStyle = if (base.backgroundStyle == "transparent") "transparent" else "surface",
+            )
+        }
     }
-
-    val ids = db.watchlistDao().getAll().map { it.countryId }
-    val cards = AdvisoryRepository(db).countryCardsByIds(ids)
-    val syncState = db.syncStateDao().get()
-    return WidgetData(widgetId, config, cards, syncState, appSettings.dynamicColor)
-}
-
-private suspend fun normalizeSyncState(state: SyncStateEntity?): SyncStateEntity? {
-    if (state == null) return null
-    if (state.status != "running") return state
-    val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
-    return if (age > TimeUnit.MINUTES.toMillis(3)) {
-        state.copy(status = "failed", message = state.message ?: "Synchronization was interrupted")
-    } else state
 }
 
 @Composable
-internal fun WatchlistWidgetContent(data: WidgetData) {
+private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
     val context = androidx.glance.LocalContext.current
-    val palette = widgetPalette(context, data.dynamicColor, data.config.backgroundStyle == "transparent")
-    val radius = data.config.cornerRadius.coerceIn(8, 36)
+    val colors = widgetColors(context, snapshot.dynamicColor, snapshot.config.backgroundStyle == "transparent")
+    val radius = snapshot.config.cornerRadius.coerceIn(8, 36)
 
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
             .cornerRadius(radius.dp)
-            .background(palette.background)
-            .padding(12.dp),
+            .background(colors.background)
+            .padding(10.dp),
     ) {
-        if (data.cards.isEmpty()) {
-            Column(modifier = GlanceModifier.fillMaxSize()) {
-                WidgetHeader(data.widgetId, palette, data.syncState)
-                Spacer(GlanceModifier.height(8.dp))
+        Column(modifier = GlanceModifier.fillMaxSize()) {
+            Header(snapshot, colors)
+
+            if (snapshot.cards.isEmpty()) {
+                Spacer(GlanceModifier.height(10.dp))
                 Text(
-                    "No countries in your watchlist",
-                    style = TextStyle(color = palette.foreground, fontWeight = FontWeight.Medium),
+                    text = "No countries in your watchlist",
+                    style = TextStyle(
+                        color = colors.foreground,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 13.sp,
+                    ),
                 )
+                Spacer(GlanceModifier.height(2.dp))
                 Text(
-                    "Open Waymark and add countries to see them here.",
-                    style = TextStyle(color = palette.muted, fontSize = 12.sp),
+                    text = "Open Waymark to add countries.",
+                    style = TextStyle(color = colors.muted, fontSize = 12.sp),
                 )
-            }
-        } else {
-            Column(modifier = GlanceModifier.fillMaxSize()) {
-                WidgetHeader(data.widgetId, palette, data.syncState)
+            } else {
                 Spacer(GlanceModifier.height(6.dp))
                 LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
-                    items(data.cards, itemId = { it.id.hashCode().toLong() }) { card ->
-                        Column {
-                            CountryRow(card, data.config, palette)
-                            Spacer(GlanceModifier.height(6.dp))
-                        }
+                    items(snapshot.cards, itemId = { it.id.hashCode().toLong() }) { card ->
+                        CountryItem(card = card, config = snapshot.config, colors = colors)
+                        Spacer(GlanceModifier.height(6.dp))
                     }
                 }
             }
@@ -164,79 +175,102 @@ internal fun WatchlistWidgetContent(data: WidgetData) {
 }
 
 @Composable
-private fun WidgetHeader(widgetId: Int, palette: WidgetPalette, syncState: SyncStateEntity?) {
+private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors) {
     Row(
         modifier = GlanceModifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = GlanceModifier.defaultWeight()) {
             Text(
-                "Waymark",
-                style = TextStyle(color = palette.foreground, fontWeight = FontWeight.Bold, fontSize = 13.sp),
+                text = "Waymark",
+                style = TextStyle(
+                    color = colors.foreground,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                ),
+                maxLines = 1,
             )
             Text(
-                syncStatusText(syncState),
-                style = TextStyle(color = palette.muted, fontSize = 11.sp),
+                text = statusText(snapshot.syncState),
+                style = TextStyle(color = colors.muted, fontSize = 11.sp),
                 maxLines = 1,
             )
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            SmallIconButton("↻", palette) { actionRunCallback<RefreshWidgetsAction>() }
-            Spacer(GlanceModifier.width(6.dp))
-            SmallIconButton("⚙", palette) { actionRunCallback<OpenWidgetSettingsAction>() }
-        }
+        IconButton("↻", "Refresh", colors) { actionRunCallback<RefreshAction>() }
+        Spacer(GlanceModifier.width(6.dp))
+        IconButton("⚙", "Settings", colors) { actionRunCallback<OpenSettingsAction>() }
     }
 }
 
 @Composable
-private fun SmallIconButton(symbol: String, palette: WidgetPalette, onClick: () -> androidx.glance.action.Action) {
+private fun IconButton(
+    symbol: String,
+    contentDescription: String,
+    colors: WidgetColors,
+    onClick: () -> androidx.glance.action.Action,
+) {
     Box(
         modifier = GlanceModifier
             .size(30.dp)
             .cornerRadius(15.dp)
-            .background(palette.chip)
+            .background(colors.chip)
             .clickable(onClick()),
         contentAlignment = Alignment.Center,
     ) {
-        Text(symbol, style = TextStyle(color = palette.foreground, fontSize = 14.sp))
+        Text(text = symbol, style = TextStyle(color = colors.foreground, fontSize = 14.sp))
     }
 }
 
 @Composable
-private fun CountryRow(card: CountryCard, config: WidgetConfigEntity, palette: WidgetPalette) {
+private fun CountryItem(card: CountryCard, config: WidgetConfigEntity, colors: WidgetColors) {
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
             .cornerRadius(14.dp)
-            .background(palette.row)
-            .padding(horizontal = 8.dp, vertical = 7.dp)
-            .clickable(actionStartActivity<MainActivity>(actionParametersOf(COUNTRY_ID_KEY to card.id))),
+            .background(colors.row)
+            .clickable(actionStartActivity<MainActivity>(actionParametersOf(COUNTRY_ID_KEY to card.id)))
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (config.showFlag) {
-            FlagBadge(card, palette, size = 32)
+            Box(
+                modifier = GlanceModifier
+                    .size(30.dp)
+                    .cornerRadius(10.dp)
+                    .background(colors.chip),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = flagEmoji(card.isoAlpha2),
+                    style = TextStyle(fontSize = 16.sp),
+                )
+            }
             Spacer(GlanceModifier.width(8.dp))
         }
+
         Column(modifier = GlanceModifier.defaultWeight()) {
             if (config.showCountryName) {
                 Text(
-                    card.name,
-                    style = TextStyle(color = palette.foreground, fontWeight = FontWeight.Bold, fontSize = 14.sp),
+                    text = card.name,
+                    style = TextStyle(
+                        color = colors.foreground,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp,
+                    ),
                     maxLines = 1,
                 )
             }
             if (config.showLevel) {
                 Text(
-                    levelLine(card),
+                    text = levelText(card),
                     style = TextStyle(color = levelColor(card), fontWeight = FontWeight.Medium, fontSize = 12.sp),
                     maxLines = 1,
                 )
             }
             if (config.showDate) {
                 Text(
-                    advisoryDateLine(card),
-                    style = TextStyle(color = palette.muted, fontSize = 11.sp),
+                    text = dateText(card.advisoryDate),
+                    style = TextStyle(color = colors.muted, fontSize = 11.sp),
                     maxLines = 1,
                 )
             }
@@ -244,23 +278,7 @@ private fun CountryRow(card: CountryCard, config: WidgetConfigEntity, palette: W
     }
 }
 
-@Composable
-private fun FlagBadge(card: CountryCard, palette: WidgetPalette, size: Int) {
-    Box(
-        modifier = GlanceModifier
-            .size(size.dp)
-            .cornerRadius((size / 3).dp)
-            .background(palette.chip),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            flagEmoji(card.isoAlpha2),
-            style = TextStyle(fontSize = (size * 0.55f).sp),
-        )
-    }
-}
-
-internal data class WidgetPalette(
+internal data class WidgetColors(
     val background: ColorProvider,
     val foreground: ColorProvider,
     val muted: ColorProvider,
@@ -268,7 +286,7 @@ internal data class WidgetPalette(
     val row: ColorProvider,
 )
 
-internal fun widgetPalette(context: Context, dynamicColor: Boolean, transparent: Boolean): WidgetPalette {
+private fun widgetColors(context: Context, dynamicColor: Boolean, transparent: Boolean): WidgetColors {
     val dark = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
         Configuration.UI_MODE_NIGHT_YES
 
@@ -278,26 +296,28 @@ internal fun widgetPalette(context: Context, dynamicColor: Boolean, transparent:
         val mutedRes = if (dark) android.R.color.system_neutral2_200 else android.R.color.system_neutral2_700
         val chipRes = if (dark) android.R.color.system_neutral2_800 else android.R.color.system_neutral2_100
         val rowRes = if (dark) android.R.color.system_neutral2_700 else android.R.color.system_neutral1_100
-        val bgColor = Color(context.getColor(bgRes)).let { if (transparent) it.copy(alpha = 0.85f) else it.copy(alpha = 0.96f) }
-        return WidgetPalette(
-            background = ColorProvider(bgColor),
+
+        val bg = Color(context.getColor(bgRes)).let { if (transparent) it.copy(alpha = 0.86f) else it.copy(alpha = 0.97f) }
+        val row = Color(context.getColor(rowRes)).let { if (transparent) it.copy(alpha = 0.55f) else it.copy(alpha = 0.78f) }
+        return WidgetColors(
+            background = ColorProvider(bg),
             foreground = ColorProvider(Color(context.getColor(fgRes))),
             muted = ColorProvider(Color(context.getColor(mutedRes))),
             chip = ColorProvider(Color(context.getColor(chipRes))),
-            row = ColorProvider(Color(context.getColor(rowRes)).copy(alpha = if (transparent) 0.55f else 0.75f)),
+            row = ColorProvider(row),
         )
     }
 
     return if (dark) {
-        WidgetPalette(
+        WidgetColors(
             background = ColorProvider(Color(if (transparent) 0xCC1A211E else 0xF21A211E)),
             foreground = ColorProvider(Color(0xFFE8F0EB)),
-            muted = ColorProvider(Color(0xFF9FB0A7)),
-            chip = ColorProvider(Color(0xFF27322D)),
-            row = ColorProvider(Color(if (transparent) 0x99202925 else 0xFF202925)),
+            muted = ColorProvider(Color(0xFFA4B4AB)),
+            chip = ColorProvider(Color(0xFF27332D)),
+            row = ColorProvider(Color(if (transparent) 0x99202925 else 0xFF212B26)),
         )
     } else {
-        WidgetPalette(
+        WidgetColors(
             background = ColorProvider(Color(if (transparent) 0xCCFBF9F4 else 0xF7FBF9F4)),
             foreground = ColorProvider(Color(0xFF16201B)),
             muted = ColorProvider(Color(0xFF5E6E66)),
@@ -307,39 +327,33 @@ internal fun widgetPalette(context: Context, dynamicColor: Boolean, transparent:
     }
 }
 
-class RefreshWidgetsAction : ActionCallback {
+class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val allowMobileData = com.kusokmedi.waymark.data.local.SettingsRepository(context)
-            .settings.first().allowMobileData
+        val allowMobileData = SettingsRepository(context).settings.first().allowMobileData
         SyncScheduler.syncNow(context, allowMobileData)
         WaymarkWidgetUpdater.updateAll(context)
     }
 }
 
-class OpenWidgetSettingsAction : ActionCallback {
+class OpenSettingsAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val widgetId = GlanceAppWidgetManager(context).getAppWidgetId(glanceId)
+        val widgetId = runCatching { GlanceAppWidgetManager(context).getAppWidgetId(glanceId) }.getOrNull()
+            ?: AppWidgetManager.INVALID_APPWIDGET_ID
         val intent = Intent(context, WidgetConfigActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
         }
         context.startActivity(intent)
     }
 }
 
-internal fun syncStatusText(state: SyncStateEntity?): String {
+private fun statusText(state: SyncStateEntity?): String {
     if (state == null) return "Not synced yet"
-    val status = effectiveStatus(state)
-    if (status == "running") {
-        val dots = ((System.currentTimeMillis() / 700) % 3).toInt() + 1
-        return "Updating" + ".".repeat(dots)
-    }
-    val last = state.lastSuccessAt
-    val time = if (last != null) formatSyncTime(last) else "never"
-    return when (status) {
-        "failed", "offline" -> "Error, last update at $time"
-        "success", "idle" -> if (last != null) "Updated $time" else "Not synced yet"
-        else -> if (last != null) "Updated $time" else "Not synced yet"
+    return when (effectiveStatus(state)) {
+        "running" -> "Updating…"
+        "failed", "offline" -> "Error, last update at ${timeText(state.lastSuccessAt)}"
+        "success", "idle" -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"
+        else -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"
     }
 }
 
@@ -351,22 +365,24 @@ private fun effectiveStatus(state: SyncStateEntity): String {
     return state.status
 }
 
-private fun formatSyncTime(at: Long): String = try {
-    val instant = Instant.ofEpochMilli(at)
-    val zoned = instant.atZone(ZoneId.systemDefault())
-    val today = java.time.LocalDate.now(ZoneId.systemDefault())
-    val pattern = if (zoned.toLocalDate() == today) "HH:mm" else "d MMM, HH:mm"
-    DateTimeFormatter.ofPattern(pattern, Locale.getDefault()).format(zoned)
-} catch (_: Exception) {
-    "recently"
+private fun timeText(at: Long?): String {
+    if (at == null) return "never"
+    return try {
+        val zoned = Instant.ofEpochMilli(at).atZone(ZoneId.systemDefault())
+        val today = java.time.LocalDate.now(ZoneId.systemDefault())
+        val pattern = if (zoned.toLocalDate() == today) "HH:mm" else "d MMM, HH:mm"
+        DateTimeFormatter.ofPattern(pattern, Locale.getDefault()).format(zoned)
+    } catch (_: Exception) {
+        "recently"
+    }
 }
 
-internal fun levelLine(card: CountryCard): String {
+private fun levelText(card: CountryCard): String {
     val level = card.level ?: return "Unknown advisory"
     return "Level ${level.number} · ${AdvisoryLevels.label(level)}"
 }
 
-internal fun levelColor(card: CountryCard): ColorProvider = when (card.level?.number) {
+private fun levelColor(card: CountryCard): ColorProvider = when (card.level?.number) {
     4 -> ColorProvider(Color(0xFFB3261E))
     3 -> ColorProvider(Color(0xFFC77700))
     2 -> ColorProvider(Color(0xFF7A6A00))
@@ -374,12 +390,11 @@ internal fun levelColor(card: CountryCard): ColorProvider = when (card.level?.nu
     else -> ColorProvider(Color(0xFF6E6E6E))
 }
 
-internal fun advisoryDateLine(card: CountryCard): String {
-    val value = card.advisoryDate
+private fun dateText(value: String?): String {
     if (value.isNullOrBlank()) return "Advisory date unknown"
     return try {
-        val parsed = java.time.LocalDate.parse(value)
-        "Advisory " + parsed.format(java.time.format.DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
+        val parsed = LocalDate.parse(value)
+        "Advisory " + parsed.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
     } catch (_: Exception) {
         "Advisory date unknown"
     }

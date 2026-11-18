@@ -1,5 +1,9 @@
 package com.kusokmedi.waymark.ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -92,34 +96,43 @@ fun WatchlistScreen(
             },
         )
         SyncBanner(syncState, onClick = onOpenSyncDetails)
-        if (countries.isEmpty()) {
-            EmptyWatchlist(onExplore)
-        } else {
-            LazyRow(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(WatchlistSort.entries) { option ->
-                    FilterChip(
-                        selected = sort == option,
-                        onClick = { sort = option },
-                        label = { Text(option.label) },
-                    )
+        AnimatedContent(
+            targetState = countries.isEmpty(),
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            label = "watchlist-content",
+        ) { empty ->
+            if (empty) {
+                EmptyWatchlist(onExplore)
+            } else {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        items(WatchlistSort.entries) { option ->
+                            FilterChip(
+                                selected = sort == option,
+                                onClick = { sort = option },
+                                label = { Text(option.label) },
+                            )
+                        }
+                    }
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        items(sorted, key = { it.id }) { card ->
+                            CountryCardView(
+                                card = card,
+                                onClick = { onOpenCountry(card.id) },
+                                onFavorite = { onToggleFavorite(card) },
+                                modifier = Modifier.animateItem(),
+                            )
+                        }
+                        item { Spacer(Modifier.height(8.dp)) }
+                    }
                 }
-            }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                items(sorted, key = { it.id }) { card ->
-                    CountryCardView(
-                        card = card,
-                        onClick = { onOpenCountry(card.id) },
-                        onFavorite = { onToggleFavorite(card) },
-                    )
-                }
-                item { Spacer(Modifier.height(8.dp)) }
             }
         }
     }

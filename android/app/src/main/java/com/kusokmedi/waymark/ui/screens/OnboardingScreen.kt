@@ -45,8 +45,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -93,19 +93,19 @@ fun OnboardingScreen(
                 when (step) {
                     0 -> WelcomeStep()
                     1 -> LevelsStep()
-                    2 -> CountryStep(
-                        query = query,
-                        onQueryChange = { query = it },
-                        countries = filtered,
-                        selected = selected,
-                    )
-                    else -> PermissionsStep(
+                    2 -> PermissionsStep(
                         notificationsEnabled = notifications,
                         onNotificationsChange = { notifications = it },
                         allowMobileData = allowMobileData,
                         onAllowMobileDataChange = { allowMobileData = it },
                         selectedCount = selected.size,
                         onRequestBatteryExemption = { requestBatteryExemption(context) },
+                    )
+                    else -> CountryStep(
+                        query = query,
+                        onQueryChange = { query = it },
+                        countries = filtered,
+                        selected = selected,
                     )
                 }
             }
@@ -132,7 +132,7 @@ fun OnboardingScreen(
                     },
                 ) {
                     val label = when {
-                        step == 2 && selected.isEmpty() -> "Skip"
+                        step == 3 && selected.isEmpty() -> "Skip"
                         step < 3 -> "Continue"
                         else -> "Start using Waymark"
                     }
@@ -311,10 +311,10 @@ private fun PermissionsStep(
     }
 
     Column {
-        Text("Permissions", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text("Permissions & network", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Text(
-            "Optional permissions to keep you informed and help background updates run reliably.",
+            "Choose how Waymark keeps you informed and downloads updates. You can change these later in Settings.",
             style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(Modifier.height(16.dp))
@@ -328,7 +328,7 @@ private fun PermissionsStep(
             Column(modifier = Modifier.weight(1f)) {
                 Text("Advisory notifications")
                 Text(
-                    "Notify about meaningful changes for your $selectedCount selected countries. Uses Android notifications.",
+                    "Notify about meaningful changes for the countries you follow. Uses Android notifications.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

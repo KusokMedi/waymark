@@ -19,14 +19,7 @@ import com.kusokmedi.waymark.domain.RecordKind
 import com.kusokmedi.waymark.widget.WaymarkWidgetUpdater
 import androidx.room.withTransaction
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.TimeUnit
@@ -71,7 +64,6 @@ class SyncEngine(
         val attemptAt = System.currentTimeMillis()
         db.syncStateDao().upsert(state.copy(lastAttemptAt = attemptAt, status = "running", message = null))
         WaymarkWidgetUpdater.updateAll(context)
-        val ticker = startUpdatingTicker()
 
         try {
             val fetched = client.fetchAll(etag = state.etag, lastModified = state.lastModified)
@@ -196,17 +188,6 @@ class SyncEngine(
             WaymarkWidgetUpdater.updateAll(context)
             notifier.notifySyncProblem(message)
             SyncOutcome.Failure(message)
-        } finally {
-            ticker.cancel()
-        }
-    }
-
-    private fun startUpdatingTicker(): Job = CoroutineScope(Dispatchers.Default).launch {
-        while (isActive) {
-            delay(800)
-            val current = db.syncStateDao().get()
-            if (current?.status != "running") break
-            WaymarkWidgetUpdater.updateAll(context)
         }
     }
 
