@@ -98,8 +98,8 @@ fun WaymarkAppRoot(
         if (!settings.onboardingCompleted) {
             OnboardingScreen(
                 countries = countries,
-                onComplete = { ids, notifications ->
-                    viewModel.completeOnboarding(ids, notifications, settings.themeMode)
+                onComplete = { ids, notifications, allowMobileData ->
+                    viewModel.completeOnboarding(ids, notifications, settings.themeMode, allowMobileData)
                 },
             )
         } else {

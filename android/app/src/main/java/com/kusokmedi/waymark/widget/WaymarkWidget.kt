@@ -309,7 +309,9 @@ internal fun widgetPalette(context: Context, dynamicColor: Boolean, transparent:
 
 class RefreshWidgetsAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        SyncScheduler.syncNow(context)
+        val allowMobileData = com.kusokmedi.waymark.data.local.SettingsRepository(context)
+            .settings.first().allowMobileData
+        SyncScheduler.syncNow(context, allowMobileData)
         WaymarkWidgetUpdater.updateAll(context)
     }
 }

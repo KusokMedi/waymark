@@ -14,6 +14,7 @@ import com.kusokmedi.waymark.domain.HistoryItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -76,13 +77,19 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
         container.repository.reorderWatchlist(ids)
     }
 
-    fun completeOnboarding(countryIds: List<String>, notificationsEnabled: Boolean, themeMode: ThemeMode) =
+    fun completeOnboarding(
+        countryIds: List<String>,
+        notificationsEnabled: Boolean,
+        themeMode: ThemeMode,
+        allowMobileData: Boolean,
+    ) =
         viewModelScope.launch {
             countryIds.forEach { container.repository.addToWatchlist(it, notificationsEnabled) }
             container.settings.setNotificationsEnabled(notificationsEnabled)
             container.settings.setThemeMode(themeMode)
+            container.settings.setAllowMobileData(allowMobileData)
             container.settings.setOnboardingCompleted(true)
-            SyncScheduler.syncNow(container.context)
+            SyncScheduler.syncNow(container.context, allowMobileData)
         }
 
     fun syncNow() = viewModelScope.launch {
@@ -116,14 +123,28 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun setAutomaticSync(enabled: Boolean) = viewModelScope.launch {
         container.settings.setAutomaticSync(enabled)
-        val settings = settings.value
-        if (enabled) SyncScheduler.schedulePeriodic(container.context, settings.syncIntervalHours)
-        else SyncScheduler.cancelPeriodic(container.context)
+        val current = container.settings.settings.first()
+        if (enabled) {
+            SyncScheduler.schedulePeriodic(container.context, current.syncIntervalHours, current.allowMobileData)
+        } else {
+            SyncScheduler.cancelPeriodic(container.context)
+        }
     }
 
     fun setSyncInterval(hours: Int) = viewModelScope.launch {
         container.settings.setSyncIntervalHours(hours)
-        if (settings.value.automaticSync) SyncScheduler.schedulePeriodic(container.context, hours)
+        val current = container.settings.settings.first()
+        if (current.automaticSync) {
+            SyncScheduler.schedulePeriodic(container.context, current.syncIntervalHours, current.allowMobileData)
+        }
+    }
+
+    fun setAllowMobileData(enabled: Boolean) = viewModelScope.launch {
+        container.settings.setAllowMobileData(enabled)
+        val current = container.settings.settings.first()
+        if (current.automaticSync) {
+            SyncScheduler.schedulePeriodic(container.context, current.syncIntervalHours, current.allowMobileData)
+        }
     }
 
     fun clearHistory() = viewModelScope.launch {

@@ -22,6 +22,7 @@ data class AppSettings(
     val automaticSync: Boolean = true,
     val notificationSoundUri: String = "",
     val notificationImportance: String = "high",
+    val allowMobileData: Boolean = false,
 )
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "waymark_settings")
@@ -36,6 +37,7 @@ class SettingsRepository(private val context: Context) {
         val automaticSync = booleanPreferencesKey("automatic_sync")
         val notificationSoundUri = stringPreferencesKey("notification_sound_uri")
         val notificationImportance = stringPreferencesKey("notification_importance")
+        val allowMobileData = booleanPreferencesKey("allow_mobile_data")
     }
 
     val settings: Flow<AppSettings> = context.dataStore.data.map { prefs ->
@@ -49,6 +51,7 @@ class SettingsRepository(private val context: Context) {
             automaticSync = prefs[Keys.automaticSync] ?: true,
             notificationSoundUri = prefs[Keys.notificationSoundUri] ?: "",
             notificationImportance = prefs[Keys.notificationImportance] ?: "high",
+            allowMobileData = prefs[Keys.allowMobileData] ?: false,
         )
     }
 
@@ -60,4 +63,5 @@ class SettingsRepository(private val context: Context) {
     suspend fun setAutomaticSync(value: Boolean) = context.dataStore.edit { it[Keys.automaticSync] = value }
     suspend fun setNotificationSoundUri(value: String) = context.dataStore.edit { it[Keys.notificationSoundUri] = value }
     suspend fun setNotificationImportance(value: String) = context.dataStore.edit { it[Keys.notificationImportance] = value }
+    suspend fun setAllowMobileData(value: Boolean) = context.dataStore.edit { it[Keys.allowMobileData] = value }
 }

@@ -8,7 +8,8 @@ Waymark walks you through four short steps:
 2. **Advisory levels** — how Levels 1–4 work and the higher-risk area note.
 3. **Choose countries** — search and select the destinations you want to follow.
 4. **Permissions** — optional. Enable advisory notifications (Android may ask for
-   notification permission) and, if you want, allow Waymark to ignore battery
+   notification permission), choose whether to allow mobile data for updates
+   (default is Wi-Fi only), and, if you want, allow Waymark to ignore battery
    optimizations to reduce delays in background updates.
 
 The first synchronization downloads the country catalogue and advisory records.
@@ -75,8 +76,9 @@ Settings are organized into categories:
 
 - **Appearance** — system/light/dark theme and dynamic color (Android 12+; also
   affects widgets).
-- **Synchronisation** — automatic updates on/off, interval (6/12/24 hours),
-  manual sync, and synchronization details.
+- **Synchronisation** — automatic updates on/off, allow mobile data for updates
+  (Wi-Fi only by default), interval (6/12/24 hours), manual sync, and
+  synchronization details.
 - **Notifications** — global opt-in, notification sound and priority (default
   High), and battery optimization settings.
 - **Data management** — export JSON, export ZIP, import backup, choose merge or

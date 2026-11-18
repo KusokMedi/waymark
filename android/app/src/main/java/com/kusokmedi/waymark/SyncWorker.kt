@@ -31,14 +31,15 @@ object SyncScheduler {
     private const val UNIQUE_PERIODIC = "waymark-periodic-sync"
     private const val UNIQUE_ONE_TIME = "waymark-one-time-sync"
 
-    private val constraints = Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.CONNECTED)
-        .build()
+    private fun constraints(allowMobileData: Boolean): Constraints =
+        Constraints.Builder()
+            .setRequiredNetworkType(if (allowMobileData) NetworkType.CONNECTED else NetworkType.UNMETERED)
+            .build()
 
-    fun schedulePeriodic(context: Context, intervalHours: Int = 12) {
+    fun schedulePeriodic(context: Context, intervalHours: Int = 12, allowMobileData: Boolean = false) {
         val interval = intervalHours.coerceIn(6, 24).toLong()
         val periodic = PeriodicWorkRequestBuilder<SyncWorker>(interval, TimeUnit.HOURS)
-            .setConstraints(constraints)
+            .setConstraints(constraints(allowMobileData))
             .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
@@ -52,9 +53,9 @@ object SyncScheduler {
         WorkManager.getInstance(context).cancelUniqueWork(UNIQUE_PERIODIC)
     }
 
-    fun syncNow(context: Context) {
+    fun syncNow(context: Context, allowMobileData: Boolean = false) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
-            .setConstraints(constraints)
+            .setConstraints(constraints(allowMobileData))
             .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork(

@@ -58,12 +58,13 @@ import com.kusokmedi.waymark.ui.components.LevelChip
 @Composable
 fun OnboardingScreen(
     countries: List<CountryCard>,
-    onComplete: (List<String>, Boolean) -> Unit,
+    onComplete: (List<String>, Boolean, Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     var step by remember { mutableStateOf(0) }
     val selected = remember { mutableStateListOf<String>() }
     var notifications by remember { mutableStateOf(false) }
+    var allowMobileData by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -101,6 +102,8 @@ fun OnboardingScreen(
                     else -> PermissionsStep(
                         notificationsEnabled = notifications,
                         onNotificationsChange = { notifications = it },
+                        allowMobileData = allowMobileData,
+                        onAllowMobileDataChange = { allowMobileData = it },
                         selectedCount = selected.size,
                         onRequestBatteryExemption = { requestBatteryExemption(context) },
                     )
@@ -121,7 +124,7 @@ fun OnboardingScreen(
                         if (step < 3) {
                             step += 1
                         } else {
-                            onComplete(selected.toList(), notifications)
+                            onComplete(selected.toList(), notifications, allowMobileData)
                             if (notifications && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                             }
@@ -289,6 +292,8 @@ private fun CountryStep(
 private fun PermissionsStep(
     notificationsEnabled: Boolean,
     onNotificationsChange: (Boolean) -> Unit,
+    allowMobileData: Boolean,
+    onAllowMobileDataChange: (Boolean) -> Unit,
     selectedCount: Int,
     onRequestBatteryExemption: () -> Unit,
 ) {
@@ -329,6 +334,27 @@ private fun PermissionsStep(
                 )
             }
             Switch(checked = notificationsEnabled, onCheckedChange = onNotificationsChange)
+        }
+
+        Spacer(Modifier.height(16.dp))
+        HorizontalDivider()
+        Spacer(Modifier.height(16.dp))
+
+        Text("Network", fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(6.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Use mobile data for updates")
+                Text(
+                    "When off, Waymark syncs only on Wi-Fi. Default is Wi-Fi only.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Switch(checked = allowMobileData, onCheckedChange = onAllowMobileDataChange)
         }
 
         Spacer(Modifier.height(16.dp))

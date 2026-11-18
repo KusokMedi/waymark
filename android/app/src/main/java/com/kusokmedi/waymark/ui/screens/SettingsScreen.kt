@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.kusokmedi.waymark.BuildConfig
+import com.kusokmedi.waymark.SyncScheduler
 import com.kusokmedi.waymark.data.local.SyncStateEntity
 import com.kusokmedi.waymark.data.local.ThemeMode
 import com.kusokmedi.waymark.sync.ChangeNotifier
@@ -64,6 +65,7 @@ import com.kusokmedi.waymark.ui.components.SyncBanner
 import com.kusokmedi.waymark.ui.components.formatTimestamp
 import com.kusokmedi.waymark.waymarkContainer
 import android.os.PowerManager
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -149,6 +151,12 @@ fun SyncSettingsScreen(
                 description = "Android may delay background work. Advisories remain available offline.",
                 checked = settings.automaticSync,
                 onCheckedChange = viewModel::setAutomaticSync,
+            )
+            ToggleSetting(
+                title = "Use mobile data for updates",
+                description = "When off, Waymark syncs only on Wi-Fi (default).",
+                checked = settings.allowMobileData,
+                onCheckedChange = viewModel::setAllowMobileData,
             )
             Text("Update interval", style = MaterialTheme.typography.titleSmall)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -358,6 +366,14 @@ fun DataManagementScreen(viewModel: AppViewModel, onBack: () -> Unit) {
                 val bytes = context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
                     ?: throw IOException("Could not read the selected file")
                 val result = container.backupManager.restore(bytes, replaceOnRestore)
+                if (result.successful) {
+                    val s = container.settings.settings.first()
+                    if (s.automaticSync) {
+                        SyncScheduler.schedulePeriodic(context, s.syncIntervalHours, s.allowMobileData)
+                    } else {
+                        SyncScheduler.cancelPeriodic(context)
+                    }
+                }
                 val detail = if (result.warnings.isEmpty()) result.message else "${result.message} ${result.warnings.size} warning(s)."
                 snackbar.showSnackbar(detail)
             } catch (e: Exception) { snackbar.showSnackbar("Import failed: ${e.message}") }

@@ -5,6 +5,14 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-11-18
+
+### Added
+
+- Option to allow using mobile data for synchronization (asked during initial
+  setup and configurable in **Settings → Synchronisation**). Default is Wi-Fi
+  only.
+
 ## [1.3.0] - 2026-11-18
 
 ### Changed

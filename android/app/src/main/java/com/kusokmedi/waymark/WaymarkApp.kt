@@ -40,11 +40,11 @@ class WaymarkApp : Application() {
             val settings = container.settings.settings.first()
             container.notifier.initialize(settings.notificationSoundUri, settings.notificationImportance)
             if (settings.automaticSync) {
-                SyncScheduler.schedulePeriodic(this@WaymarkApp, settings.syncIntervalHours)
+                SyncScheduler.schedulePeriodic(this@WaymarkApp, settings.syncIntervalHours, settings.allowMobileData)
             } else {
                 SyncScheduler.cancelPeriodic(this@WaymarkApp)
             }
-            SyncScheduler.syncNow(this@WaymarkApp)
+            SyncScheduler.syncNow(this@WaymarkApp, settings.allowMobileData)
         }
     }
 }

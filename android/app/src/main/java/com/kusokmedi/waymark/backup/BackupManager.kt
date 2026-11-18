@@ -113,6 +113,7 @@ data class BackupSettings(
     val automaticSync: Boolean = true,
     val notificationSoundUri: String = "",
     val notificationImportance: String = "high",
+    val allowMobileData: Boolean = false,
 )
 
 data class ImportResult(
@@ -233,6 +234,7 @@ class BackupManager(
                 automaticSync = current.automaticSync,
                 notificationSoundUri = current.notificationSoundUri,
                 notificationImportance = current.notificationImportance,
+                allowMobileData = current.allowMobileData,
             ),
         )
     }
@@ -397,6 +399,7 @@ class BackupManager(
             settings.setAutomaticSync(restored.automaticSync)
             settings.setNotificationSoundUri(restored.notificationSoundUri)
             settings.setNotificationImportance(restored.notificationImportance.ifBlank { "high" })
+            settings.setAllowMobileData(restored.allowMobileData)
         }
         settings.setOnboardingCompleted(true)
 

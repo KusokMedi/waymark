@@ -49,17 +49,23 @@ class SyncEngine(
     suspend fun synchronize(): SyncOutcome = mutex.withLock {
         var state = db.syncStateDao().get() ?: SyncStateEntity()
         state = clearStaleRunning(state)
+        val appSettings = settings.settings.first()
 
-        if (!NetworkMonitor.isOnline(context)) {
+        if (!NetworkMonitor.isAllowed(context, appSettings.allowMobileData)) {
+            val offlineMessage = if (!NetworkMonitor.isOnline(context)) {
+                "No network connection. Showing saved data."
+            } else {
+                "Mobile data is disabled for sync. Connect to Wi-Fi or allow mobile data in Settings."
+            }
             db.syncStateDao().upsert(
                 state.copy(
                     lastAttemptAt = System.currentTimeMillis(),
                     status = "offline",
-                    message = "No network connection",
+                    message = if (!NetworkMonitor.isOnline(context)) "No network connection" else "Mobile data disabled",
                 )
             )
             WaymarkWidgetUpdater.updateAll(context)
-            return SyncOutcome.Offline("No network connection. Showing saved data.")
+            return SyncOutcome.Offline(offlineMessage)
         }
 
         val attemptAt = System.currentTimeMillis()
@@ -163,7 +169,6 @@ class SyncEngine(
                 )
             }
 
-            val appSettings = settings.settings.first()
             if (appSettings.notificationsEnabled) {
                 val enabledCountryIds = watchEntries.values
                     .filter { it.notificationsEnabled }
