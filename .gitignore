@@ -22,4 +22,5 @@ android/captures/
 
 # Local release secrets (do not commit)
 release-secrets.local.md
+KEYSTORE_BASE64.local.txt
 
