@@ -32,6 +32,9 @@ jobs:
 
       - uses: android-actions/setup-android@v3
 
+      - name: Install Android SDK components
+        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Verify signing secrets are present
@@ -79,18 +82,27 @@ jobs:
 
       - name: Name artifacts
         id: artifacts
+        env:
+          TAG_NAME: ${{ inputs.tag || github.ref_name }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          version="${TAG_NAME#v}"
           mkdir -p ../release
           cp app/build/outputs/apk/release/app-release.apk "../release/waymark-${version}.apk"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ steps.artifacts.outputs.tag }}
+          VERSION: ${{ steps.artifacts.outputs.version }}
         run: |
-          tag="${{ inputs.tag || github.ref_name }}"
-          gh release create "$tag" \
-            ../release/waymark-*.apk \
-            --title "Waymark ${{ steps.artifacts.outputs.version }}" \
-            --generate-notes
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" ../release/waymark-*.apk --clobber
+          else
+            gh release create "$TAG_NAME" \
+              ../release/waymark-*.apk \
+              --title "Waymark ${VERSION}" \
+              --generate-notes
+          fi
+          gh release view "$TAG_NAME" --json url,assets --jq '{url, assets: [.assets[].name]}'

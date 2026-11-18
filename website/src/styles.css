@@ -181,6 +181,11 @@ a {
   transform: translateY(-1px);
 }
 
+.site-header nav a.btn,
+.site-header nav a.btn:hover {
+  color: var(--bg);
+}
+
 .btn.secondary {
   background: transparent;
   color: var(--text);
