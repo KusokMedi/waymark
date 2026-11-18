@@ -6,4 +6,16 @@ website/dist/
 .DS_Store
 .env
 .env.local
-EOF
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/keystore.properties
+*.jks
+*.keystore
+android/.idea/
+android/captures/
+*.apk
+*.aab

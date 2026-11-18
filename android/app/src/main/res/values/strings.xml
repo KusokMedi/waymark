@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Waymark</string>
+    <string name="widget_default_name">Waymark Watchlist</string>
+    <string name="widget_compact_name">Waymark Compact</string>
+    <string name="widget_description">Your travel advisory watchlist</string>
+    <string name="widget_compact_description">A single-country advisory card</string>
+    <string name="notification_channel_changes">Advisory changes</string>
+    <string name="notification_channel_changes_description">Notifies you about meaningful changes for countries you watch.</string>
+    <string name="notification_channel_sync">Synchronization</string>
+    <string name="notification_channel_sync_description">Reports synchronization problems.</string>
+    <string name="backup_mime">application/json</string>
+    <string name="backup_zip_mime">application/zip</string>
+</resources>
