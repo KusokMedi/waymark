@@ -1,23 +1,19 @@
 {
   "name": "waymark",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "A modern, open-source dashboard for U.S. Department of State travel advisories.",
+  "description": "Local-first Android app for official U.S. Department of State travel advisories.",
   "workspaces": [
     "app",
     "website"
   ],
   "scripts": {
-    "dev:app": "npm --workspace app run dev",
     "dev:website": "npm --workspace website run dev",
-    "build": "npm run build:app && npm run build:website && npm run assemble",
-    "build:app": "npm --workspace app run build",
+    "build": "npm run build:website && npm run assemble",
     "build:website": "npm --workspace website run build",
     "assemble": "node scripts/assemble.mjs",
-    "test": "npm --workspace app run test",
-    "lint": "echo 'no lint configured'",
-    "typecheck": "npm --workspace app run typecheck && npm --workspace website run typecheck",
-    "sync:data": "node scripts/sync-data.mjs"
+    "typecheck": "npm --workspace website run typecheck",
+    "test": "npm --workspace app run test"
   },
   "engines": {
     "node": ">=20"

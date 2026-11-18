@@ -4,7 +4,6 @@ import path from "node:path";
 const root = process.cwd();
 const dist = path.join(root, "dist");
 const websiteDist = path.join(root, "website", "dist");
-const appDist = path.join(root, "app", "dist");
 
 async function copyDir(src, dest) {
   await fs.mkdir(dest, { recursive: true });
@@ -17,25 +16,16 @@ async function copyDir(src, dest) {
   }
 }
 
-async function rmrf(p) {
-  await fs.rm(p, { recursive: true, force: true });
-}
-
 async function main() {
-  await rmrf(dist);
+  // Only the product website is published. The legacy web dashboard in app/
+  // is not part of the GitHub Pages deployment.
+  await fs.rm(dist, { recursive: true, force: true });
   await fs.mkdir(dist, { recursive: true });
   await copyDir(websiteDist, dist);
-  await copyDir(appDist, path.join(dist, "app"));
-  // Ensure data snapshot present
-  const dataSrc = path.join(root, "data", "latest.json");
-  const dataDest = path.join(dist, "app", "data", "latest.json");
-  try {
-    await fs.mkdir(path.dirname(dataDest), { recursive: true });
-    await fs.copyFile(dataSrc, dataDest);
-  } catch (e) {
-    console.warn("No data snapshot to copy:", e.message);
-  }
-  console.log("Assembled dist/");
+  console.log("Assembled dist/ from website/");
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
