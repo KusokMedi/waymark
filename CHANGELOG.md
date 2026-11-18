@@ -5,6 +5,26 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.3] - 2026-11-18
+
+### Changed
+
+- Widget settings now use corner radius 0–20 dp and background opacity 0–100%.
+- Widget background opacity applies only to the background; cards, text and
+  buttons remain opaque.
+- Advisory level is hidden by default in widgets and can be enabled manually.
+- Advisory level is no longer shown on Watchlist/Explore cards; it remains
+  visible on the country detail screen.
+- Onboarding now downloads the country catalogue before the country selection
+  step, so countries can be chosen during initial setup.
+
+### Fixed
+
+- Widget refresh/update reliability: manual refresh now runs synchronization
+  directly and updates the widget; repeated taps are ignored while syncing.
+- Widget settings (save/apply/return) reliably update the widget.
+- Onboarding country selection now works when mobile data is available.
+
 ## [1.3.2] - 2026-11-18
 
 ### Changed

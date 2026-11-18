@@ -14,7 +14,7 @@ import androidx.room.RoomDatabase
         SyncStateEntity::class,
         WidgetConfigEntity::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
 )
 abstract class WaymarkDatabase : RoomDatabase() {

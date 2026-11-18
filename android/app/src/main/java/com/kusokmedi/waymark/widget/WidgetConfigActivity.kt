@@ -101,10 +101,10 @@ private fun WidgetSettingsScreen(
 
     var showFlag by remember { mutableStateOf(true) }
     var showName by remember { mutableStateOf(true) }
-    var showLevel by remember { mutableStateOf(true) }
+    var showLevel by remember { mutableStateOf(false) }
     var showDate by remember { mutableStateOf(true) }
-    var transparent by remember { mutableStateOf(false) }
-    var cornerRadius by remember { mutableFloatStateOf(24f) }
+    var cornerRadius by remember { mutableFloatStateOf(12f) }
+    var backgroundAlpha by remember { mutableFloatStateOf(100f) }
 
     val scope = rememberCoroutineScope()
 
@@ -115,8 +115,8 @@ private fun WidgetSettingsScreen(
         showName = cfg.showCountryName
         showLevel = cfg.showLevel
         showDate = cfg.showDate
-        transparent = cfg.backgroundStyle == "transparent"
-        cornerRadius = cfg.cornerRadius.coerceIn(8, 36).toFloat()
+        cornerRadius = cfg.cornerRadius.coerceIn(0, 20).toFloat()
+        backgroundAlpha = cfg.backgroundAlpha.coerceIn(0, 100).toFloat()
         loading = false
     }
 
@@ -166,15 +166,17 @@ private fun WidgetSettingsScreen(
             Slider(
                 value = cornerRadius,
                 onValueChange = { cornerRadius = it },
-                valueRange = 8f..36f,
-                steps = 27,
+                valueRange = 0f..20f,
+                steps = 20,
             )
 
-            SettingToggle(
-                title = "Transparent background",
-                subtitle = "Make the widget background translucent.",
-                checked = transparent,
-                onCheckedChange = { transparent = it },
+            Spacer(Modifier.height(12.dp))
+            Text("Background opacity: ${backgroundAlpha.roundToInt()}%", style = MaterialTheme.typography.bodyMedium)
+            Slider(
+                value = backgroundAlpha,
+                onValueChange = { backgroundAlpha = it },
+                valueRange = 0f..100f,
+                steps = 100,
             )
 
             Spacer(Modifier.height(16.dp))
@@ -199,8 +201,9 @@ private fun WidgetSettingsScreen(
                         showCountryName = showName,
                         showLevel = showLevel,
                         showDate = showDate,
-                        backgroundStyle = if (transparent) "transparent" else "surface",
-                        cornerRadius = cornerRadius.roundToInt().coerceIn(8, 36),
+                        backgroundStyle = "surface",
+                        backgroundAlpha = backgroundAlpha.roundToInt().coerceIn(0, 100),
+                        cornerRadius = cornerRadius.roundToInt().coerceIn(0, 20),
                         updatedAt = System.currentTimeMillis(),
                     )
                     scope.launch {

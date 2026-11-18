@@ -51,6 +51,7 @@ import com.kusokmedi.waymark.domain.AdvisoryLevels
 import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.domain.flagEmoji
 import com.kusokmedi.waymark.ui.MainActivity
+import com.kusokmedi.waymark.waymarkContainer
 import kotlinx.coroutines.flow.first
 import java.time.Instant
 import java.time.LocalDate
@@ -122,8 +123,9 @@ internal data class WidgetSnapshot(
                 preset = "watchlist",
                 widgetType = "watchlist",
                 singleCountryId = null,
-                cornerRadius = base.cornerRadius.coerceIn(8, 36),
+                cornerRadius = base.cornerRadius.coerceIn(0, 20),
                 columns = 1,
+                backgroundAlpha = base.backgroundAlpha.coerceIn(0, 100),
                 backgroundStyle = if (base.backgroundStyle == "transparent") "transparent" else "surface",
             )
         }
@@ -133,8 +135,8 @@ internal data class WidgetSnapshot(
 @Composable
 private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
     val context = androidx.glance.LocalContext.current
-    val colors = widgetColors(context, snapshot.dynamicColor, snapshot.config.backgroundStyle == "transparent")
-    val radius = snapshot.config.cornerRadius.coerceIn(8, 36)
+    val colors = widgetColors(context, snapshot.dynamicColor, snapshot.config.backgroundAlpha)
+    val radius = snapshot.config.cornerRadius.coerceIn(0, 20)
 
     Box(
         modifier = GlanceModifier
@@ -286,9 +288,11 @@ internal data class WidgetColors(
     val row: ColorProvider,
 )
 
-private fun widgetColors(context: Context, dynamicColor: Boolean, transparent: Boolean): WidgetColors {
+private fun widgetColors(context: Context, dynamicColor: Boolean, backgroundAlpha: Int): WidgetColors {
     val dark = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
         Configuration.UI_MODE_NIGHT_YES
+
+    val alpha = (backgroundAlpha.coerceIn(0, 100) / 100f)
 
     if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val bgRes = if (dark) android.R.color.system_neutral1_900 else android.R.color.system_neutral1_50
@@ -297,8 +301,8 @@ private fun widgetColors(context: Context, dynamicColor: Boolean, transparent: B
         val chipRes = if (dark) android.R.color.system_neutral2_800 else android.R.color.system_neutral2_100
         val rowRes = if (dark) android.R.color.system_neutral2_700 else android.R.color.system_neutral1_100
 
-        val bg = Color(context.getColor(bgRes)).let { if (transparent) it.copy(alpha = 0.86f) else it.copy(alpha = 0.97f) }
-        val row = Color(context.getColor(rowRes)).let { if (transparent) it.copy(alpha = 0.55f) else it.copy(alpha = 0.78f) }
+        val bg = Color(context.getColor(bgRes)).copy(alpha = alpha)
+        val row = Color(context.getColor(rowRes)).copy(alpha = 0.92f)
         return WidgetColors(
             background = ColorProvider(bg),
             foreground = ColorProvider(Color(context.getColor(fgRes))),
@@ -308,29 +312,48 @@ private fun widgetColors(context: Context, dynamicColor: Boolean, transparent: B
         )
     }
 
+    val bgBase = if (dark) 0x1A211E else 0xFBFBF4
+    val rowBase = if (dark) 0x212B26 else 0xF1F5F0
     return if (dark) {
         WidgetColors(
-            background = ColorProvider(Color(if (transparent) 0xCC1A211E else 0xF21A211E)),
+            background = ColorProvider(Color(bgBase).copy(alpha = alpha)),
             foreground = ColorProvider(Color(0xFFE8F0EB)),
             muted = ColorProvider(Color(0xFFA4B4AB)),
             chip = ColorProvider(Color(0xFF27332D)),
-            row = ColorProvider(Color(if (transparent) 0x99202925 else 0xFF212B26)),
+            row = ColorProvider(Color(rowBase).copy(alpha = 0.92f)),
         )
     } else {
         WidgetColors(
-            background = ColorProvider(Color(if (transparent) 0xCCFBF9F4 else 0xF7FBF9F4)),
+            background = ColorProvider(Color(bgBase).copy(alpha = alpha)),
             foreground = ColorProvider(Color(0xFF16201B)),
             muted = ColorProvider(Color(0xFF5E6E66)),
             chip = ColorProvider(Color(0xFFE7EEE8)),
-            row = ColorProvider(Color(if (transparent) 0x99F1F5F0 else 0xFFF1F5F0)),
+            row = ColorProvider(Color(rowBase).copy(alpha = 0.92f)),
         )
     }
 }
 
 class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val allowMobileData = SettingsRepository(context).settings.first().allowMobileData
-        SyncScheduler.syncNow(context, allowMobileData)
+        val container = context.waymarkContainer()
+        val currentState = container.database.syncStateDao().get()
+        if (currentState?.status == "running") {
+            // Already syncing; just refresh the widget UI.
+            WaymarkWidgetUpdater.updateAll(context)
+            return
+        }
+        val allowMobileData = container.settings.settings.first().allowMobileData
+        // Update state immediately so the widget shows "Updating…".
+        container.database.syncStateDao().upsert(
+            (currentState ?: SyncStateEntity()).copy(
+                lastAttemptAt = System.currentTimeMillis(),
+                status = "running",
+                message = null,
+            )
+        )
+        WaymarkWidgetUpdater.updateAll(context)
+        // Perform sync synchronously in this background coroutine.
+        container.syncEngine.synchronize()
         WaymarkWidgetUpdater.updateAll(context)
     }
 }

@@ -117,6 +117,7 @@ fun CountryCardView(
     onFavorite: (() -> Unit)? = null,
     onWatchlist: (() -> Unit)? = null,
     showWatchlistAction: Boolean = false,
+    showLevel: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -156,11 +157,13 @@ fun CountryCardView(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    LevelChip(
-                        level = card.level,
-                        higherRisk = card.containsHigherRiskAreas,
-                        compact = true,
-                    )
+                    if (showLevel) {
+                        LevelChip(
+                            level = card.level,
+                            higherRisk = card.containsHigherRiskAreas,
+                            compact = true,
+                        )
+                    }
                     AdvisoryDateText(card.advisoryDate)
                 }
             }

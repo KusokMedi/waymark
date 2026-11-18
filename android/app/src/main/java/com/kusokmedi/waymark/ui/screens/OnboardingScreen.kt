@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +53,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.kusokmedi.waymark.domain.AdvisoryLevel
 import com.kusokmedi.waymark.domain.AdvisoryLevels
+import com.kusokmedi.waymark.SyncScheduler
 import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.ui.components.LevelChip
 
@@ -75,6 +77,15 @@ fun OnboardingScreen(
         else countries.filter {
             it.name.contains(query, ignoreCase = true) ||
                 it.isoAlpha2?.equals(query, ignoreCase = true) == true
+        }
+    }
+
+    // Trigger a sync when reaching the country step so the catalogue is available.
+    var syncRequested by remember { mutableStateOf(false) }
+    LaunchedEffect(step, allowMobileData) {
+        if (step == 3 && countries.isEmpty() && !syncRequested) {
+            syncRequested = true
+            com.kusokmedi.waymark.SyncScheduler.syncNow(context, allowMobileData)
         }
     }
 
@@ -251,36 +262,50 @@ private fun CountryStep(
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
         )
         Text(
-            if (countries.isEmpty()) "Waiting for the country catalogue…" else "${selected.size} selected",
+            if (countries.isEmpty()) "Loading country catalogue… (this may take a moment)" else "${selected.size} selected",
             modifier = Modifier.padding(vertical = 6.dp),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
         )
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(countries, key = { it.id }) { card ->
-                Surface(
-                    onClick = {
-                        if (card.id in selected) selected.remove(card.id) else selected.add(card.id)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+        if (countries.isEmpty()) {
+            Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    androidx.compose.material3.CircularProgressIndicator()
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Downloading catalogue…",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        } else {
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(countries, key = { it.id }) { card ->
+                    Surface(
+                        onClick = {
+                            if (card.id in selected) selected.remove(card.id) else selected.add(card.id)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.background,
                     ) {
-                        Checkbox(
-                            checked = card.id in selected,
-                            onCheckedChange = {
-                                if (card.id in selected) selected.remove(card.id) else selected.add(card.id)
-                            },
-                        )
-                        Text(card.name, modifier = Modifier.weight(1f))
-                        Text(
-                            card.isoAlpha2 ?: "",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Checkbox(
+                                checked = card.id in selected,
+                                onCheckedChange = {
+                                    if (card.id in selected) selected.remove(card.id) else selected.add(card.id)
+                                },
+                            )
+                            Text(card.name, modifier = Modifier.weight(1f))
+                            Text(
+                                card.isoAlpha2 ?: "",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
             }
