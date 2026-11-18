@@ -20,7 +20,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-const val BACKUP_SCHEMA_VERSION = 1
+const val BACKUP_SCHEMA_VERSION = 2
 const val BACKUP_APP_ID = "com.kusokmedi.waymark"
 
 @Serializable
@@ -91,7 +91,7 @@ data class BackupHistory(
 @Serializable
 data class BackupWidget(
     val widgetId: Int,
-    val preset: String = "large",
+    val preset: String = "watchlist",
     val countryIds: String = "",
     val showDate: Boolean = true,
     val showLevel: Boolean = true,
@@ -101,6 +101,7 @@ data class BackupWidget(
     val columns: Int = 1,
     val widgetType: String = "watchlist",
     val singleCountryId: String? = null,
+    val cornerRadius: Int = 24,
 )
 
 @Serializable
@@ -110,6 +111,8 @@ data class BackupSettings(
     val notificationsEnabled: Boolean = false,
     val syncIntervalHours: Int = 12,
     val automaticSync: Boolean = true,
+    val notificationSoundUri: String = "",
+    val notificationImportance: String = "high",
 )
 
 data class ImportResult(
@@ -219,6 +222,7 @@ class BackupManager(
                     columns = it.columns,
                     widgetType = it.widgetType,
                     singleCountryId = it.singleCountryId,
+                    cornerRadius = it.cornerRadius,
                 )
             },
             settings = BackupSettings(
@@ -227,12 +231,14 @@ class BackupManager(
                 notificationsEnabled = current.notificationsEnabled,
                 syncIntervalHours = current.syncIntervalHours,
                 automaticSync = current.automaticSync,
+                notificationSoundUri = current.notificationSoundUri,
+                notificationImportance = current.notificationImportance,
             ),
         )
     }
 
     private suspend fun validateAndRestore(file: BackupFile, replaceExisting: Boolean): ImportResult {
-        if (file.schemaVersion != BACKUP_SCHEMA_VERSION) {
+        if (file.schemaVersion !in 1..BACKUP_SCHEMA_VERSION) {
             return ImportResult(false, "Unsupported backup schema version ${file.schemaVersion}.")
         }
         if (file.appId != BACKUP_APP_ID) {
@@ -283,7 +289,9 @@ class BackupManager(
             ok
         }.distinctBy { it.fingerprint }
 
-        val validWidgets = file.widgets.filter { it.widgetId > 0 }.distinctBy { it.widgetId }
+        val validWidgets = file.widgets
+            .filter { it.widgetId > 0 && it.widgetType != "single" }
+            .distinctBy { it.widgetId }
 
         db.withTransaction {
             if (replaceExisting) {
@@ -363,7 +371,7 @@ class BackupManager(
                     validWidgets.map {
                         WidgetConfigEntity(
                             widgetId = it.widgetId,
-                            preset = it.preset,
+                            preset = "watchlist",
                             countryIds = it.countryIds,
                             showDate = it.showDate,
                             showLevel = it.showLevel,
@@ -372,8 +380,9 @@ class BackupManager(
                             backgroundStyle = it.backgroundStyle,
                             columns = it.columns.coerceIn(1, 3),
                             updatedAt = System.currentTimeMillis(),
-                            widgetType = it.widgetType.ifBlank { "watchlist" },
-                            singleCountryId = it.singleCountryId,
+                            widgetType = "watchlist",
+                            singleCountryId = null,
+                            cornerRadius = it.cornerRadius.coerceIn(8, 36),
                         )
                     }
                 )
@@ -386,6 +395,8 @@ class BackupManager(
             settings.setNotificationsEnabled(restored.notificationsEnabled)
             settings.setSyncIntervalHours(restored.syncIntervalHours)
             settings.setAutomaticSync(restored.automaticSync)
+            settings.setNotificationSoundUri(restored.notificationSoundUri)
+            settings.setNotificationImportance(restored.notificationImportance.ifBlank { "high" })
         }
         settings.setOnboardingCompleted(true)
 

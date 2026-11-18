@@ -7,7 +7,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioAttributes
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -15,17 +18,45 @@ import com.kusokmedi.waymark.R
 import com.kusokmedi.waymark.domain.AdvisoryChange
 import com.kusokmedi.waymark.domain.ChangeType
 import com.kusokmedi.waymark.ui.MainActivity
+import java.security.MessageDigest
 
 class ChangeNotifier(private val context: Context) {
+    @Volatile private var soundUri: String = ""
+    @Volatile private var importanceSetting: String = "high"
+    @Volatile private var changesChannelId: String = channelIdFor("high", "")
+
+    fun initialize(soundUri: String, importance: String) {
+        this.soundUri = soundUri
+        this.importanceSetting = normalizeImportance(importance)
+        this.changesChannelId = channelIdFor(this.importanceSetting, this.soundUri)
+        createChannels()
+    }
+
+    fun applySettings(soundUri: String, importance: String) {
+        initialize(soundUri, importance)
+    }
+
     fun createChannels() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
+
+        // Remove previous advisory channel variants to avoid stale duplicates.
+        manager.notificationChannels
+            .filter { it.id.startsWith(CHANNEL_CHANGES_PREFIX) && it.id != changesChannelId }
+            .forEach { manager.deleteNotificationChannel(it.id) }
+
+        val importance = when (normalizeImportance(importanceSetting)) {
+            "low" -> NotificationManager.IMPORTANCE_LOW
+            "default" -> NotificationManager.IMPORTANCE_DEFAULT
+            else -> NotificationManager.IMPORTANCE_HIGH
+        }
         val changes = NotificationChannel(
-            CHANNEL_CHANGES,
+            changesChannelId,
             context.getString(R.string.notification_channel_changes),
-            NotificationManager.IMPORTANCE_DEFAULT,
+            importance,
         ).apply {
             description = context.getString(R.string.notification_channel_changes_description)
+            setSound(resolveSoundUri(soundUri), notificationAudioAttributes())
         }
         val sync = NotificationChannel(
             CHANNEL_SYNC,
@@ -42,9 +73,7 @@ class ChangeNotifier(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
             PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
+        ) return
         if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return
 
         changes.forEach { change ->
@@ -58,13 +87,8 @@ class ChangeNotifier(private val context: Context) {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
-            val priority = when (change.type) {
-                ChangeType.WORSENED -> NotificationCompat.PRIORITY_HIGH
-                ChangeType.REGIONAL -> NotificationCompat.PRIORITY_DEFAULT
-                ChangeType.IMPROVED -> NotificationCompat.PRIORITY_DEFAULT
-                ChangeType.DETAILS -> NotificationCompat.PRIORITY_LOW
-            }
-            val notification = NotificationCompat.Builder(context, CHANNEL_CHANGES)
+            val priority = builderPriorityFor(change.type)
+            val builder = NotificationCompat.Builder(context, changesChannelId)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(change.title)
                 .setContentText(change.message)
@@ -72,9 +96,15 @@ class ChangeNotifier(private val context: Context) {
                 .setPriority(priority)
                 .setAutoCancel(true)
                 .setContentIntent(pending)
-                .build()
+
+            // Pre-O devices respect builder sound/priority; on O+ channel controls it.
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                val uri = resolveSoundUri(soundUri)
+                if (uri != null) builder.setSound(uri) else builder.setSound(null)
+            }
+
             try {
-                NotificationManagerCompat.from(context).notify(change.fingerprint.hashCode(), notification)
+                NotificationManagerCompat.from(context).notify(change.fingerprint.hashCode(), builder.build())
             } catch (_: SecurityException) {
                 // Permission was revoked between the check and notify().
             }
@@ -85,9 +115,7 @@ class ChangeNotifier(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
             PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
+        ) return
         val notification = NotificationCompat.Builder(context, CHANNEL_SYNC)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("Waymark could not update advisories")
@@ -103,8 +131,52 @@ class ChangeNotifier(private val context: Context) {
         }
     }
 
+    private fun builderPriorityFor(type: ChangeType): Int {
+        val base = when (normalizeImportance(importanceSetting)) {
+            "low" -> NotificationCompat.PRIORITY_LOW
+            "default" -> NotificationCompat.PRIORITY_DEFAULT
+            else -> NotificationCompat.PRIORITY_HIGH
+        }
+        return when (type) {
+            ChangeType.WORSENED -> maxOf(base, NotificationCompat.PRIORITY_DEFAULT)
+            ChangeType.DETAILS -> minOf(base, NotificationCompat.PRIORITY_DEFAULT)
+            else -> base
+        }
+    }
+
+    private fun resolveSoundUri(value: String): Uri? = when {
+        value == "silent" -> null
+        value.isBlank() -> Settings.System.DEFAULT_NOTIFICATION_URI
+        else -> runCatching { Uri.parse(value) }.getOrNull() ?: Settings.System.DEFAULT_NOTIFICATION_URI
+    }
+
+    private fun notificationAudioAttributes(): AudioAttributes =
+        AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+    private fun normalizeImportance(value: String): String = when (value) {
+        "low", "default", "high" -> value
+        else -> "high"
+    }
+
+    private fun channelIdFor(importance: String, sound: String): String {
+        val soundKey = when {
+            sound == "silent" -> "silent"
+            sound.isBlank() -> "default"
+            else -> shortHash(sound)
+        }
+        return "${CHANNEL_CHANGES_PREFIX}_${normalizeImportance(importance)}_$soundKey"
+    }
+
+    private fun shortHash(value: String): String {
+        val digest = MessageDigest.getInstance("SHA-1").digest(value.toByteArray())
+        return digest.take(4).joinToString("") { "%02x".format(it) }
+    }
+
     companion object {
-        const val CHANNEL_CHANGES = "advisory_changes"
+        private const val CHANNEL_CHANGES_PREFIX = "advisory_changes"
         const val CHANNEL_SYNC = "sync_status"
         private const val SYNC_NOTIFICATION_ID = 7001
     }

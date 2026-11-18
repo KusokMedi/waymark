@@ -41,7 +41,13 @@ import com.kusokmedi.waymark.ui.screens.CountryDetailScreen
 import com.kusokmedi.waymark.ui.screens.ExploreScreen
 import com.kusokmedi.waymark.ui.screens.HistoryScreen
 import com.kusokmedi.waymark.ui.screens.OnboardingScreen
-import com.kusokmedi.waymark.ui.screens.SettingsScreen
+import com.kusokmedi.waymark.ui.screens.SettingsHomeScreen
+import com.kusokmedi.waymark.ui.screens.AppearanceSettingsScreen
+import com.kusokmedi.waymark.ui.screens.SyncSettingsScreen
+import com.kusokmedi.waymark.ui.screens.SyncDetailsScreen
+import com.kusokmedi.waymark.ui.screens.NotificationSettingsScreen
+import com.kusokmedi.waymark.ui.screens.DataManagementScreen
+import com.kusokmedi.waymark.ui.screens.AboutSettingsScreen
 import com.kusokmedi.waymark.ui.screens.WatchlistScreen
 import com.kusokmedi.waymark.ui.theme.WaymarkTheme
 import com.kusokmedi.waymark.waymarkContainer
@@ -128,7 +134,7 @@ private fun MainNavigation(
     val syncState by viewModel.syncState.collectAsState()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val route = backStackEntry?.destination?.route
-    val showBottomBar = route?.startsWith("country/") != true
+    val showBottomBar = route == "watchlist" || route == "explore" || route == "history" || route == "settings"
 
     LaunchedEffect(deepLinkCountry) {
         val id = deepLinkCountry
@@ -173,6 +179,7 @@ private fun MainNavigation(
                     onToggleFavorite = { card -> viewModel.setFavorite(card.id, !card.isFavorite) },
                     onRefresh = viewModel::syncNow,
                     onExplore = { navController.navigate("explore") },
+                    onOpenSyncDetails = { navController.navigate("settings/sync_details") },
                 )
             }
             composable("explore") {
@@ -191,7 +198,35 @@ private fun MainNavigation(
                 )
             }
             composable("settings") {
-                SettingsScreen(viewModel)
+                SettingsHomeScreen(
+                    onOpen = { sub -> navController.navigate(sub) },
+                )
+            }
+            composable("settings/appearance") {
+                AppearanceSettingsScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+            }
+            composable("settings/sync") {
+                SyncSettingsScreen(
+                    viewModel = viewModel,
+                    syncState = syncState,
+                    onBack = { navController.popBackStack() },
+                    onOpenDetails = { navController.navigate("settings/sync_details") },
+                )
+            }
+            composable("settings/sync_details") {
+                SyncDetailsScreen(
+                    syncState = syncState,
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable("settings/notifications") {
+                NotificationSettingsScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+            }
+            composable("settings/data") {
+                DataManagementScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
+            }
+            composable("settings/about") {
+                AboutSettingsScreen(onBack = { navController.popBackStack() })
             }
             composable(
                 "country/{countryId}",

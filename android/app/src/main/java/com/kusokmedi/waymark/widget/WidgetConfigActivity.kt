@@ -6,34 +6,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,8 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.kusokmedi.waymark.data.local.WidgetConfigEntity
-import com.kusokmedi.waymark.domain.CountryCard
-import com.kusokmedi.waymark.domain.flagEmoji
 import com.kusokmedi.waymark.ui.theme.WaymarkTheme
 import com.kusokmedi.waymark.waymarkContainer
 import kotlinx.coroutines.launch
@@ -59,7 +54,6 @@ class WidgetConfigActivity : ComponentActivity() {
             AppWidgetManager.EXTRA_APPWIDGET_ID,
             AppWidgetManager.INVALID_APPWIDGET_ID,
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
-        setResult(RESULT_CANCELED)
         if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish()
             return
@@ -67,20 +61,11 @@ class WidgetConfigActivity : ComponentActivity() {
         val container = application.waymarkContainer()
         setContent {
             WaymarkTheme {
-                SingleCountryPickerScreen(
+                WidgetSettingsScreen(
                     onCancel = { finish() },
-                    onSave = { countryId ->
+                    onSave = { config ->
                         lifecycleScope.launch {
-                            container.database.widgetConfigDao().upsert(
-                                WidgetConfigEntity(
-                                    widgetId = widgetId,
-                                    preset = "single",
-                                    countryIds = countryId,
-                                    widgetType = "single",
-                                    singleCountryId = countryId,
-                                    updatedAt = System.currentTimeMillis(),
-                                )
-                            )
+                            container.database.widgetConfigDao().upsert(config)
                             WaymarkWidgetUpdater.updateAll(this@WidgetConfigActivity)
                             setResult(
                                 RESULT_OK,
@@ -89,6 +74,11 @@ class WidgetConfigActivity : ComponentActivity() {
                             finish()
                         }
                     },
+                    loadConfig = {
+                        container.database.widgetConfigDao().get(widgetId)
+                            ?: WidgetConfigEntity(widgetId = widgetId, preset = "watchlist", widgetType = "watchlist")
+                    },
+                    widgetId = widgetId,
                 )
             }
         }
@@ -97,101 +87,124 @@ class WidgetConfigActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SingleCountryPickerScreen(
+private fun WidgetSettingsScreen(
+    widgetId: Int,
+    loadConfig: suspend () -> WidgetConfigEntity,
     onCancel: () -> Unit,
-    onSave: (String) -> Unit,
+    onSave: (WidgetConfigEntity) -> Unit,
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
-    val container = remember { context.applicationContext.waymarkContainer() }
-    val countries by container.repository.allCountries.collectAsState(initial = emptyList())
-    var query by remember { mutableStateOf("") }
-    var selectedId by remember { mutableStateOf<String?>(null) }
+    var loaded by remember { mutableStateOf(false) }
+    var showFlag by remember { mutableStateOf(true) }
+    var showName by remember { mutableStateOf(true) }
+    var showLevel by remember { mutableStateOf(true) }
+    var showDate by remember { mutableStateOf(true) }
+    var transparent by remember { mutableStateOf(false) }
+    var cornerRadius by remember { mutableFloatStateOf(24f) }
+    var base by remember { mutableStateOf<WidgetConfigEntity?>(null) }
 
-    val filtered = remember(countries, query) {
-        if (query.isBlank()) countries
-        else countries.filter {
-            it.name.contains(query, ignoreCase = true) ||
-                it.isoAlpha2?.equals(query, ignoreCase = true) == true ||
-                it.isoAlpha3?.equals(query, ignoreCase = true) == true
-        }
+    LaunchedEffect(widgetId) {
+        val cfg = loadConfig()
+        base = cfg
+        showFlag = cfg.showFlag
+        showName = cfg.showCountryName
+        showLevel = cfg.showLevel
+        showDate = cfg.showDate
+        transparent = cfg.backgroundStyle == "transparent"
+        cornerRadius = cfg.cornerRadius.coerceIn(8, 36).toFloat()
+        loaded = true
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Choose a country") },
+                title = { Text("Widget settings") },
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Cancel")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
                     TextButton(
-                        onClick = { selectedId?.let(onSave) },
-                        enabled = selectedId != null,
+                        onClick = {
+                            val current = base ?: WidgetConfigEntity(widgetId = widgetId)
+                            onSave(
+                                current.copy(
+                                    preset = "watchlist",
+                                    widgetType = "watchlist",
+                                    showFlag = showFlag,
+                                    showCountryName = showName,
+                                    showLevel = showLevel,
+                                    showDate = showDate,
+                                    backgroundStyle = if (transparent) "transparent" else "surface",
+                                    cornerRadius = cornerRadius.toInt().coerceIn(8, 36),
+                                    updatedAt = System.currentTimeMillis(),
+                                )
+                            )
+                        },
+                        enabled = loaded,
                     ) { Text("Save") }
                 },
             )
         },
     ) { padding ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        if (!loaded) {
+            Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
+                Text("Loading…")
+            }
+            return@Scaffold
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+        ) {
             Text(
-                "This widget will show the current advisory for the selected country.",
+                "This widget shows countries from your watchlist.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
-            OutlinedTextField(
-                value = query,
-                onValueChange = { query = it },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                label = { Text("Search countries") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                singleLine = true,
+            Spacer(Modifier.height(16.dp))
+
+            Text("Appearance", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(8.dp))
+            Text("Corner radius: ${cornerRadius.toInt()} dp")
+            Slider(
+                value = cornerRadius,
+                onValueChange = { cornerRadius = it },
+                valueRange = 8f..36f,
+                steps = 27,
             )
-            if (filtered.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        if (countries.isEmpty()) "No countries available yet. Open Waymark to sync data." else "No countries match your search.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(24.dp),
-                    )
-                }
-            } else {
-                LazyColumn(modifier = Modifier.fillMaxSize().padding(top = 8.dp)) {
-                    items(filtered, key = { it.id }) { card ->
-                        CountryPickRow(
-                            card = card,
-                            selected = card.id == selectedId,
-                            onSelect = { selectedId = card.id },
-                        )
-                        HorizontalDivider()
-                    }
-                }
-            }
+            ToggleRow("Transparent background", "Transparency is off by default.", transparent) { transparent = it }
+
+            Spacer(Modifier.height(16.dp))
+            Text("Visible elements", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(8.dp))
+            ToggleRow("Show country flag", null, showFlag) { showFlag = it }
+            ToggleRow("Show country name", null, showName) { showName = it }
+            ToggleRow("Show advisory level", null, showLevel) { showLevel = it }
+            ToggleRow("Show advisory date", null, showDate) { showDate = it }
         }
     }
 }
 
 @Composable
-private fun CountryPickRow(card: CountryCard, selected: Boolean, onSelect: () -> Unit) {
+private fun ToggleRow(title: String, description: String?, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onSelect)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(flagEmoji(card.isoAlpha2), style = MaterialTheme.typography.titleLarge)
-        Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(card.name, fontWeight = FontWeight.Medium)
-            Text(
-                card.isoAlpha2 ?: card.isoAlpha3 ?: "",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Text(title)
+            if (!description.isNullOrBlank()) {
+                Text(
+                    description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
-        RadioButton(selected = selected, onClick = onSelect)
+        Switch(checked = checked, onCheckedChange = onChange)
     }
 }

@@ -36,9 +36,9 @@ class WaymarkApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
-        container.notifier.createChannels()
         appScope.launch {
             val settings = container.settings.settings.first()
+            container.notifier.initialize(settings.notificationSoundUri, settings.notificationImportance)
             if (settings.automaticSync) {
                 SyncScheduler.schedulePeriodic(this@WaymarkApp, settings.syncIntervalHours)
             } else {

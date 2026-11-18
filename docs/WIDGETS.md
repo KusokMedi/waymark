@@ -1,25 +1,28 @@
 # Widgets
 
-Waymark provides real Android App Widgets built with Jetpack Glance. They are
-not web views, shortcuts or in-app simulations.
+Waymark provides a real Android App Widget built with Jetpack Glance. It is not
+a web view, shortcut or in-app simulation.
 
-## Available widgets
+## Available widget
 
 | Widget | Default size | Behavior |
 |---|---|---|
 | Waymark Watchlist | 2×2 (resizable) | Shows countries from your watchlist with current advisory levels and sync status |
-| Waymark Country | 4×2 (resizable) | Shows the current advisory for one selected country |
 
-Both widgets are resizable. Because Glance uses `SizeMode.Responsive`, content
+The widget is resizable. Because Glance uses `SizeMode.Responsive`, content
 adapts to the launcher-provided size.
 
 ## Configuration
 
-- **Waymark Watchlist** has no configuration screen. It is added immediately and
-  always shows the countries in your current watchlist, in watchlist order.
-  Manage which countries appear by editing your watchlist in the app.
-- **Waymark Country** opens a country picker when added. Choose one country to
-  display. To change the country, remove and re-add the widget.
+- The widget is added immediately and always shows the countries in your current
+  watchlist, in watchlist order. Manage which countries appear by editing your
+  watchlist in the app.
+- Tap the settings (⚙) button in the widget header to open widget settings.
+- Available options:
+  - **Corner radius** — adjust the widget corner rounding.
+  - **Transparent background** — off by default.
+  - **Visible elements** — show or hide the flag, country name, advisory level,
+    and advisory date.
 
 Every widget instance stores its own configuration keyed by App Widget ID.
 Configuration survives process restarts and device reboots because it lives in
@@ -27,22 +30,29 @@ the local Room database.
 
 ## Behavior
 
-- Widgets read from the local database; the refresh action triggers a
+- Widgets read from the local database; the refresh (↻) action triggers a
   synchronization so new data can be fetched and the status updates.
-- The header shows sync status: `Updating…` while a sync is running, or the last
-  successful update time when idle (for example `Updated 14:32`).
+- The header shows sync status:
+  - `Updating.` / `Updating..` / `Updating...` while a sync is running.
+  - `Updated HH:mm` (or date and time) after a successful sync.
+  - `Error, last update at …` when the last attempt failed or was interrupted.
 - Tapping a country opens its dashboard in the app.
-- With an empty watchlist (or no country selected for the single-country
-  widget) the widget shows a clear empty state instead of a fabricated advisory.
+- With an empty watchlist the widget shows a clear empty state instead of a
+  fabricated advisory.
 - Deleting a widget removes its stored configuration.
+
+## Appearance
+
+- When **Dynamic color** is enabled in app settings (default), the widget
+  follows Android system colors on supported devices (Android 12+).
+- Country flags are rendered as emoji derived from ISO country codes.
 
 ## Data shown
 
-- Country flag (emoji, derived from the country code).
-- Country name.
-- Advisory level with official wording, or `Unknown` when unavailable.
-- Advisory publication date when available.
-- Regional advisory count on the single-country widget when present.
+- Country flag (optional).
+- Country name (optional).
+- Advisory level with official wording, or `Unknown` when unavailable (optional).
+- Advisory publication date when available (optional).
 
 The widget never invents an advisory level; unknown data is shown as unknown.
 
@@ -56,7 +66,8 @@ arbitrary layouts or interactions:
 - Exact dimensions are controlled by the launcher; `SizeMode.Responsive`
   provides breakpoints rather than pixel-perfect layouts.
 - Widget updates are subject to Android scheduling. There is no guaranteed
-  refresh time, and continuous animations are not available in App Widgets.
+  refresh time, and continuous animations are not available in App Widgets (the
+  updating indicator is refreshed periodically while a sync is in progress).
 - Flags are rendered as emoji based on ISO country codes. Appearance may vary
   slightly by device and system font.
 

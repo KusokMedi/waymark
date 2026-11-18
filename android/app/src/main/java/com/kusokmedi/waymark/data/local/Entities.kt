@@ -154,7 +154,7 @@ data class SyncStateEntity(
 @Entity(tableName = "widget_configs")
 data class WidgetConfigEntity(
     @PrimaryKey val widgetId: Int,
-    val preset: String = "large",
+    val preset: String = "watchlist",
     val countryIds: String = "",
     val showDate: Boolean = true,
     val showLevel: Boolean = true,
@@ -165,4 +165,5 @@ data class WidgetConfigEntity(
     val updatedAt: Long = 0,
     val widgetType: String = "watchlist",
     val singleCountryId: String? = null,
+    val cornerRadius: Int = 24,
 )

@@ -59,6 +59,8 @@ fun levelContainerColor(level: AdvisoryLevel?): Color = when (level) {
 fun LevelChip(
     level: AdvisoryLevel?,
     higherRisk: Boolean = false,
+    compact: Boolean = false,
+    showLabel: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val label = if (level == null) "Unknown" else "Level ${level.number}"
@@ -66,21 +68,25 @@ fun LevelChip(
         modifier = modifier,
         color = levelContainerColor(level),
         contentColor = levelColor(level),
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(10.dp),
     ) {
-        Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = if (compact) 4.dp else 6.dp)) {
             Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-            Text(
-                AdvisoryLevels.label(level),
-                style = MaterialTheme.typography.labelSmall,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (showLabel) {
+                Text(
+                    AdvisoryLevels.label(level),
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = if (compact) 1 else 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
             if (higherRisk) {
                 Text(
-                    "Contains higher-risk areas",
+                    "Higher-risk areas",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
@@ -145,25 +151,17 @@ fun CountryCardView(
                         )
                     }
                 }
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    if (card.level == null) "Advisory unknown" else AdvisoryLevels.label(card.level),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(6.dp))
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    LevelChip(card.level, card.containsHigherRiskAreas)
-                    Text(
-                        formatAdvisoryDate(card.advisoryDate),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    LevelChip(
+                        level = card.level,
+                        higherRisk = card.containsHigherRiskAreas,
+                        compact = true,
                     )
+                    AdvisoryDateText(card.advisoryDate)
                 }
             }
             if (onFavorite != null) {
@@ -185,6 +183,38 @@ fun CountryCardView(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AdvisoryDateText(value: String?, modifier: Modifier = Modifier) {
+    val parts = advisoryDateParts(value)
+    val year = parts.second
+    Column(modifier = modifier) {
+        Text(
+            parts.first,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        if (year != null) {
+            Text(
+                year,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+fun advisoryDateParts(value: String?): Pair<String, String?> {
+    if (value.isNullOrBlank()) return "Advisory date" to "unknown"
+    return try {
+        val date = LocalDate.parse(value)
+        val dayMonth = date.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
+        val year = date.format(DateTimeFormatter.ofPattern("yyyy", Locale.getDefault()))
+        "Advisory $dayMonth" to year
+    } catch (_: Exception) {
+        "Advisory date" to "unknown"
     }
 }
 

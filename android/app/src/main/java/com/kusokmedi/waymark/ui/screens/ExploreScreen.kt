@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -27,11 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.kusokmedi.waymark.data.sortedBySeverity
+import com.kusokmedi.waymark.domain.AdvisoryLevel
 import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.ui.components.CountryCardView
 
-private enum class ExploreSort { NAME, LEVEL, FAVORITES }
+private enum class ExploreSort(val label: String) {
+    NAME_ASC("A–Z"),
+    NAME_DESC("Z–A"),
+    LEVEL_ASC("Level 1–4"),
+    LEVEL_DESC("Level 4–1"),
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +48,7 @@ fun ExploreScreen(
     onToggleWatchlist: (CountryCard) -> Unit,
 ) {
     var query by remember { mutableStateOf("") }
-    var sort by remember { mutableStateOf(ExploreSort.NAME) }
+    var sort by remember { mutableStateOf(ExploreSort.NAME_ASC) }
 
     val filtered = remember(countries, query, sort) {
         val base = countries.filter {
@@ -52,9 +58,10 @@ fun ExploreScreen(
                 it.isoAlpha3?.equals(query, ignoreCase = true) == true
         }
         when (sort) {
-            ExploreSort.NAME -> base.sortedBy { it.name.lowercase() }
-            ExploreSort.LEVEL -> base.sortedBySeverity()
-            ExploreSort.FAVORITES -> base.filter { it.isFavorite }.sortedBy { it.name.lowercase() }
+            ExploreSort.NAME_ASC -> base.sortedBy { it.name.lowercase() }
+            ExploreSort.NAME_DESC -> base.sortedByDescending { it.name.lowercase() }
+            ExploreSort.LEVEL_ASC -> base.sortedWith(compareByCountryLevel(ascending = true))
+            ExploreSort.LEVEL_DESC -> base.sortedWith(compareByCountryLevel(ascending = false))
         }
     }
 
@@ -80,23 +87,24 @@ fun ExploreScreen(
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 singleLine = true,
             )
-            androidx.compose.foundation.layout.Row(
+            LazyRow(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                FilterChip(selected = sort == ExploreSort.NAME, onClick = { sort = ExploreSort.NAME }, label = { Text("A–Z") })
-                FilterChip(selected = sort == ExploreSort.LEVEL, onClick = { sort = ExploreSort.LEVEL }, label = { Text("Level") })
-                FilterChip(selected = sort == ExploreSort.FAVORITES, onClick = { sort = ExploreSort.FAVORITES }, label = { Text("Favorites") })
+                items(ExploreSort.entries) { option ->
+                    FilterChip(
+                        selected = sort == option,
+                        onClick = { sort = option },
+                        label = { Text(option.label) },
+                    )
+                }
             }
         }
         if (filtered.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
                 Text(
-                    when {
-                        countries.isEmpty() -> "No country catalogue is available yet. Refresh to download advisories."
-                        sort == ExploreSort.FAVORITES -> "No favorite countries yet. Tap the star on a country card."
-                        else -> "No countries match “$query”."
-                    },
+                    if (countries.isEmpty()) "No country catalogue is available yet. Refresh to download advisories."
+                    else "No countries match \"$query\".",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -119,4 +127,12 @@ fun ExploreScreen(
             }
         }
     }
+}
+
+private fun compareByCountryLevel(ascending: Boolean): Comparator<CountryCard> {
+    val levelValue: (CountryCard) -> Int = { card ->
+        card.level?.number ?: if (ascending) Int.MAX_VALUE else Int.MIN_VALUE
+    }
+    val base = if (ascending) compareBy(levelValue) else compareByDescending(levelValue)
+    return base.thenBy { it.name.lowercase() }
 }

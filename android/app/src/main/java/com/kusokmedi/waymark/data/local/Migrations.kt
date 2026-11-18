@@ -17,5 +17,13 @@ object Migrations {
         }
     }
 
-    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2)
+    private val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE widget_configs ADD COLUMN cornerRadius INTEGER NOT NULL DEFAULT 24")
+            // Single-country widgets are removed; drop orphan configs so they don't linger.
+            db.execSQL("DELETE FROM widget_configs WHERE widgetType = 'single'")
+        }
+    }
+
+    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2, MIGRATION_2_3)
 }

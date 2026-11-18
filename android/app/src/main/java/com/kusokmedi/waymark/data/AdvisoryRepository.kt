@@ -89,7 +89,7 @@ class AdvisoryRepository(private val db: WaymarkDatabase) {
 
     suspend fun getCountry(id: String): CountryEntity? = countries.getById(id)
 
-    suspend fun addToWatchlist(countryId: String) {
+    suspend fun addToWatchlist(countryId: String, notificationsEnabled: Boolean = false) {
         if (countries.getById(countryId) == null) return
         db.withTransaction {
             if (watchlist.get(countryId) != null) return@withTransaction
@@ -99,7 +99,7 @@ class AdvisoryRepository(private val db: WaymarkDatabase) {
                     countryId = countryId,
                     position = position,
                     isFavorite = false,
-                    notificationsEnabled = false,
+                    notificationsEnabled = notificationsEnabled,
                     addedAt = System.currentTimeMillis(),
                 )
             )

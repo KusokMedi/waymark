@@ -1,7 +1,13 @@
 package com.kusokmedi.waymark.ui.screens
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +29,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -36,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kusokmedi.waymark.domain.AdvisoryLevel
@@ -48,6 +56,7 @@ fun OnboardingScreen(
     countries: List<CountryCard>,
     onComplete: (List<String>, Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
     var step by remember { mutableStateOf(0) }
     val selected = remember { mutableStateListOf<String>() }
     var notifications by remember { mutableStateOf(false) }
@@ -64,52 +73,59 @@ fun OnboardingScreen(
         }
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            StepIndicator(step)
-            Spacer(Modifier.height(24.dp))
-            when (step) {
-                0 -> WelcomeStep()
-                1 -> LevelsStep()
-                2 -> CountryStep(
-                    query = query,
-                    onQueryChange = { query = it },
-                    countries = filtered,
-                    selected = selected,
-                )
-                else -> NotificationStep(
-                    enabled = notifications,
-                    onEnabledChange = { notifications = it },
-                    selectedCount = selected.size,
-                )
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            modifier = Modifier.fillMaxSize().padding(24.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            if (step > 0) {
-                TextButton(onClick = { step -= 1 }) { Text("Back") }
-            } else {
-                Spacer(Modifier)
+            Column(modifier = Modifier.weight(1f)) {
+                StepIndicator(step)
+                Spacer(Modifier.height(24.dp))
+                when (step) {
+                    0 -> WelcomeStep()
+                    1 -> LevelsStep()
+                    2 -> CountryStep(
+                        query = query,
+                        onQueryChange = { query = it },
+                        countries = filtered,
+                        selected = selected,
+                    )
+                    else -> PermissionsStep(
+                        notificationsEnabled = notifications,
+                        onNotificationsChange = { notifications = it },
+                        selectedCount = selected.size,
+                        onRequestBatteryExemption = { requestBatteryExemption(context) },
+                    )
+                }
             }
-            Button(
-                onClick = {
-                    if (step < 3) {
-                        step += 1
-                    } else {
-                        onComplete(selected.toList(), notifications)
-                        if (notifications && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        }
-                    }
-                },
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(if (step < 3) "Continue" else "Start using Waymark")
+                if (step > 0) {
+                    TextButton(onClick = { step -= 1 }) { Text("Back") }
+                } else {
+                    Spacer(Modifier)
+                }
+                Button(
+                    onClick = {
+                        if (step < 3) {
+                            step += 1
+                        } else {
+                            onComplete(selected.toList(), notifications)
+                            if (notifications && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            }
+                        }
+                    },
+                ) {
+                    Text(if (step < 3) "Continue" else "Start using Waymark")
+                }
             }
         }
     }
@@ -122,8 +138,7 @@ private fun StepIndicator(step: Int) {
             Box(
                 modifier = Modifier
                     .height(4.dp)
-                    .weight(1f)
-                    .padding(0.dp),
+                    .weight(1f),
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -185,7 +200,6 @@ private fun LevelsStep() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 LevelChip(level)
-                Spacer(Modifier.height(0.dp))
                 Text(
                     description,
                     modifier = Modifier.padding(start = 12.dp),
@@ -237,6 +251,7 @@ private fun CountryStep(
                         if (card.id in selected) selected.remove(card.id) else selected.add(card.id)
                     },
                     modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
@@ -262,42 +277,70 @@ private fun CountryStep(
 }
 
 @Composable
-private fun NotificationStep(enabled: Boolean, onEnabledChange: (Boolean) -> Unit, selectedCount: Int) {
+private fun PermissionsStep(
+    notificationsEnabled: Boolean,
+    onNotificationsChange: (Boolean) -> Unit,
+    selectedCount: Int,
+    onRequestBatteryExemption: () -> Unit,
+) {
+    val context = LocalContext.current
+    val ignoringBattery = isIgnoringBatteryOptimizations(context)
+
     Column {
-        Text("Stay informed", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text("Permissions", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Text(
-            "Waymark can notify you when an advisory for one of your $selectedCount selected countries changes.",
+            "Optional permissions to keep you informed and help background updates run reliably.",
             style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(Modifier.height(16.dp))
+
+        Text("Notifications", fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(6.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text("Advisory notifications", fontWeight = FontWeight.SemiBold)
+                Text("Advisory notifications")
                 Text(
-                    "Optional. Uses Android notifications and the standard notification sound.",
+                    "Notify about meaningful changes for your $selectedCount selected countries. Uses Android notifications.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Switch(checked = enabled, onCheckedChange = onEnabledChange)
+            Switch(checked = notificationsEnabled, onCheckedChange = onNotificationsChange)
         }
-        Spacer(Modifier.height(20.dp))
-        Text(
-            "You can enable notifications later in Settings. Waymark will not ask for notification permission unless you choose to enable them.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+
         Spacer(Modifier.height(16.dp))
         HorizontalDivider()
         Spacer(Modifier.height(16.dp))
-        Text("What Waymark sends", fontWeight = FontWeight.SemiBold)
+
+        Text("Background updates", fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(6.dp))
         Text(
-            "Only advisory changes for countries you follow. The first synchronization never sends notifications.",
+            "To reduce delays in background synchronization, you can allow Waymark to ignore battery optimizations. This is optional.",
             style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(8.dp))
+        if (ignoringBattery) {
+            Text(
+                "Battery optimization exemption is already allowed.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        } else {
+            OutlinedButton(onClick = onRequestBatteryExemption) {
+                Text("Allow background updates")
+            }
+        }
+
+        Spacer(Modifier.height(20.dp))
+        Text(
+            "You can change these later in Settings. Waymark will not ask for notification permission unless you enable notifications.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -313,7 +356,30 @@ private fun InfoLine(title: String, body: String) {
         )
         Column(modifier = Modifier.padding(start = 10.dp)) {
             Text(title, fontWeight = FontWeight.SemiBold)
-            Text(body, style = MaterialTheme.typography.bodySmall)
+            Text(body, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+private fun isIgnoringBatteryOptimizations(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true
+    val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager ?: return false
+    return pm.isIgnoringBatteryOptimizations(context.packageName)
+}
+
+@SuppressLint("BatteryLife")
+private fun requestBatteryExemption(context: Context) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+    try {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+            data = Uri.parse("package:${context.packageName}")
+        }
+        context.startActivity(intent)
+    } catch (_: Exception) {
+        try {
+            context.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+        } catch (_: Exception) {
+            // No settings activity available.
         }
     }
 }

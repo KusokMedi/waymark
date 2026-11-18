@@ -52,7 +52,7 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
         container.repository.observeCountry(countryId)
 
     fun addToWatchlist(countryId: String) = viewModelScope.launch {
-        container.repository.addToWatchlist(countryId)
+        container.repository.addToWatchlist(countryId, settings.value.notificationsEnabled)
     }
 
     fun removeFromWatchlist(countryId: String) = viewModelScope.launch {
@@ -61,7 +61,7 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun toggleWatchlist(countryId: String, currentlyInWatchlist: Boolean) = viewModelScope.launch {
         if (currentlyInWatchlist) container.repository.removeFromWatchlist(countryId)
-        else container.repository.addToWatchlist(countryId)
+        else container.repository.addToWatchlist(countryId, settings.value.notificationsEnabled)
     }
 
     fun setFavorite(countryId: String, favorite: Boolean) = viewModelScope.launch {
@@ -78,10 +78,7 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun completeOnboarding(countryIds: List<String>, notificationsEnabled: Boolean, themeMode: ThemeMode) =
         viewModelScope.launch {
-            countryIds.forEach { container.repository.addToWatchlist(it) }
-            if (notificationsEnabled) {
-                countryIds.forEach { container.repository.setNotifications(it, true) }
-            }
+            countryIds.forEach { container.repository.addToWatchlist(it, notificationsEnabled) }
             container.settings.setNotificationsEnabled(notificationsEnabled)
             container.settings.setThemeMode(themeMode)
             container.settings.setOnboardingCompleted(true)
@@ -107,6 +104,14 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
                 container.repository.setNotifications(it.countryId, true)
             }
         }
+    }
+
+    fun setNotificationSoundUri(value: String) = viewModelScope.launch {
+        container.settings.setNotificationSoundUri(value)
+    }
+
+    fun setNotificationImportance(value: String) = viewModelScope.launch {
+        container.settings.setNotificationImportance(value)
     }
 
     fun setAutomaticSync(enabled: Boolean) = viewModelScope.launch {

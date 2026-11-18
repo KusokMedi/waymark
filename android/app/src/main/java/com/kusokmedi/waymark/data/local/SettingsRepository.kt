@@ -20,6 +20,8 @@ data class AppSettings(
     val notificationsEnabled: Boolean = false,
     val syncIntervalHours: Int = 12,
     val automaticSync: Boolean = true,
+    val notificationSoundUri: String = "",
+    val notificationImportance: String = "high",
 )
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "waymark_settings")
@@ -32,6 +34,8 @@ class SettingsRepository(private val context: Context) {
         val notifications = booleanPreferencesKey("notifications_enabled")
         val syncInterval = intPreferencesKey("sync_interval_hours")
         val automaticSync = booleanPreferencesKey("automatic_sync")
+        val notificationSoundUri = stringPreferencesKey("notification_sound_uri")
+        val notificationImportance = stringPreferencesKey("notification_importance")
     }
 
     val settings: Flow<AppSettings> = context.dataStore.data.map { prefs ->
@@ -43,6 +47,8 @@ class SettingsRepository(private val context: Context) {
             notificationsEnabled = prefs[Keys.notifications] ?: false,
             syncIntervalHours = prefs[Keys.syncInterval] ?: 12,
             automaticSync = prefs[Keys.automaticSync] ?: true,
+            notificationSoundUri = prefs[Keys.notificationSoundUri] ?: "",
+            notificationImportance = prefs[Keys.notificationImportance] ?: "high",
         )
     }
 
@@ -52,4 +58,6 @@ class SettingsRepository(private val context: Context) {
     suspend fun setNotificationsEnabled(value: Boolean) = context.dataStore.edit { it[Keys.notifications] = value }
     suspend fun setSyncIntervalHours(value: Int) = context.dataStore.edit { it[Keys.syncInterval] = value.coerceIn(6, 24) }
     suspend fun setAutomaticSync(value: Boolean) = context.dataStore.edit { it[Keys.automaticSync] = value }
+    suspend fun setNotificationSoundUri(value: String) = context.dataStore.edit { it[Keys.notificationSoundUri] = value }
+    suspend fun setNotificationImportance(value: String) = context.dataStore.edit { it[Keys.notificationImportance] = value }
 }

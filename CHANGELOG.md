@@ -5,6 +5,44 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-18
+
+### Added
+
+- Widget settings (⚙) from the widget header: corner radius, transparent
+  background (off by default), and visibility of flag, name, level and date.
+- Dynamic color support for widgets when enabled in app settings (Android 12+).
+- Sync error details screen in Settings; tap a sync error banner in the app to
+  view details.
+- Notification sound and priority settings (default priority High).
+- Optional battery optimization exemption prompt in onboarding (Permissions step)
+  and access from notification settings.
+- Additional sorting options: A–Z/Z–A and Level 1–4/4–1 in Explore and Watchlist,
+  with Favorites sorting in Watchlist.
+
+### Changed
+
+- Settings reorganized into separate screens (Appearance, Synchronisation,
+  Notifications, Data management, About).
+- Onboarding notifications step replaced with a Permissions step.
+- Widget sync status shows an animated updating indicator while syncing and
+  shows `Error, last update at …` on failure; stale "updating" states are
+  recovered.
+- Reduced duplication in advisory/risk display and improved advisory date
+  presentation.
+- Adding a country to the watchlist enables per-country notifications by default
+  when global notifications are enabled.
+- Dynamic color setting applies to widgets as well as the app.
+
+### Removed
+
+- Single-country widget (replaced by the configurable watchlist widget).
+
+### Fixed
+
+- Widgets no longer remain stuck on "Updating…" after an interrupted sync.
+- Onboarding screens now adapt correctly to dark theme.
+
 ## [1.1.0] - 2026-11-18
 
 ### Added

@@ -177,14 +177,12 @@ private fun CountryHeader(detail: CountryDetailData) {
         }
     }
     Spacer(Modifier.height(8.dp))
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        LevelChip(detail.level, detail.containsHigherRiskAreas)
-        Spacer(Modifier.width(12.dp))
-        Text(
-            detail.countryRecord?.officialLabel ?: AdvisoryLevels.label(detail.level),
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
+    LevelChip(
+        level = detail.level,
+        higherRisk = detail.containsHigherRiskAreas,
+        compact = false,
+        showLabel = true,
+    )
 }
 
 @Composable
@@ -192,10 +190,7 @@ private fun AdvisoryCard(detail: CountryDetailData, context: android.content.Con
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text("Official advisory", style = MaterialTheme.typography.labelLarge)
-            Text(
-                formatAdvisoryDate(detail.advisoryDate),
-                style = MaterialTheme.typography.bodyMedium,
-            )
+            com.kusokmedi.waymark.ui.components.AdvisoryDateText(detail.advisoryDate)
             val record = detail.countryRecord
             if (!record?.assistedDepartureText.isNullOrBlank()) {
                 Spacer(Modifier.height(8.dp))
@@ -285,13 +280,9 @@ private fun RegionRow(region: com.kusokmedi.waymark.data.local.AdvisoryEntity) {
         Row(modifier = Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(region.destinationName, fontWeight = FontWeight.SemiBold)
-                Text(
-                    formatAdvisoryDate(region.advisoryDate),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                com.kusokmedi.waymark.ui.components.AdvisoryDateText(region.advisoryDate)
             }
-            LevelChip(region.level, region.containsHigherRiskAreas)
+            LevelChip(region.level, region.containsHigherRiskAreas, compact = true)
         }
     }
 }

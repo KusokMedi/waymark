@@ -19,15 +19,3 @@ class WatchlistWidgetReceiver : GlanceAppWidgetReceiver() {
         }
     }
 }
-
-class SingleCountryWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = SingleCountryWidget()
-
-    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        super.onDeleted(context, appWidgetIds)
-        val db = WaymarkDatabase.get(context)
-        CoroutineScope(Dispatchers.IO).launch {
-            appWidgetIds.forEach { db.widgetConfigDao().delete(it) }
-        }
-    }
-}

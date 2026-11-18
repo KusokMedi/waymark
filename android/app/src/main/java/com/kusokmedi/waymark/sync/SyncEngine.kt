@@ -19,9 +19,17 @@ import com.kusokmedi.waymark.domain.RecordKind
 import com.kusokmedi.waymark.widget.WaymarkWidgetUpdater
 import androidx.room.withTransaction
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.concurrent.TimeUnit
 
 sealed interface SyncOutcome {
     data class Success(val changeCount: Int, val notModified: Boolean = false) : SyncOutcome
@@ -39,8 +47,10 @@ class SyncEngine(
     private val mutex = Mutex()
 
     suspend fun synchronize(): SyncOutcome = mutex.withLock {
+        var state = db.syncStateDao().get() ?: SyncStateEntity()
+        state = clearStaleRunning(state)
+
         if (!NetworkMonitor.isOnline(context)) {
-            val state = db.syncStateDao().get() ?: SyncStateEntity()
             db.syncStateDao().upsert(
                 state.copy(
                     lastAttemptAt = System.currentTimeMillis(),
@@ -48,13 +58,14 @@ class SyncEngine(
                     message = "No network connection",
                 )
             )
+            WaymarkWidgetUpdater.updateAll(context)
             return SyncOutcome.Offline("No network connection. Showing saved data.")
         }
 
-        val state = db.syncStateDao().get() ?: SyncStateEntity()
         val attemptAt = System.currentTimeMillis()
         db.syncStateDao().upsert(state.copy(lastAttemptAt = attemptAt, status = "running", message = null))
         WaymarkWidgetUpdater.updateAll(context)
+        val ticker = startUpdatingTicker()
 
         try {
             val fetched = client.fetchAll(etag = state.etag, lastModified = state.lastModified)
@@ -180,7 +191,30 @@ class SyncEngine(
             WaymarkWidgetUpdater.updateAll(context)
             notifier.notifySyncProblem(message)
             SyncOutcome.Failure(message)
+        } finally {
+            ticker.cancel()
         }
+    }
+
+    private fun startUpdatingTicker(): Job = CoroutineScope(Dispatchers.Default).launch {
+        while (isActive) {
+            delay(800)
+            val current = db.syncStateDao().get()
+            if (current?.status != "running") break
+            WaymarkWidgetUpdater.updateAll(context)
+        }
+    }
+
+    private suspend fun clearStaleRunning(state: SyncStateEntity): SyncStateEntity {
+        if (state.status != "running") return state
+        val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
+        if (age < TimeUnit.MINUTES.toMillis(3)) return state
+        val cleared = state.copy(
+            status = "failed",
+            message = state.message ?: "Synchronization was interrupted",
+        )
+        db.syncStateDao().upsert(cleared)
+        return cleared
     }
 
     private fun snapshotOf(country: CountryEntity, records: List<AdvisoryEntity>): CountrySnapshot {
