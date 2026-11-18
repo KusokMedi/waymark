@@ -19,3 +19,7 @@ android/.idea/
 android/captures/
 *.apk
 *.aab
+
+# Local release secrets (do not commit)
+release-secrets.local.md
+

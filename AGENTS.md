@@ -610,3 +610,12 @@ The project is ready for release only when:
 - Release artifacts can be generated through the documented workflow.
 
 **Primary objective: Build a reliable, polished, fully functional native Android application and preserve the Waymark website as a separate, useful project website.**
+
+## 18. Local release signing materials (not committed)
+
+Release signing materials for the Android app are stored locally and must never be committed:
+
+- **In-repo local secrets file (gitignored):** `release-secrets.local.md` (repository root). Contains the GitHub Actions **Repository secrets** values used by `.github/workflows/release.yml` (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`) and information to reconstruct the release keystore.
+- **Backup copy:** `/home/kusokmedi/.local/share/waymark-release-backup/` containing `release-secrets.local.md` and `waymark-release.jks` (SHA-256: `6ec1281189337631dd4990399dc3aefb7eb5b602b88943ed95180b6cca6793af`).
+
+These are **Repository secrets** in GitHub Actions (Settings → Secrets and variables → Actions → Secrets), not Environment secrets. Keep the keystore and passwords backed up securely; losing them prevents publishing updates signed with the same key.
