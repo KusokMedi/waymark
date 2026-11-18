@@ -105,6 +105,7 @@ fun WaymarkAppRoot(
                 onComplete = { ids, notifications, allowMobileData ->
                     viewModel.completeOnboarding(ids, notifications, settings.themeMode, allowMobileData)
                 },
+                onRequestSync = { allowMobileData -> viewModel.syncNowWithMobileData(allowMobileData) },
             )
         } else {
             MainNavigation(viewModel, deepLinkCountry, onDeepLinkHandled)

@@ -176,7 +176,7 @@ private fun WidgetSettingsScreen(
                 value = backgroundAlpha,
                 onValueChange = { backgroundAlpha = it },
                 valueRange = 0f..100f,
-                steps = 100,
+                steps = 20,
             )
 
             Spacer(Modifier.height(16.dp))

@@ -5,6 +5,22 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.4] - 2026-11-18
+
+### Changed
+
+- Onboarding country selection now runs synchronization directly, so the
+  catalogue loads during initial setup; search works as soon as data arrives.
+- Widget manual refresh now runs synchronization directly (no WorkManager
+  throttling) and updates both data and widget immediately.
+- Widget transparency slider uses 5% increments (0–100%).
+- Increased spacing between countries in the widget.
+
+### Fixed
+
+- Onboarding search not working at startup.
+- Widget manual refresh appearing to work only once per minute.
+
 ## [1.3.3] - 2026-11-18
 
 ### Changed

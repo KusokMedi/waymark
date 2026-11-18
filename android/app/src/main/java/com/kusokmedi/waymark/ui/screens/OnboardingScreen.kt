@@ -61,6 +61,7 @@ import com.kusokmedi.waymark.ui.components.LevelChip
 fun OnboardingScreen(
     countries: List<CountryCard>,
     onComplete: (List<String>, Boolean, Boolean) -> Unit,
+    onRequestSync: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     var step by remember { mutableStateOf(0) }
@@ -85,7 +86,7 @@ fun OnboardingScreen(
     LaunchedEffect(step, allowMobileData) {
         if (step == 3 && countries.isEmpty() && !syncRequested) {
             syncRequested = true
-            com.kusokmedi.waymark.SyncScheduler.syncNow(context, allowMobileData)
+            onRequestSync(allowMobileData)
         }
     }
 
@@ -117,6 +118,8 @@ fun OnboardingScreen(
                         onQueryChange = { query = it },
                         countries = filtered,
                         selected = selected,
+                        allowMobileData = allowMobileData,
+                        onRequestSync = onRequestSync,
                     )
                 }
             }
@@ -245,6 +248,8 @@ private fun CountryStep(
     onQueryChange: (String) -> Unit,
     countries: List<CountryCard>,
     selected: MutableList<String>,
+    allowMobileData: Boolean,
+    onRequestSync: (Boolean) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Choose countries", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
@@ -277,6 +282,10 @@ private fun CountryStep(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                    Spacer(Modifier.height(12.dp))
+                    TextButton(onClick = { onRequestSync(allowMobileData) }) {
+                        Text("Retry")
+                    }
                 }
             }
         } else {

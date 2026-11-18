@@ -100,6 +100,14 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun syncNow() = viewModelScope.launch {
         container.syncEngine.synchronize()
+        WaymarkWidgetUpdater.updateAll(container.context)
+    }
+
+    fun syncNowWithMobileData(allowMobileData: Boolean) = viewModelScope.launch {
+        container.settings.setAllowMobileData(allowMobileData)
+        // Ensure settings are persisted before sync reads them.
+        kotlinx.coroutines.delay(50)
+        container.syncEngine.synchronize(forceMobileData = allowMobileData)
     }
 
     fun setThemeMode(mode: ThemeMode) = viewModelScope.launch {

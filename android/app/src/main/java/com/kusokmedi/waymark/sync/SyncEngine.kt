@@ -39,12 +39,13 @@ class SyncEngine(
 ) {
     private val mutex = Mutex()
 
-    suspend fun synchronize(): SyncOutcome = mutex.withLock {
+    suspend fun synchronize(forceMobileData: Boolean = false): SyncOutcome = mutex.withLock {
         var state = db.syncStateDao().get() ?: SyncStateEntity()
         state = clearStaleRunning(state)
         val appSettings = settings.settings.first()
+        val effectiveAllowMobileData = forceMobileData || appSettings.allowMobileData
 
-        if (!NetworkMonitor.isAllowed(context, appSettings.allowMobileData)) {
+        if (!NetworkMonitor.isAllowed(context, effectiveAllowMobileData)) {
             val offlineMessage = if (!NetworkMonitor.isOnline(context)) {
                 "No network connection. Showing saved data."
             } else {

@@ -168,7 +168,7 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
                 LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                     items(snapshot.cards, itemId = { it.id.hashCode().toLong() }) { card ->
                         CountryItem(card = card, config = snapshot.config, colors = colors)
-                        Spacer(GlanceModifier.height(6.dp))
+                        Spacer(GlanceModifier.height(10.dp))
                     }
                 }
             }
@@ -231,7 +231,7 @@ private fun CountryItem(card: CountryCard, config: WidgetConfigEntity, colors: W
             .cornerRadius(14.dp)
             .background(colors.row)
             .clickable(actionStartActivity<MainActivity>(actionParametersOf(COUNTRY_ID_KEY to card.id)))
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+            .padding(horizontal = 10.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (config.showFlag) {
@@ -353,7 +353,7 @@ class RefreshAction : ActionCallback {
         )
         WaymarkWidgetUpdater.updateAll(context)
         // Perform sync synchronously in this background coroutine.
-        container.syncEngine.synchronize()
+        container.syncEngine.synchronize(forceMobileData = true)
         WaymarkWidgetUpdater.updateAll(context)
     }
 }
