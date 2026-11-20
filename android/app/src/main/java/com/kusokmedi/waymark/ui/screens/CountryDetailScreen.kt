@@ -116,7 +116,7 @@ fun CountryDetailScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item { CountryHeader(current) }
             item { AdvisoryCard(current, context) }

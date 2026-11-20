@@ -392,13 +392,11 @@ class RefreshAction : ActionCallback {
             WaymarkWidgetUpdater.updateAll(context)
             return
         }
-        // Update widget immediately with current data.
-        WaymarkWidgetUpdater.updateAll(context)
-        // Run sync (updates data and widget on completion).
+        // Run sync (SyncEngine updates widget status and data during and after sync).
         runCatching {
             container.syncEngine.synchronize(forceMobileData = true)
         }
-        // Ensure widget is updated after sync.
+        // Ensure widget reflects the final state.
         WaymarkWidgetUpdater.updateAll(context)
     }
 }

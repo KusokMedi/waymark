@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ArrowRight,
   Bell,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div className="site">
       <header className="site-header">
@@ -25,7 +27,21 @@ export default function App() {
           <span className="brand-mark"><MapPin size={18} /></span>
           <span>Waymark</span>
         </a>
-        <nav aria-label="Primary">
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-expanded={menuOpen}
+          aria-controls="primary-nav"
+          onClick={() => setMenuOpen((value) => !value)}
+        >
+          Menu
+        </button>
+        <nav
+          id="primary-nav"
+          className={menuOpen ? "open" : ""}
+          aria-label="Primary"
+          onClick={() => setMenuOpen(false)}
+        >
           <a href="#features">Features</a>
           <a href="#widgets">Widgets</a>
           <a href="#data">Data</a>

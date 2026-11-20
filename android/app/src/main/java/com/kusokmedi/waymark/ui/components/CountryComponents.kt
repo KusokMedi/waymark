@@ -128,7 +128,7 @@ fun CountryCardView(
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CountryFlag(card.isoAlpha2, card.isoAlpha3)
