@@ -136,9 +136,16 @@ a {
 .site-header nav {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
   flex-wrap: wrap;
-  font-size: 0.94rem;
+  font-size: 0.88rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.site-header nav::-webkit-scrollbar {
+  display: none;
 }
 
 .site-header nav a {
@@ -1021,12 +1028,19 @@ a {
   }
 
   .hero {
-    padding: 48px 0;
-    gap: 36px;
+    padding: 32px 0;
+    gap: 24px;
   }
 
   .hero-device {
     order: -1;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+
+  .hero-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
   .hero-facts {
@@ -1047,13 +1061,38 @@ a {
     padding: 0 16px;
   }
 
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 0;
+  }
+
   .site-header nav {
-    gap: 14px;
-    font-size: 0.86rem;
+    width: 100%;
+    gap: 10px;
+    font-size: 0.82rem;
+    justify-content: flex-start;
+  }
+
+  .nav-download {
+    margin-left: auto;
   }
 
   .section {
-    padding: 44px 0;
+    padding: 36px 0;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .widgets-section {
+    gap: 24px;
+  }
+
+  .widget-compact {
+    width: 100%;
   }
 
   .hero h1 {

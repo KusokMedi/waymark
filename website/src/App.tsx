@@ -12,7 +12,6 @@ import {
   MapPin,
   RefreshCw,
   Shield,
-  Smartphone,
   Sparkles,
   Star,
   WifiOff,
@@ -31,6 +30,7 @@ export default function App() {
           <a href="#widgets">Widgets</a>
           <a href="#data">Data</a>
           <a href="#docs">Docs</a>
+          <a className="nav-download" href="https://github.com/KusokMedi/waymark/releases/latest" target="_blank" rel="noopener noreferrer">Download</a>
         </nav>
       </header>
 
@@ -108,19 +108,19 @@ export default function App() {
               even across reboots.
             </p>
             <ul className="check-list">
-              <li><Check size={16} /> Compact card, list and multi-country grid layouts</li>
-              <li><Check size={16} /> Independent settings for every widget instance</li>
+              <li><Check size={16} /> Watchlist widget with country flags, advisory levels and last update</li>
+              <li><Check size={16} /> Resizable from 2×2 down to 2×1</li>
               <li><Check size={16} /> Tap a country to open its dashboard</li>
-              <li><Check size={16} /> Updates after synchronization; no per-widget network jobs</li>
+              <li><Check size={16} /> Automatic refresh after synchronization</li>
               <li><Check size={16} /> Clear empty state when no countries are selected</li>
             </ul>
           </div>
           <div className="widget-preview" aria-label="Illustration of sample Waymark widgets">
             <div className="widget-surface widget-large">
               <div className="widget-head"><strong>Waymark</strong><RefreshCw size={13} /></div>
-              <div className="widget-row"><span className="demo-flag small">FI</span><div><strong>Finland</strong><small>Level 1</small></div><span className="level level-1">L1</span></div>
-              <div className="widget-row"><span className="demo-flag small">MX</span><div><strong>Mexico</strong><small>Level 2 · higher-risk areas</small></div><span className="level level-2">L2</span></div>
-              <div className="widget-row"><span className="demo-flag small">CO</span><div><strong>Colombia</strong><small>Level 3</small></div><span className="level level-3">L3</span></div>
+              <div className="widget-row"><span className="demo-flag small">FI</span><div><strong>Finland</strong></div><span className="level level-1">L1</span></div>
+              <div className="widget-row"><span className="demo-flag small">MX</span><div><strong>Mexico</strong></div><span className="level level-2">L2</span></div>
+              <div className="widget-row"><span className="demo-flag small">CO</span><div><strong>Colombia</strong></div><span className="level level-3">L3</span></div>
             </div>
             <div className="widget-surface widget-compact">
               <span className="demo-flag small">JP</span>
@@ -128,21 +128,6 @@ export default function App() {
               <span className="level level-1">L1</span>
             </div>
             <p className="widget-caption">Illustrative widget layouts with sample data. Actual widget rendering follows Android launcher constraints.</p>
-          </div>
-        </section>
-
-        <section id="screenshots" className="section">
-          <div className="section-heading">
-            <div>
-              <div className="eyebrow"><Smartphone size={14} /> Screenshots</div>
-              <h2>Real screenshots, clearly labeled</h2>
-              <p>These regions are placeholders until the project owner supplies genuine Android screenshots. They are not fabricated app screens.</p>
-            </div>
-          </div>
-          <div className="screenshot-grid">
-            <div className="screenshot-placeholder"><span>Watchlist screenshot placeholder</span><small>Required asset: Android phone, watchlist populated</small></div>
-            <div className="screenshot-placeholder"><span>Country dashboard placeholder</span><small>Required asset: detail with level and history chart</small></div>
-            <div className="screenshot-placeholder"><span>Widget configuration placeholder</span><small>Required asset: widget settings on a home screen</small></div>
           </div>
         </section>
 
