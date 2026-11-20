@@ -691,9 +691,15 @@ a {
 /* Features */
 
 .feature-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
+}
+
+.feature-grid > * {
+  flex: 1 1 280px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .feature {
@@ -943,9 +949,15 @@ a {
 /* Docs */
 
 .docs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+}
+
+.docs-grid > * {
+  flex: 1 1 240px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .docs-grid a {
