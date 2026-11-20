@@ -622,8 +622,8 @@ These are **Repository secrets** in GitHub Actions (Settings → Secrets and var
 
 ## 19. Current project state (updated 2026-11-20)
 
-- **Version:** v1.3.7 (versionCode 11), released and published on GitHub.
-- **Latest commit:** `0425aad` (master), tag `v1.3.7`.
+- **Version:** v1.3.8 (versionCode 12), released and published on GitHub.
+- **Latest commit:** `a79e83b` (master), tag `v1.3.8`.
 - **Website:** React+Vite, deployed to GitHub Pages. Mobile-responsive, flexbox grids.
 - **Widget (simplified):** No settings UI. Fixed defaults: flag+name+level (no date), 2×2/2×1,
   transparency 100%, corner radius 12dp. Vector icons (refresh). Per-position corner rounding.
