@@ -36,9 +36,12 @@ class WaymarkApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        // Ensure notification channels exist before any background sync can run,
+        // even if a WorkManager job fires before settings are loaded.
+        container.notifier.initialize("", "high")
         appScope.launch {
             val settings = container.settings.settings.first()
-            container.notifier.initialize(settings.notificationSoundUri, settings.notificationImportance)
+            container.notifier.applySettings(settings.notificationSoundUri, settings.notificationImportance)
             if (settings.automaticSync) {
                 SyncScheduler.schedulePeriodic(this@WaymarkApp, settings.syncIntervalHours, settings.allowMobileData)
             } else {

@@ -71,7 +71,11 @@ fun OnboardingScreen(
     var query by remember { mutableStateOf("") }
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { }
+    ) { granted ->
+        // Propagate the actual permission result so settings do not stay
+        // enabled when the user denied the notification permission.
+        onComplete(selected.toList(), notifications && granted, allowMobileData)
+    }
 
     val filtered = remember(countries, query) {
         if (query.isBlank()) countries
@@ -137,11 +141,10 @@ fun OnboardingScreen(
                     onClick = {
                         if (step < 3) {
                             step += 1
+                        } else if (notifications && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                         } else {
                             onComplete(selected.toList(), notifications, allowMobileData)
-                            if (notifications && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            }
                         }
                     },
                 ) {
