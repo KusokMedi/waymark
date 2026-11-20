@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.LocalSize
 import androidx.glance.ColorFilter
 import androidx.glance.Image
 import androidx.glance.ImageProvider
@@ -71,9 +72,14 @@ class WatchlistWidget : GlanceAppWidget() {
 
     override val sizeMode = SizeMode.Responsive(
         setOf(
+            DpSize(110.dp, 50.dp),
+            DpSize(180.dp, 50.dp),
+            DpSize(250.dp, 50.dp),
             DpSize(110.dp, 110.dp),
             DpSize(180.dp, 110.dp),
+            DpSize(250.dp, 110.dp),
             DpSize(250.dp, 180.dp),
+            DpSize(320.dp, 180.dp),
             DpSize(320.dp, 280.dp),
             DpSize(250.dp, 320.dp),
         )
@@ -142,36 +148,40 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
     val context = androidx.glance.LocalContext.current
     val colors = widgetColors(context, snapshot.dynamicColor, snapshot.config.backgroundAlpha)
     val radius = snapshot.config.cornerRadius.coerceIn(0, 20)
+    val size = LocalSize.current
+    val compact = size.height < 80.dp || size.width < 150.dp
+    val outerPadding = if (compact) 6.dp else 10.dp
+    val cardSpacing = if (compact) 2.dp else 4.dp
 
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
             .cornerRadius(radius.dp)
             .background(colors.background)
-            .padding(10.dp),
+            .padding(outerPadding),
     ) {
         Column(modifier = GlanceModifier.fillMaxSize()) {
-            Header(snapshot, colors)
+            Header(snapshot, colors, compact)
 
             if (snapshot.cards.isEmpty()) {
-                Spacer(GlanceModifier.height(16.dp))
+                Spacer(GlanceModifier.height(if (compact) 8.dp else 16.dp))
                 Text(
                     text = "Your watchlist is empty",
                     style = TextStyle(
                         color = colors.foreground,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
+                        fontSize = if (compact) 12.sp else 14.sp,
                     ),
                 )
                 Spacer(GlanceModifier.height(4.dp))
                 Text(
                     text = "Open Waymark to add countries.",
-                    style = TextStyle(color = colors.muted, fontSize = 12.sp),
+                    style = TextStyle(color = colors.muted, fontSize = if (compact) 10.sp else 12.sp),
                 )
             } else {
-                Spacer(GlanceModifier.height(6.dp))
+                Spacer(GlanceModifier.height(if (compact) 4.dp else 6.dp))
                 val cardCount = snapshot.cards.size
-                LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
+                LazyColumn(modifier = GlanceModifier.fillMaxWidth().defaultWeight()) {
                     items(
                         count = cardCount,
                         itemId = { index -> snapshot.cards[index].id.hashCode().toLong() },
@@ -181,12 +191,10 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
                             card = card,
                             config = snapshot.config,
                             colors = colors,
-                            isFirst = index == 0,
-                            isLast = index == cardCount - 1,
-                            isSingle = cardCount == 1,
+                            compact = compact,
                         )
                         if (index < cardCount - 1) {
-                            Spacer(GlanceModifier.height(2.dp))
+                            Spacer(GlanceModifier.height(cardSpacing))
                         }
                     }
                 }
@@ -196,7 +204,10 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
 }
 
 @Composable
-private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors) {
+private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Boolean = false) {
+    val titleSize = if (compact) 11.sp else 13.sp
+    val statusSize = if (compact) 9.sp else 11.sp
+    val progressSize = if (compact) 16.dp else 20.dp
     Row(
         modifier = GlanceModifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -207,25 +218,25 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors) {
                 style = TextStyle(
                     color = colors.foreground,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
+                    fontSize = titleSize,
                 ),
                 maxLines = 1,
             )
             Text(
                 text = statusText(snapshot.syncState),
-                style = TextStyle(color = colors.muted, fontSize = 11.sp),
+                style = TextStyle(color = colors.muted, fontSize = statusSize),
                 maxLines = 1,
             )
         }
         val isSyncing = snapshot.syncState?.status == "running"
         if (isSyncing) {
             CircularProgressIndicator(
-                GlanceModifier.size(20.dp),
+                GlanceModifier.size(progressSize),
                 colors.foreground,
             )
-            Spacer(GlanceModifier.width(6.dp))
+            Spacer(GlanceModifier.width(if (compact) 4.dp else 6.dp))
         }
-        IconButton(iconRes = R.drawable.ic_widget_refresh, contentDescription = "Refresh", colors = colors) { actionRunCallback<RefreshAction>() }
+        IconButton(iconRes = R.drawable.ic_widget_refresh, contentDescription = "Refresh", colors = colors, compact = compact) { actionRunCallback<RefreshAction>() }
     }
 }
 
@@ -234,12 +245,15 @@ private fun IconButton(
     iconRes: Int,
     contentDescription: String,
     colors: WidgetColors,
+    compact: Boolean = false,
     onClick: () -> androidx.glance.action.Action,
 ) {
+    val buttonSize = if (compact) 28.dp else 34.dp
+    val iconSize = if (compact) 16.dp else 20.dp
     Box(
         modifier = GlanceModifier
-            .size(34.dp)
-            .cornerRadius(17.dp)
+            .size(buttonSize)
+            .cornerRadius((buttonSize.value / 2).dp)
             .background(colors.chip)
             .clickable(onClick()),
         contentAlignment = Alignment.Center,
@@ -247,28 +261,36 @@ private fun IconButton(
         Image(
             provider = ImageProvider(iconRes),
             contentDescription = contentDescription,
-            modifier = GlanceModifier.size(20.dp),
+            modifier = GlanceModifier.size(iconSize),
             colorFilter = ColorFilter.tint(colors.foreground),
         )
     }
 }
 
 @Composable
-private fun CountryItemContent(card: CountryCard, config: WidgetConfigEntity, colors: WidgetColors, columnModifier: GlanceModifier = GlanceModifier.fillMaxWidth()) {
+private fun CountryItemContent(card: CountryCard, config: WidgetConfigEntity, colors: WidgetColors, compact: Boolean = false, columnModifier: GlanceModifier = GlanceModifier.fillMaxWidth()) {
+    val flagSize = if (compact) 24.dp else 30.dp
+    val flagCorner = if (compact) 8.dp else 10.dp
+    val flagTextSize = if (compact) 13.sp else 16.sp
+    val nameSize = if (compact) 11.sp else 13.sp
+    val levelSize = if (compact) 10.sp else 12.sp
+    val dateSize = if (compact) 9.sp else 11.sp
+    val spacerWidth = if (compact) 6.dp else 8.dp
+
     if (config.showFlag) {
         Box(
             modifier = GlanceModifier
-                .size(30.dp)
-                .cornerRadius(10.dp)
+                .size(flagSize)
+                .cornerRadius(flagCorner)
                 .background(colors.chip),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = flagEmoji(card.isoAlpha2),
-                style = TextStyle(fontSize = 16.sp),
+                style = TextStyle(fontSize = flagTextSize),
             )
         }
-        Spacer(GlanceModifier.width(8.dp))
+        Spacer(GlanceModifier.width(spacerWidth))
     }
 
     Column(modifier = columnModifier) {
@@ -278,7 +300,7 @@ private fun CountryItemContent(card: CountryCard, config: WidgetConfigEntity, co
                 style = TextStyle(
                     color = colors.foreground,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
+                    fontSize = nameSize,
                 ),
                 maxLines = 1,
             )
@@ -286,14 +308,14 @@ private fun CountryItemContent(card: CountryCard, config: WidgetConfigEntity, co
         if (config.showLevel) {
             Text(
                 text = levelText(card),
-                style = TextStyle(color = levelColor(card), fontWeight = FontWeight.Medium, fontSize = 12.sp),
+                style = TextStyle(color = levelColor(card), fontWeight = FontWeight.Medium, fontSize = levelSize),
                 maxLines = 1,
             )
         }
         if (config.showDate) {
             Text(
                 text = dateText(card.advisoryDate),
-                style = TextStyle(color = colors.muted, fontSize = 11.sp),
+                style = TextStyle(color = colors.muted, fontSize = dateSize),
                 maxLines = 1,
             )
         }
@@ -305,27 +327,24 @@ private fun CountryItem(
     card: CountryCard,
     config: WidgetConfigEntity,
     colors: WidgetColors,
-    isFirst: Boolean,
-    isLast: Boolean,
-    isSingle: Boolean,
+    compact: Boolean = false,
 ) {
     val r = config.cornerRadius.coerceIn(0, 20)
-
-    // Determine corner radius based on position.
-    val applyRadius = isSingle || isFirst || isLast
+    val horizontalPadding = if (compact) 8.dp else 10.dp
+    val verticalPadding = if (compact) 6.dp else 10.dp
 
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
             .let { m ->
-                if (applyRadius && r > 0) m.cornerRadius(r.dp).background(colors.row)
+                if (r > 0) m.cornerRadius(r.dp).background(colors.row)
                 else m.background(colors.row)
             }
             .clickable(actionStartActivity<MainActivity>(actionParametersOf(COUNTRY_ID_KEY to card.id)))
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(horizontal = horizontalPadding, vertical = verticalPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
+        CountryItemContent(card, config, colors, compact, GlanceModifier.defaultWeight())
     }
 }
 

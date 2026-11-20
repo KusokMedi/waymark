@@ -5,6 +5,26 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.10] - 2026-11-20
+
+### Fixed
+
+- Widget country cards now use consistent corner rounding and spacing.
+- Widget layouts now adapt to compact and larger widget sizes, filling the
+  available area correctly.
+
+## [1.3.9] - 2026-11-20
+
+### Changed
+
+- Release version 1.3.9.
+
+## [1.3.8] - 2026-11-19
+
+### Changed
+
+- Release version 1.3.8.
+
 ## [1.3.7] - 2026-11-20
 
 ### Changed
@@ -47,7 +67,7 @@ All notable changes to Waymark are documented here. The project follows
   catalogue loads during initial setup; search works as soon as data arrives.
 - Widget manual refresh now runs synchronization directly (no WorkManager
   throttling) and updates both data and widget immediately.
-- Widget transparency slider uses 5% increments (0–100%).
+- Widget transparency slider uses 5% increments (0-100%).
 - Increased spacing between countries in the widget.
 
 ### Fixed
@@ -59,7 +79,7 @@ All notable changes to Waymark are documented here. The project follows
 
 ### Changed
 
-- Widget settings now use corner radius 0–20 dp and background opacity 0–100%.
+- Widget settings now use corner radius 0-20 dp and background opacity 0-100%.
 - Widget background opacity applies only to the background; cards, text and
   buttons remain opaque.
 - Advisory level is hidden by default in widgets and can be enabled manually.
@@ -108,8 +128,8 @@ All notable changes to Waymark are documented here. The project follows
 ### Changed
 
 - Onboarding country selection shows **Skip** when no countries are selected.
-- Watchlist sorting defaults to A–Z with options A–Z, Z–A, Favorites, Level 1–4,
-  Level 4–1.
+- Watchlist sorting defaults to A-Z with options A-Z, Z-A, Favorites, Level 1-4,
+  Level 4-1.
 - Advisory date year is shown in country overview/detail; cards, lists and
   widgets show advisory date without year.
 - Widget rows have clearer spacing between countries.
@@ -143,7 +163,7 @@ All notable changes to Waymark are documented here. The project follows
 - Notification sound and priority settings (default priority High).
 - Optional battery optimization exemption prompt in onboarding (Permissions step)
   and access from notification settings.
-- Additional sorting options: A–Z/Z–A and Level 1–4/4–1 in Explore and Watchlist,
+- Additional sorting options: A-Z/Z-A and Level 1-4/4-1 in Explore and Watchlist,
   with Favorites sorting in Watchlist.
 
 ### Changed
