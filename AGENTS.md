@@ -619,3 +619,23 @@ Release signing materials for the Android app are stored locally and must never 
 - **Backup copy:** `/home/kusokmedi/.local/share/waymark-release-backup/` containing `release-secrets.local.md` and `waymark-release.jks` (SHA-256: `6ec1281189337631dd4990399dc3aefb7eb5b602b88943ed95180b6cca6793af`).
 
 These are **Repository secrets** in GitHub Actions (Settings → Secrets and variables → Actions → Secrets), not Environment secrets. Keep the keystore and passwords backed up securely; losing them prevents publishing updates signed with the same key.
+
+## 19. Current project state (updated 2026-11-20)
+
+- **Version:** v1.3.7 (versionCode 11), released and published on GitHub.
+- **Latest commit:** `0425aad` (master), tag `v1.3.7`.
+- **Website:** React+Vite, deployed to GitHub Pages. Mobile-responsive, flexbox grids.
+- **Widget (simplified):** No settings UI. Fixed defaults: flag+name+level (no date), 2×2/2×1,
+  transparency 100%, corner radius 12dp. Vector icons (refresh). Per-position corner rounding.
+  Debounce on refresh (2s). Tap country → country detail.
+- **Key recent changes:**
+  - Removed widget settings (config fixed to defaults).
+  - WiFi sync fixed (NetworkMonitor allows WiFi regardless of mobile data setting).
+  - Onboarding: progress bar fully visible, no Retry button, sync runs directly.
+  - SyncBanner: removed cached data message, shortened date format.
+  - Dynamic color disabled on Android < 12.
+  - Nav: unified top-level navigation (fixes Watchlist↔Explore back-stack).
+- **Build:** `cd android && JAVA_HOME=/usr/lib/jvm/java-17-openjdk ./gradlew :app:assembleDebug`
+- **Test on device:** `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`
+- **Release:** push tag `v*` → GitHub Actions (signed APK attached).
+- **Phone:** LG G7 connected via USB (adb), debug builds installable directly.
