@@ -5,6 +5,24 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.7] - 2026-11-20
+
+### Changed
+
+- Widget defaults to 2×2, resizable down to 2×1.
+- Widget no longer has settings button; all settings removed, fixed defaults.
+- Widget shows only level + color (no advisory details).
+- Widget status text changed to "Loading...".
+- Widget icons replaced with vector icons (refresh).
+- Widget per-position corner rounding.
+- Widget transparency slider snaps to 5% increments.
+- Spam protection for refresh button (2s debounce).
+- Onboarding progress bar fully visible.
+- Removed "Retry" button from onboarding.
+- WiFi sync fixed (no longer requires mobile data).
+- SyncBanner: removed cached data message, shortened date format.
+- Theme settings: Dynamic color disabled on Android < 12.
+
 ## [1.3.6] - 2026-11-18
 
 ### Changed

@@ -127,6 +127,7 @@ fun AppearanceSettingsScreen(viewModel: AppViewModel, onBack: () -> Unit) {
                 description = "Use Android system colors on Android 12 and later (applies to app and widgets).",
                 checked = settings.dynamicColor,
                 onCheckedChange = viewModel::setDynamicColor,
+                enabled = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S,
             )
         }
     }
@@ -474,13 +475,14 @@ private fun ToggleSetting(
     description: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    enabled: Boolean = true,
 ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(title)
-            Text(description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(title, color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f))
+            Text(description, style = MaterialTheme.typography.bodySmall, color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f))
         }
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
+        Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
     }
 }
 

@@ -12,10 +12,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.ColorFilter
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
+import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
@@ -50,6 +54,7 @@ import com.kusokmedi.waymark.data.local.WidgetConfigEntity
 import com.kusokmedi.waymark.domain.AdvisoryLevels
 import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.domain.flagEmoji
+import com.kusokmedi.waymark.R
 import com.kusokmedi.waymark.ui.MainActivity
 import com.kusokmedi.waymark.waymarkContainer
 import kotlinx.coroutines.flow.first
@@ -113,20 +118,20 @@ internal data class WidgetSnapshot(
         }
 
         private fun normalizeConfig(existing: WidgetConfigEntity?, widgetId: Int): WidgetConfigEntity {
-            val base = existing ?: WidgetConfigEntity(
+            // Fixed defaults: no settings UI. Use current default appearance.
+            return WidgetConfigEntity(
                 widgetId = widgetId,
                 preset = "watchlist",
                 widgetType = "watchlist",
-                updatedAt = System.currentTimeMillis(),
-            )
-            return base.copy(
-                preset = "watchlist",
-                widgetType = "watchlist",
-                singleCountryId = null,
-                cornerRadius = base.cornerRadius.coerceIn(0, 20),
+                showFlag = true,
+                showCountryName = true,
+                showLevel = true,
+                showDate = false,
+                backgroundStyle = "surface",
+                backgroundAlpha = 100,
+                cornerRadius = 12,
                 columns = 1,
-                backgroundAlpha = base.backgroundAlpha.coerceIn(0, 100),
-                backgroundStyle = if (base.backgroundStyle == "transparent") "transparent" else "surface",
+                updatedAt = System.currentTimeMillis(),
             )
         }
     }
@@ -149,16 +154,16 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
             Header(snapshot, colors)
 
             if (snapshot.cards.isEmpty()) {
-                Spacer(GlanceModifier.height(10.dp))
+                Spacer(GlanceModifier.height(16.dp))
                 Text(
-                    text = "No countries in your watchlist",
+                    text = "Your watchlist is empty",
                     style = TextStyle(
                         color = colors.foreground,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
                     ),
                 )
-                Spacer(GlanceModifier.height(2.dp))
+                Spacer(GlanceModifier.height(4.dp))
                 Text(
                     text = "Open Waymark to add countries.",
                     style = TextStyle(color = colors.muted, fontSize = 12.sp),
@@ -212,28 +217,39 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors) {
                 maxLines = 1,
             )
         }
-        IconButton("↻", "Refresh", colors) { actionRunCallback<RefreshAction>() }
-        Spacer(GlanceModifier.width(6.dp))
-        IconButton("⚙", "Settings", colors) { actionRunCallback<OpenSettingsAction>() }
+        val isSyncing = snapshot.syncState?.status == "running"
+        if (isSyncing) {
+            CircularProgressIndicator(
+                GlanceModifier.size(20.dp),
+                colors.foreground,
+            )
+            Spacer(GlanceModifier.width(6.dp))
+        }
+        IconButton(iconRes = R.drawable.ic_widget_refresh, contentDescription = "Refresh", colors = colors) { actionRunCallback<RefreshAction>() }
     }
 }
 
 @Composable
 private fun IconButton(
-    symbol: String,
+    iconRes: Int,
     contentDescription: String,
     colors: WidgetColors,
     onClick: () -> androidx.glance.action.Action,
 ) {
     Box(
         modifier = GlanceModifier
-            .size(30.dp)
-            .cornerRadius(15.dp)
+            .size(34.dp)
+            .cornerRadius(17.dp)
             .background(colors.chip)
             .clickable(onClick()),
         contentAlignment = Alignment.Center,
     ) {
-        Text(text = symbol, style = TextStyle(color = colors.foreground, fontSize = 14.sp))
+        Image(
+            provider = ImageProvider(iconRes),
+            contentDescription = contentDescription,
+            modifier = GlanceModifier.size(20.dp),
+            colorFilter = ColorFilter.tint(colors.foreground),
+        )
     }
 }
 
@@ -295,85 +311,22 @@ private fun CountryItem(
 ) {
     val r = config.cornerRadius.coerceIn(0, 20)
 
-    if (isSingle) {
-        // Single card: round all corners.
-        Row(
-            modifier = GlanceModifier
-                .fillMaxWidth()
-                .let { m -> if (r > 0) m.cornerRadius(r.dp).background(colors.row) else m.background(colors.row) }
-                .padding(horizontal = 10.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
-        }
-        return
-    }
+    // Determine corner radius based on position.
+    val applyRadius = isSingle || isFirst || isLast
 
-    if (isFirst) {
-        // Top card: round top corners only. Use a Box with bottom-aligned filler.
-        Box(
-            modifier = GlanceModifier.fillMaxWidth(),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            Row(
-                modifier = GlanceModifier
-                    .fillMaxWidth()
-                    .let { m -> if (r > 0) m.cornerRadius(r.dp).background(colors.row) else m.background(colors.row) }
-                    .padding(horizontal = 10.dp, vertical = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
-            }
-            if (r > 0) {
-                Box(
-                    modifier = GlanceModifier
-                        .fillMaxWidth()
-                        .height(r.dp)
-                        .background(colors.row),
-                ) {}
-            }
-        }
-        return
-    }
-
-    if (isLast) {
-        // Bottom card: round bottom corners only. Use a Box with top-aligned filler.
-        Box(
-            modifier = GlanceModifier.fillMaxWidth(),
-            contentAlignment = Alignment.TopCenter,
-        ) {
-            if (r > 0) {
-                Box(
-                    modifier = GlanceModifier
-                        .fillMaxWidth()
-                        .height(r.dp)
-                        .background(colors.row),
-                ) {}
-            }
-            Row(
-                modifier = GlanceModifier
-                    .fillMaxWidth()
-                    .let { m -> if (r > 0) m.cornerRadius(r.dp).background(colors.row) else m.background(colors.row) }
-                    .padding(horizontal = 10.dp, vertical = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
-            }
-        }
-        return
-    }
-
-    // Middle card: no rounding.
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .background(colors.row)
+            .let { m ->
+                if (applyRadius && r > 0) m.cornerRadius(r.dp).background(colors.row)
+                else m.background(colors.row)
+            }
+            .clickable(actionStartActivity<MainActivity>(actionParametersOf(COUNTRY_ID_KEY to card.id)))
             .padding(horizontal = 10.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CountryItemContent(card, config, colors, GlanceModifier.defaultWeight())
     }
-    return
 }
 
 internal data class WidgetColors(
@@ -433,43 +386,27 @@ class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val container = context.waymarkContainer()
         val currentState = container.database.syncStateDao().get()
-        if (currentState?.status == "running") {
-            // Already syncing; just refresh the widget UI.
+        // Debounce: ignore if a sync ran less than 2 seconds ago.
+        val lastAttempt = currentState?.lastAttemptAt ?: 0L
+        if (System.currentTimeMillis() - lastAttempt < 2000) {
             WaymarkWidgetUpdater.updateAll(context)
             return
         }
-        val allowMobileData = container.settings.settings.first().allowMobileData
-        // Update state immediately so the widget shows "Updating…".
-        container.database.syncStateDao().upsert(
-            (currentState ?: SyncStateEntity()).copy(
-                lastAttemptAt = System.currentTimeMillis(),
-                status = "running",
-                message = null,
-            )
-        )
+        // Update widget immediately with current data.
         WaymarkWidgetUpdater.updateAll(context)
-        // Perform sync synchronously in this background coroutine.
-        container.syncEngine.synchronize(forceMobileData = true)
-        WaymarkWidgetUpdater.updateAll(context)
-    }
-}
-
-class OpenSettingsAction : ActionCallback {
-    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val widgetId = runCatching { GlanceAppWidgetManager(context).getAppWidgetId(glanceId) }.getOrNull()
-            ?: AppWidgetManager.INVALID_APPWIDGET_ID
-        val intent = Intent(context, WidgetConfigActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+        // Run sync (updates data and widget on completion).
+        runCatching {
+            container.syncEngine.synchronize(forceMobileData = true)
         }
-        context.startActivity(intent)
+        // Ensure widget is updated after sync.
+        WaymarkWidgetUpdater.updateAll(context)
     }
 }
 
 private fun statusText(state: SyncStateEntity?): String {
     if (state == null) return "Not synced yet"
     return when (effectiveStatus(state)) {
-        "running" -> "Updating…"
+        "running" -> "Loading..."
         "failed", "offline" -> "Error, last update at ${timeText(state.lastSuccessAt)}"
         "success", "idle" -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"
         else -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"
@@ -497,8 +434,8 @@ private fun timeText(at: Long?): String {
 }
 
 private fun levelText(card: CountryCard): String {
-    val level = card.level ?: return "Unknown advisory"
-    return "Level ${level.number} · ${AdvisoryLevels.label(level)}"
+    val level = card.level ?: return "Unknown"
+    return "Level ${level.number}"
 }
 
 private fun levelColor(card: CountryCard): ColorProvider = when (card.level?.number) {

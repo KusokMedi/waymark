@@ -74,6 +74,7 @@ class WidgetConfigActivity : ComponentActivity() {
                     onCancel = { finish() },
                     onSave = { config ->
                         container.database.widgetConfigDao().upsert(config)
+                        kotlinx.coroutines.delay(100)
                         WaymarkWidgetUpdater.updateAll(this@WidgetConfigActivity)
                         setResult(
                             RESULT_OK,
@@ -182,8 +183,14 @@ private fun WidgetSettingsScreen(
             Spacer(Modifier.height(16.dp))
             Text("Visible elements", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(8.dp))
-            SettingToggle("Show flag", null, showFlag) { showFlag = it }
-            SettingToggle("Show country name", null, showName) { showName = it }
+            SettingToggle("Show flag", null, showFlag) { newValue ->
+                if (!newValue && !showName) return@SettingToggle
+                showFlag = newValue
+            }
+            SettingToggle("Show country name", null, showName) { newValue ->
+                if (!newValue && !showFlag) return@SettingToggle
+                showName = newValue
+            }
             SettingToggle("Show advisory level", null, showLevel) { showLevel = it }
             SettingToggle("Show advisory date", null, showDate) { showDate = it }
 

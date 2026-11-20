@@ -159,7 +159,10 @@ fun OnboardingScreen(
 
 @Composable
 private fun StepIndicator(step: Int) {
-    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
         repeat(4) { index ->
             Box(
                 modifier = Modifier
@@ -282,10 +285,6 @@ private fun CountryStep(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Spacer(Modifier.height(12.dp))
-                    TextButton(onClick = { onRequestSync(allowMobileData) }) {
-                        Text("Retry")
-                    }
                 }
             }
         } else {

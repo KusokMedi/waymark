@@ -81,13 +81,7 @@ fun SyncBanner(
                 )
             }
 
-            AnimatedVisibility(visible = status == "success") {
-                Text(
-                    "Data is cached on this device. Advisories may be delayed by Android background scheduling.",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 2.dp),
-                )
-            }
+            // Removed cached data message per user request.
         }
     }
 }
@@ -109,4 +103,4 @@ fun formatTimestampShort(millis: Long): String =
 fun formatTimestamp(millis: Long): String =
     Instant.ofEpochMilli(millis)
         .atZone(ZoneId.systemDefault())
-        .format(DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm", Locale.getDefault()))
+        .format(DateTimeFormatter.ofPattern("d MMM, HH:mm", Locale.getDefault()))
