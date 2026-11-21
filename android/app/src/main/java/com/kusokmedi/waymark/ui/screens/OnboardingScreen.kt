@@ -10,17 +10,29 @@ import android.os.PowerManager
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
@@ -45,17 +57,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import kotlinx.coroutines.delay
 import com.kusokmedi.waymark.domain.AdvisoryLevel
 import com.kusokmedi.waymark.domain.AdvisoryLevels
 import com.kusokmedi.waymark.SyncScheduler
 import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.ui.components.LevelChip
+import com.kusokmedi.waymark.ui.components.levelColor
+import com.kusokmedi.waymark.ui.components.levelContainerColor
 
 @Composable
 fun OnboardingScreen(
@@ -213,38 +230,185 @@ private fun WelcomeStep() {
 
 @Composable
 private fun LevelsStep() {
-    Column {
-        Text("Advisory levels", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+    val scrollState = rememberScrollState()
+    var revealed by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { revealed = true }
+
+    val levels = listOf(
+        Triple(
+            AdvisoryLevel.LEVEL_1,
+            "Standard awareness",
+            "Take the usual precautions you would in any unfamiliar place.",
+        ),
+        Triple(
+            AdvisoryLevel.LEVEL_2,
+            "Heightened awareness",
+            "Be more alert to safety and security conditions.",
+        ),
+        Triple(
+            AdvisoryLevel.LEVEL_3,
+            "Serious risks",
+            "Carefully reconsider plans. Safety risks may be significant.",
+        ),
+        Triple(
+            AdvisoryLevel.LEVEL_4,
+            "Life-threatening risks",
+            "Do not travel. The U.S. government may have limited ability to help.",
+        ),
+    )
+
+    Column(modifier = Modifier.verticalScroll(scrollState)) {
+        Text(
+            "Advisory levels",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
         Spacer(Modifier.height(8.dp))
         Text(
-            "The U.S. Department of State publishes a level from 1 to 4 for each destination. Some levels note that the country contains areas with a higher security risk.",
+            "Each destination gets an official U.S. State Department level from 1 to 4. Higher level means greater risk.",
             style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(16.dp))
-        listOf(
-            AdvisoryLevel.LEVEL_1 to "Exercise normal precautions.",
-            AdvisoryLevel.LEVEL_2 to "Exercise increased caution.",
-            AdvisoryLevel.LEVEL_3 to "Reconsider travel.",
-            AdvisoryLevel.LEVEL_4 to "Do not travel.",
-        ).forEach { (level, description) ->
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically,
+        Spacer(Modifier.height(18.dp))
+
+        levels.forEachIndexed { index, (level, headline, detail) ->
+            AnimatedVisibility(
+                visible = revealed,
+                enter = fadeIn(tween(durationMillis = 350, delayMillis = index * 70)) +
+                    slideInVertically(
+                        animationSpec = tween(durationMillis = 350, delayMillis = index * 70),
+                        initialOffsetY = { it / 4 },
+                    ),
             ) {
-                LevelChip(level = level, showLabel = false)
-                Text(
-                    description,
-                    modifier = Modifier.padding(start = 12.dp),
-                    style = MaterialTheme.typography.bodyMedium,
+                LevelCard(
+                    level = level,
+                    headline = headline,
+                    detail = detail,
+                    modifier = Modifier.padding(bottom = 10.dp),
                 )
             }
         }
-        Spacer(Modifier.height(12.dp))
+
+        AnimatedVisibility(
+            visible = revealed,
+            enter = fadeIn(tween(durationMillis = 350, delayMillis = 320)) +
+                slideInVertically(
+                    animationSpec = tween(durationMillis = 350, delayMillis = 320),
+                    initialOffsetY = { it / 4 },
+                ),
+        ) {
+            HigherRiskCallout(modifier = Modifier.padding(top = 4.dp, bottom = 14.dp))
+        }
+
         Text(
-            "Advisories are written for U.S. citizens and are not a universal safety rating. Always consult the official advisory.",
+            "Advisories are written for U.S. citizens and are not a universal safety rating. Always consult the official advisory before travel.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        Spacer(Modifier.height(8.dp))
+    }
+}
+
+@Composable
+private fun LevelCard(
+    level: AdvisoryLevel,
+    headline: String,
+    detail: String,
+    modifier: Modifier = Modifier,
+) {
+    val accent = levelColor(level)
+    val container = levelContainerColor(level)
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp,
+    ) {
+        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+            Box(
+                modifier = Modifier
+                    .width(6.dp)
+                    .fillMaxHeight()
+                    .background(accent),
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(container),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = "${level.number}",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = accent,
+                    )
+                }
+                Column(modifier = Modifier.padding(start = 14.dp).weight(1f)) {
+                    Text(
+                        text = AdvisoryLevels.label(level),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = headline,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = accent,
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = detail,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HigherRiskCallout(modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = "Special case: higher-risk areas",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "Some countries have the same base level but include specific areas with higher security risk. Waymark marks them separately.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.height(10.dp))
+            LevelChip(
+                level = AdvisoryLevel.LEVEL_2,
+                higherRisk = true,
+                showLabel = true,
+                compact = true,
+            )
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = "Example: Level 2, with higher-risk areas.",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 

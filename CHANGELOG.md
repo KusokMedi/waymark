@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.16] - 2026-11-21
+
+### Changed
+
+- Redesigned the onboarding advisory levels step with richer level cards, action-oriented descriptions, a higher-risk areas example, and a subtle animated reveal.
+
 ## [1.3.15] - 2026-11-21
 
 ### Changed

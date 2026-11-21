@@ -14,17 +14,16 @@ adapts to the launcher-provided size.
 
 ## Configuration
 
-- The widget is added immediately and always shows the countries in your current
-  watchlist, in watchlist order. Manage which countries appear by editing your
-  watchlist in the app.
-- Tap the settings (⚙) button in the widget header to open widget settings.
-- Available options:
-  - **Corner radius** — adjust the widget corner rounding.
-  - **Transparent background** — off by default.
-  - **Visible elements** — show or hide the flag, country name, advisory level,
-    and advisory date.
+The widget has no separate settings screen. It always shows the countries in
+your current watchlist, in watchlist order. Manage which countries appear by
+editing your watchlist in the app.
 
-Every widget instance stores its own configuration keyed by App Widget ID.
+Appearance is fixed to a sensible default: country flag, country name, advisory
+level, a 12 dp corner radius, and a solid surface background. The widget is
+resizable, and content adapts to the launcher-provided size.
+
+Each widget instance still has its own identity (App Widget ID) and stored
+configuration, so deleting and re-adding a widget does not affect others.
 Configuration survives process restarts and device reboots because it lives in
 the local Room database.
 
@@ -33,9 +32,9 @@ the local Room database.
 - Widgets read from the local database; the refresh (↻) action triggers a
   synchronization so new data can be fetched and the status updates.
 - The header shows sync status:
-  - `Updating.` / `Updating..` / `Updating...` while a sync is running.
+  - `Loading...` while a sync is running.
   - `Updated HH:mm` (or date and time) after a successful sync.
-  - `Error, last update at …` when the last attempt failed or was interrupted.
+  - `Error, last update at ...` when the last attempt failed or was interrupted.
 - Tapping a country opens its dashboard in the app.
 - With an empty watchlist the widget shows a clear empty state instead of a
   fabricated advisory.
@@ -49,12 +48,13 @@ the local Room database.
 
 ## Data shown
 
-- Country flag (optional).
-- Country name (optional).
-- Advisory level with official wording, or `Unknown` when unavailable (optional).
-- Advisory publication date when available (optional).
+- Country flag.
+- Country name.
+- Advisory level (Level 1 to 4, or Unknown when unavailable).
+- Last successful synchronization status and time.
 
-The widget never invents an advisory level; unknown data is shown as unknown.
+The advisory publication date is not shown in the widget. The widget never
+invents an advisory level; unknown data is shown as unknown.
 
 ## Limitations
 
@@ -75,4 +75,4 @@ arbitrary layouts or interactions:
 
 Instrumented tests verify that widget configurations are independent per widget
 ID and survive storage round-trips. Launcher rendering should be checked
-manually on at least one Android 8–11 device and one Android 12+ device.
+manually on at least one Android 8-11 device and one Android 12+ device.

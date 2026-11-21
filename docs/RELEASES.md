@@ -5,9 +5,9 @@ Waymark uses Semantic Versioning. Version numbers are defined in
 
 ## Versioning
 
-- `MAJOR` — incompatible storage or behavior changes.
-- `MINOR` — new user-facing features.
-- `PATCH` — fixes and documentation.
+- `MAJOR`, incompatible storage or behavior changes.
+- `MINOR`, new user-facing features.
+- `PATCH`, fixes and documentation.
 
 A Git tag of the form `vX.Y.Z` triggers the release workflow.
 
@@ -60,8 +60,8 @@ unsigned APK.
 
 ## Artifacts
 
-- `app-release.apk` — installable release build.
-- `app-release.aab` — optional Play-style bundle (not published automatically).
+- `app-release.apk`, installable release build.
+- `app-release.aab`, optional Play-style bundle (not published automatically).
 - GitHub Pages deployment is independent and only publishes the website.
 
 ## Database compatibility

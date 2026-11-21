@@ -42,11 +42,11 @@ import com.kusokmedi.waymark.ui.components.CountryCardView
 import com.kusokmedi.waymark.ui.components.SyncBanner
 
 private enum class WatchlistSort(val label: String) {
-    NAME_ASC("A–Z"),
-    NAME_DESC("Z–A"),
+    NAME_ASC("A-Z"),
+    NAME_DESC("Z-A"),
     FAVORITES("Favorites"),
-    LEVEL_ASC("Level 1–4"),
-    LEVEL_DESC("Level 4–1"),
+    LEVEL_ASC("Level 1-4"),
+    LEVEL_DESC("Level 4-1"),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

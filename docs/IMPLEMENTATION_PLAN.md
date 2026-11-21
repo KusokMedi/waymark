@@ -4,10 +4,10 @@
 
 The repository currently contains:
 
-- `app/` — a Vite + React + TypeScript travel advisory dashboard.
-- `website/` — a static Vite + React project website.
-- `data/latest.json` and `app/public/data/latest.json` — ArcGIS snapshots.
-- `scripts/sync-data.mjs` — snapshot synchronizer.
+- `app/`, a Vite + React + TypeScript travel advisory dashboard.
+- `website/`, a static Vite + React project website.
+- `data/latest.json` and `app/public/data/latest.json`, ArcGIS snapshots.
+- `scripts/sync-data.mjs`, snapshot synchronizer.
 - GitHub Actions for CI, Pages deployment, and data sync.
 - Documentation for the web implementation.
 
@@ -31,13 +31,13 @@ waymark/
 
 The Android module is split internally by package responsibility rather than by Gradle module to keep the build simple and maintainable:
 
-- `data/remote` — official ArcGIS client and DTO parsing.
-- `data/local` — Room entities, DAOs, database, DataStore preferences.
-- `domain` — advisory levels, normalization, change detection, models.
-- `sync` — WorkManager worker, sync coordinator, notifications.
-- `ui` — Compose screens, theme, navigation.
-- `widget` — Glance widgets and widget configuration activity.
-- `backup` — JSON/ZIP export and validated restore.
+- `data/remote`, official ArcGIS client and DTO parsing.
+- `data/local`, Room entities, DAOs, database, DataStore preferences.
+- `domain`, advisory levels, normalization, change detection, models.
+- `sync`, WorkManager worker, sync coordinator, notifications.
+- `ui`, Compose screens, theme, navigation.
+- `widget`, Glance widgets and receivers.
+- `backup`, JSON/ZIP export and validated restore.
 
 ## Data source decision
 
@@ -72,12 +72,12 @@ Unknown values are stored and displayed as `Unknown`; they are never converted t
 
 Room tables:
 
-- `countries` — stable catalogue identity, ISO codes, display name.
-- `advisories` — source records, including region records, with raw code and official dates.
-- `watchlist` — selected countries, ordering, favorite flag, notification preference.
-- `history_events` — deduplicated meaningful changes with a stable fingerprint.
-- `sync_state` — last success/attempt, status, error, ETag/Last-Modified if available.
-- `widget_configs` — independent configuration per widget ID.
+- `countries`, stable catalogue identity, ISO codes, display name.
+- `advisories`, source records, including region records, with raw code and official dates.
+- `watchlist`, selected countries, ordering, favorite flag, notification preference.
+- `history_events`, deduplicated meaningful changes with a stable fingerprint.
+- `sync_state`, last success/attempt, status, error, ETag/Last-Modified if available.
+- `widget_configs`, independent configuration per widget ID.
 
 History is retained indefinitely until the user clears it explicitly. No destructive migrations.
 
@@ -101,15 +101,20 @@ History is retained indefinitely until the user clears it explicitly. No destruc
 
 ## Widgets
 
-Jetpack Glance is used for real App Widgets. Presets:
+Jetpack Glance is used for real App Widgets. The current widget is a single
+watchlist widget:
 
-- Compact card.
-- Horizontal list.
-- Vertical list.
-- Multi-country grid.
-- Large watchlist.
+- Shows the countries in the user's watchlist, in watchlist order.
+- Displays country flag, country name, advisory level, and last update.
+- Resizable from 2 by 2 down to 2 by 1.
+- Tapping a country opens its dashboard.
+- Shows an empty state when the watchlist is empty.
+- Refreshes automatically after synchronization and via the refresh action.
 
-A configuration activity allows independent country selection/order, date visibility, level text, background tone, and layout. The "custom builder" exposes the supported element toggles and column count within Glance/RemoteViews constraints. Widgets observe the shared local database and are refreshed after sync; they do not run their own network jobs.
+There is no separate widget configuration activity. Appearance is fixed to a
+default (12 dp corner radius, solid surface background). Widgets observe the
+shared local database and are refreshed after sync; they do not run their own
+network jobs.
 
 ## Website
 
@@ -134,6 +139,6 @@ Preserve the existing static site and content. Update it to present the Android 
 ## Risks and limitations
 
 - No local Android SDK was initially present; the implementation is verified with a locally installed command-line SDK where possible and by CI otherwise.
-- Glance/RemoteViews cannot render arbitrary layouts; the builder is intentionally limited to supported element visibility and arrangement.
+- Glance/RemoteViews cannot render arbitrary layouts; the current widget uses a fixed layout.
 - Country flag assets: a bundled vector set is not yet complete; a styled flag/monogram fallback is used and the asset contract is documented.
 - ArcGIS remains the only source. If it changes or disappears, cached data is preserved and the UI reports the failure honestly.

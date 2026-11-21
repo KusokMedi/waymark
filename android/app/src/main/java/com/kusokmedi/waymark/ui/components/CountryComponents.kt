@@ -66,7 +66,10 @@ fun LevelChip(
     modifier: Modifier = Modifier,
 ) {
     val label = if (level == null) "Unknown" else "Level ${level.number}"
-    val chipWidth = if (compact) 172.dp else 260.dp
+    val chipWidth = when {
+        showLabel || higherRisk -> if (compact) 172.dp else 260.dp
+        else -> if (compact) 104.dp else 120.dp
+    }
     Surface(
         modifier = modifier.width(chipWidth),
         color = levelContainerColor(level),

@@ -4,14 +4,14 @@
 
 Waymark walks you through four short steps:
 
-1. **Welcome** — what the app does and what it does not do.
-2. **Advisory levels** — how Levels 1–4 work and the higher-risk area note.
-3. **Permissions & network** — optional. Enable advisory notifications (Android
+1. **Welcome**, what the app does and what it does not do.
+2. **Advisory levels**, how Levels 1-4 work and the higher-risk area note.
+3. **Permissions & network**, optional. Enable advisory notifications (Android
    may ask for notification permission), choose whether to allow mobile data for
    updates (default is Wi-Fi only, useful if you do not have Wi-Fi yet), and, if
    you want, allow Waymark to ignore battery optimizations to reduce delays in
    background updates.
-4. **Choose countries** — search and select the destinations you want to follow.
+4. **Choose countries**, search and select the destinations you want to follow.
    You can skip this and add countries later from Explore.
 
 The first synchronization downloads the country catalogue and advisory records.
@@ -27,7 +27,7 @@ The Watchlist tab is the home screen. Each card shows:
 - The official advisory publication date.
 - A star for favorites.
 
-You can sort the watchlist (A–Z by default, Z–A, Favorites, Level 1–4, Level 4–1).
+You can sort the watchlist (A-Z by default, Z-A, Favorites, Level 1-4, Level 4-1).
 Tap the refresh action in the top bar, or use **Settings → Synchronisation →
 Sync now**, to request an update. If a sync fails, tap the status banner to view
 synchronization details. Android may delay background work.
@@ -37,7 +37,7 @@ synchronization details. Android may delay background work.
 Explore lists every destination in the downloaded catalogue.
 
 - Search by name, ISO alpha-2 or ISO alpha-3.
-- Sort by A–Z, Z–A, Level 1–4 or Level 4–1.
+- Sort by A-Z, Z-A, Level 1-4 or Level 4-1.
 - Tap the add/check button to add or remove a country.
 
 When you add a country to your watchlist and advisory notifications are enabled,
@@ -76,16 +76,16 @@ and your watchlist are kept.
 
 Settings are organized into categories:
 
-- **Appearance** — system/light/dark theme and dynamic color (Android 12+; also
+- **Appearance**, system/light/dark theme and dynamic color (Android 12+; also
   affects widgets).
-- **Synchronisation** — automatic updates on/off, allow mobile data for updates
+- **Synchronisation**, automatic updates on/off, allow mobile data for updates
   (Wi-Fi only by default), interval (6/12/24 hours), manual sync, and
   synchronization details.
-- **Notifications** — global opt-in, notification sound and priority (default
+- **Notifications**, global opt-in, notification sound and priority (default
   High), and battery optimization settings.
-- **Data management** — export JSON, export ZIP, import backup, choose merge or
+- **Data management**, export JSON, export ZIP, import backup, choose merge or
   replace, clear history.
-- **About** — version, privacy summary, licenses, official source link.
+- **About**, version, privacy summary, licenses, official source link.
 
 Per-country notification switches are available on each country page. If a sync
 fails, you can tap the error banner in the app to view details.

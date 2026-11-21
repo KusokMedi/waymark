@@ -19,7 +19,7 @@ android/app/src/main/java/com/kusokmedi/waymark/
 ├── domain/                Levels, ISO catalogue, normalization, changes
 ├── sync/                  SyncEngine and notification handling
 ├── backup/                JSON and ZIP export/import
-├── widget/                Glance widgets, receivers, config activity
+├── widget/                Glance widgets and receivers
 └── ui/                    Compose screens, theme, navigation
 ```
 
@@ -101,7 +101,7 @@ Widget ID, so multiple instances are independent. See
 
 ## Background work
 
-`SyncScheduler` enqueues a unique periodic request (6–24 hours, default 12) and
+`SyncScheduler` enqueues a unique periodic request (6-24 hours, default 12) and
 a unique one-time request for app start and manual refresh, both constrained to
 a connected network with exponential backoff. Android may delay background
 work; the app never promises exact timing. Disabling automatic updates cancels
@@ -121,8 +121,8 @@ the periodic request.
 
 - Country flags are rendered as emoji derived from ISO country codes; their
   appearance depends on the device and system font.
-- Glance/RemoteViews cannot express arbitrary layouts; the widget builder is
-  limited to supported element toggles and 1–3 columns.
+- Glance/RemoteViews cannot express arbitrary layouts. The current widget uses
+  a fixed layout: flag, country name, advisory level, and last update.
 - The official ArcGIS layer is the only source. If it changes shape or
   disappears, cached data is preserved and the UI reports the failure.
 - Release signing requires a keystore that is not committed to the repository.

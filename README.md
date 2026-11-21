@@ -5,7 +5,7 @@
 Waymark is an independent, local-first Android app for monitoring official
 U.S. Department of State Travel Advisories. It keeps a personal watchlist,
 records meaningful advisory changes over time, and provides real Android
-home-screen widgets — without accounts, a Waymark server, analytics or
+home-screen widgets, without accounts, a Waymark server, analytics or
 advertising.
 
 - **Package:** `com.kusokmedi.waymark`
@@ -25,8 +25,8 @@ advertising.
   offline states and preserved cached data.
 - Optional notifications for worsening, improvement, new regional records and
   significant detail changes. The first synchronization never notifies.
-- Real App Widget (Jetpack Glance): a 2×2 resizable, configurable watchlist
-  widget with sync status and quick refresh/settings.
+- Real App Widget (Jetpack Glance): a resizable watchlist widget with country
+  flags, advisory levels, last update, sync status and quick refresh.
 - JSON and ZIP backup/restore with validation and merge/replace modes.
 - System light/dark theme and dynamic color on Android 12+.
 

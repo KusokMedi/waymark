@@ -18,8 +18,27 @@ import {
   WifiOff,
 } from "lucide-react";
 
+const DEMO_ITEMS = [
+  { id: "FIN", name: "Finland", iso2: "FI", level: 1, higher: false, date: "2026-03-13", regions: [] as string[] },
+  { id: "MEX", name: "Mexico", iso2: "MX", level: 2, higher: true, date: "2026-02-01", regions: ["Jalisco", "Yucatan"] },
+  { id: "COL", name: "Colombia", iso2: "CO", level: 3, higher: false, date: "2026-01-15", regions: ["Border regions"] },
+  { id: "DEU", name: "Germany", iso2: "DE", level: 1, higher: false, date: "2026-03-20", regions: [] as string[] },
+  { id: "BRA", name: "Brazil", iso2: "BR", level: 2, higher: false, date: "2026-02-20", regions: ["Some states"] },
+];
+
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [demoTab, setDemoTab] = useState<"watchlist" | "explore">("watchlist");
+  const [demoQuery, setDemoQuery] = useState("");
+  const [demoSelected, setDemoSelected] = useState("MEX");
+  const demoBase = demoTab === "watchlist" ? DEMO_ITEMS.slice(0, 3) : DEMO_ITEMS;
+  const filteredDemo = demoBase.filter(
+    (item) =>
+      item.name.toLowerCase().includes(demoQuery.toLowerCase()) ||
+      item.iso2.toLowerCase().includes(demoQuery.toLowerCase()),
+  );
+  const demoItem = DEMO_ITEMS.find((item) => item.id === demoSelected) ?? null;
+
   return (
     <div className="site">
       <header className="site-header">
@@ -47,6 +66,7 @@ export default function App() {
         >
           <a href="#features">Features</a>
           <a href="#widgets">Widgets</a>
+          <a href="#demo">Demo</a>
           <a href="#data">Data</a>
           <a href="#docs">Docs</a>
           <a className="nav-download" href="https://github.com/KusokMedi/waymark/releases/latest" target="_blank" rel="noopener noreferrer">Download</a>
@@ -61,7 +81,7 @@ export default function App() {
             <p className="lead">
               A native Android watchlist for official U.S. Department of State travel advisories.
               Track the countries you care about, see meaningful changes over time, and keep real
-              home-screen widgets — without an account or a Waymark server.
+              home-screen widgets. No account, no Waymark server, no analytics, no tracking.
             </p>
             <div className="hero-actions">
               <a className="btn" href="https://github.com/KusokMedi/waymark/releases/latest" target="_blank" rel="noopener noreferrer">
@@ -110,7 +130,7 @@ export default function App() {
           <div className="feature-grid">
             <article className="feature"><Star size={20} /><h3>Your watchlist</h3><p>Choose countries manually. Favorites, ordering and per-country notification preferences stay on your device.</p></article>
             <article className="feature"><Bell size={20} /><h3>Meaningful changes</h3><p>Notifications for worsening, improvement, new regional records and significant detail changes. Never on first sync.</p></article>
-            <article className="feature"><LayoutGrid size={20} /><h3>Real app widgets</h3><p>Compact card, list and grid widgets with independent configuration for every instance.</p></article>
+            <article className="feature"><LayoutGrid size={20} /><h3>Real app widgets</h3><p>A watchlist widget with flags, advisory levels, and last update. Resizable, with an empty state and automatic refresh.</p></article>
             <article className="feature"><History size={20} /><h3>Local history</h3><p>Advisory changes are recorded indefinitely on this device, with a chart built only from recorded transitions.</p></article>
             <article className="feature"><WifiOff size={20} /><h3>Honest offline mode</h3><p>Cached advisories stay available. Failures never become Level 1, and the last successful update is always visible.</p></article>
             <article className="feature"><Lock size={20} /><h3>No tracking</h3><p>No accounts, analytics, telemetry, advertising SDKs or Waymark backend. Only the official public source is contacted.</p></article>
@@ -122,13 +142,13 @@ export default function App() {
             <div className="eyebrow"><LayoutGrid size={14} /> Home screen</div>
             <h2>Advisories where you already look</h2>
             <p>
-              Waymark widgets are real Android App Widgets, not web shortcuts. Pick countries, reorder them,
-              choose what is visible and how the widget is arranged. Each widget keeps its own configuration,
-              even across reboots.
+              Waymark widgets are real Android App Widgets, not web shortcuts. The watchlist widget shows your
+              selected countries with flags, advisory levels, and the last update time. It is resizable and
+              refreshes automatically after synchronization.
             </p>
             <ul className="check-list">
-              <li><Check size={16} /> Watchlist widget with country flags, advisory levels and last update</li>
-              <li><Check size={16} /> Resizable from 2×2 down to 2×1</li>
+              <li><Check size={16} /> Watchlist widget with country flags, advisory levels, and last update</li>
+              <li><Check size={16} /> Resizable from 2 by 2 down to 2 by 1</li>
               <li><Check size={16} /> Tap a country to open its dashboard</li>
               <li><Check size={16} /> Automatic refresh after synchronization</li>
               <li><Check size={16} /> Clear empty state when no countries are selected</li>
@@ -142,11 +162,74 @@ export default function App() {
               <div className="widget-row"><span className="demo-flag small">CO</span><div><strong>Colombia</strong></div><span className="level level-3">L3</span></div>
             </div>
             <div className="widget-surface widget-compact">
-              <span className="demo-flag small">JP</span>
-              <div><strong>Japan</strong><small>Exercise Normal Precautions</small></div>
+              <span className="demo-flag small">FI</span>
+              <div><strong>Finland</strong></div>
               <span className="level level-1">L1</span>
             </div>
             <p className="widget-caption">Illustrative widget layouts with sample data. Actual widget rendering follows Android launcher constraints.</p>
+          </div>
+        </section>
+
+        <section id="demo" className="section">
+          <div className="section-heading">
+            <div>
+              <div className="eyebrow"><Sparkles size={14} /> Sample data</div>
+              <h2>Try the interface</h2>
+              <p>Interactive demonstration using clearly labeled sample data. Not real current travel advice.</p>
+            </div>
+          </div>
+          <div className="demo-shell">
+            <div className="demo-app">
+              <div className="demo-tabs">
+                <button className={demoTab === "watchlist" ? "active" : ""} type="button" onClick={() => setDemoTab("watchlist")}>Watchlist</button>
+                <button className={demoTab === "explore" ? "active" : ""} type="button" onClick={() => setDemoTab("explore")}>Explore</button>
+                <input type="search" placeholder="Search sample destinations" value={demoQuery} onChange={(e) => setDemoQuery(e.target.value)} aria-label="Search sample destinations" />
+              </div>
+              <div className="demo-list">
+                {filteredDemo.length === 0 ? (
+                  <div className="demo-empty">No sample destinations match.</div>
+                ) : (
+                  filteredDemo.map((item) => (
+                    <button key={item.id} type="button" className={`demo-country ${demoSelected === item.id ? "selected" : ""}`} onClick={() => setDemoSelected(item.id)}>
+                      <span className="demo-flag small">{item.iso2}</span>
+                      <div className="demo-country-text">
+                        <strong>{item.name}</strong>
+                        <small>{item.regions.length ? item.regions.join(", ") : "Country advisory"}</small>
+                      </div>
+                      <span className="demo-country-meta">
+                        <span className={`level level-${item.level}`}>L{item.level}</span>
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+            <div className="demo-detail">
+              {demoItem ? (
+                <>
+                  <div className="demo-detail-head">
+                    <span className="demo-flag large">{demoItem.iso2}</span>
+                    <div>
+                      <h3>{demoItem.name}</h3>
+                      <small>{demoItem.iso2} / {demoItem.id}</small>
+                    </div>
+                  </div>
+                  <div className={`advisory-banner level-${demoItem.level}`}>
+                    <strong>Level {demoItem.level}</strong>
+                    <span>{demoItem.higher ? "Contains areas with higher security risk." : "No higher-risk areas noted."}</span>
+                    <em>Sample advisory date: {demoItem.date}</em>
+                  </div>
+                  <p className="demo-note">Sample record. Real advisories come from the official U.S. Department of State source.</p>
+                  <dl className="demo-facts">
+                    <div><dt>Regions</dt><dd>{demoItem.regions.length ? demoItem.regions.join(", ") : "None"}</dd></div>
+                    <div><dt>Sample advisory date</dt><dd>{demoItem.date}</dd></div>
+                  </dl>
+                  <p className="demo-disclaimer">Sample data only. Not real current travel advice.</p>
+                </>
+              ) : (
+                <div className="demo-empty">Select a sample destination.</div>
+              )}
+            </div>
           </div>
         </section>
 

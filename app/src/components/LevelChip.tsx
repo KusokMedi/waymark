@@ -18,7 +18,7 @@ export function LevelChip({
   const hr = higherRisk ?? false;
   const text =
     label ??
-    (level !== null ? LEVEL_LABELS[level] + (hr ? " — Contains Areas with Higher Security Risk" : "") : "Unknown advisory");
+    (level !== null ? LEVEL_LABELS[level] + (hr ? " - Contains Areas with Higher Security Risk" : "") : "Unknown advisory");
   const cls = level === null ? "level-unknown" : `level-${level}${hr ? " level-higher" : ""}`;
   return <span className={`level-chip ${cls}`}>{text}</span>;
 }

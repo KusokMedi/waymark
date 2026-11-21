@@ -61,14 +61,14 @@ export default function DestinationDetail() {
           </div>
           <div className="kv">
             <span className="k">Higher-risk areas</span>
-            <span className="v">{dest.containsHigherRiskAreas ? "Yes — contains areas with higher security risk" : "No special regional-risk indicator"}</span>
+            <span className="v">{dest.containsHigherRiskAreas ? "Yes, contains areas with higher security risk" : "No special regional-risk indicator"}</span>
           </div>
           {dest.assistedDepartureStatus !== null && (
             <div className="kv">
               <span className="k">Assisted/ordered departure</span>
               <span className="v">
                 {dest.assistedDepartureStatus === 1 ? "Authorized departure" : dest.assistedDepartureStatus === 2 ? "Ordered departure" : "Status recorded"}
-                {dest.assistedDepartureText ? ` — ${dest.assistedDepartureText}` : ""}
+                {dest.assistedDepartureText ? `, ${dest.assistedDepartureText}` : ""}
                 {dest.assistedDepartureDate ? ` (${dest.assistedDepartureDate})` : ""}
               </span>
             </div>
@@ -128,7 +128,7 @@ export default function DestinationDetail() {
         </div>
         <div className="kv">
           <span className="k">Stale</span>
-          <span className="v">{data?.stale ? "Yes — using cached data" : "No"}</span>
+          <span className="v">{data?.stale ? "Yes, using cached data" : "No"}</span>
         </div>
         <p style={{ fontSize: "0.8rem", color: "var(--on-surface-variant)", marginTop: "var(--space-3)" }}>
           Advisories are published by the U.S. Department of State for U.S. citizens, nationals, and legal residents. They are not a universal safety assessment for all travelers.
