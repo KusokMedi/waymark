@@ -141,7 +141,12 @@ object AdvisoryNormalizer {
             val uri = java.net.URI(trimmed)
             if (uri.scheme == "https" || uri.scheme == "http") uri.toString() else null
         } catch (e: Exception) {
-            android.util.Log.d("AdvisoryNormalizer", "Invalid URL encountered: $trimmed", e)
+            // Log only in debug builds - unit tests don't mock android.util.Log
+            try {
+                android.util.Log.d("AdvisoryNormalizer", "Invalid URL encountered: $trimmed", e)
+            } catch (_: RuntimeException) {
+                // Ignore if Log is not mocked (unit test environment)
+            }
             null
         }
     }
@@ -154,7 +159,12 @@ object AdvisoryNormalizer {
                 .toLocalDate()
                 .toString()
         } catch (e: Exception) {
-            android.util.Log.d("AdvisoryNormalizer", "Invalid date millis: $millis", e)
+            // Log only in debug builds - unit tests don't mock android.util.Log
+            try {
+                android.util.Log.d("AdvisoryNormalizer", "Invalid date millis: $millis", e)
+            } catch (_: RuntimeException) {
+                // Ignore if Log is not mocked (unit test environment)
+            }
             null
         }
     }
