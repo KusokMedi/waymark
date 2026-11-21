@@ -5,6 +5,16 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.3] - 2026-11-21
+
+### Changed
+
+- Onboarding advisory levels now appear immediately without entrance animations.
+
+### Fixed
+
+- Widget refresh now runs the same direct synchronization path as the in-app Watchlist refresh, avoiding WorkManager scheduling delay while keeping immediate feedback and sync animation.
+
 ## [1.4.2] - 2026-11-21
 
 ### Fixed
