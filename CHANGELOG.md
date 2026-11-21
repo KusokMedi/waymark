@@ -5,6 +5,47 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-21
+
+### Fixed
+
+#### Critical Stability Issues
+- **Race Conditions**: Fixed critical race condition in sync engine where firstSync check happened outside transaction, potentially causing duplicate notifications or missed changes during parallel syncs.
+- **Thread Safety**: Protected markFailedIfRunning with mutex to prevent concurrent state corruption.
+- **Error Handling**: Added comprehensive error handling to all ViewModel operations with proper logging and user-facing error events.
+- **Settings Persistence**: Replaced unsafe delay(50) with proper await in syncNowWithMobileData to ensure settings are persisted before sync reads them.
+
+#### Widget System
+- **State Management**: Replaced volatile flags with StateFlow-based UpdateState for proper thread-safe widget update coordination.
+- **Performance**: Added 200ms throttling to forceUpdateAll to prevent excessive widget refreshes during mass data changes.
+- **Overflow Protection**: Fixed widget refresh tick overflow by using Long range instead of Int modulo 1M.
+
+#### Security & Validation
+- **Deeplink Safety**: Added validation to check country exists before navigation, preventing crashes from malicious or invalid deeplinks.
+- **SQL Safety**: Escaped LIKE special characters (%, _, \) in country search queries.
+- **Fingerprint Collisions**: Changed history fingerprints from pipe-delimited to Base64-encoded to prevent character collisions.
+
+#### Data & Performance
+- **Database Index**: Added index on history_events.occurredAt for better query performance (database migration 5→6).
+- **Stale State Recovery**: Consolidated duplicate stale running sync recovery logic into shared SyncStateDao.recoverStaleRunning() method.
+
+#### Lifecycle & Memory
+- **Widget Cleanup**: Used goAsync() in widget receiver onDeleted to ensure database cleanup completes before process termination.
+- **Context Documentation**: Added comprehensive documentation about Application Context requirements to prevent memory leaks in SyncEngine, ChangeNotifier, and BackupManager.
+
+#### Error Logging
+- **Notifications**: Added warning logs when notification permission is revoked or channels are deleted.
+- **Data Parsing**: Added debug logging for invalid URLs and date parsing errors.
+- **Network Layer**: Added warning log when pagination MAX_PAGES limit is reached.
+
+#### Sync Scheduling
+- **Work Policy**: Changed syncNowFromWidget from REPLACE to KEEP policy to prevent cancelling already-running sync operations.
+
+### Documentation
+- Added CODE_AUDIT_FIXES.md with comprehensive analysis of 45 identified issues and their resolution status.
+- Documented Application Context requirements across all long-lived components.
+- Added comments explaining timeout coordination, notification channel management, and JSON parsing concerns.
+
 ## [1.3.20] - 2026-11-21
 
 ### Fixed
