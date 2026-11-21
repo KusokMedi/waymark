@@ -408,13 +408,26 @@ class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val container = context.waymarkContainer()
         val currentState = container.database.syncStateDao().get()
-        // Debounce: ignore if a sync ran less than 2 seconds ago.
+        val now = System.currentTimeMillis()
         val lastAttempt = currentState?.lastAttemptAt ?: 0L
-        if (System.currentTimeMillis() - lastAttempt < 2000) {
+
+        val activelyRunning = currentState?.status == "running" &&
+            now - lastAttempt < TimeUnit.MINUTES.toMillis(3)
+        if (activelyRunning || now - lastAttempt < 1500) {
             WaymarkWidgetUpdater.updateAll(context)
             return
         }
-        // Run sync (SyncEngine updates widget status and data during and after sync).
+
+        // Optimistic UI feedback so the tap is immediately visible.
+        container.database.syncStateDao().upsert(
+            (currentState ?: com.kusokmedi.waymark.data.local.SyncStateEntity()).copy(
+                lastAttemptAt = now,
+                status = "running",
+                message = null,
+            )
+        )
+        WaymarkWidgetUpdater.updateAll(context)
+
         runCatching {
             container.syncEngine.synchronize(forceMobileData = true)
         }

@@ -5,6 +5,13 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.14] - 2026-11-21
+
+### Fixed
+
+- Widget refresh button now provides immediate feedback and triggers updates more reliably.
+- Onboarding level list no longer shows duplicated advisory level text inside chips.
+
 ## [1.3.13] - 2026-11-21
 
 ### Changed

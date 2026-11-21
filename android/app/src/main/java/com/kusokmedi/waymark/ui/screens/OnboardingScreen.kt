@@ -231,7 +231,7 @@ private fun LevelsStep() {
                 modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                LevelChip(level)
+                LevelChip(level = level, showLabel = false)
                 Text(
                     description,
                     modifier = Modifier.padding(start = 12.dp),
