@@ -124,7 +124,11 @@ data class WatchlistEntity(
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index("countryId"), Index(value = ["fingerprint"], unique = true)],
+    indices = [
+        Index("countryId"),
+        Index("occurredAt"),
+        Index(value = ["fingerprint"], unique = true)
+    ],
 )
 data class HistoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

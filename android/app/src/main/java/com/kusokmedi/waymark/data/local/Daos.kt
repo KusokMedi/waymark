@@ -138,6 +138,25 @@ interface SyncStateDao {
 
     @Upsert
     suspend fun upsert(state: SyncStateEntity)
+    
+    /**
+     * Recovers stale "running" state that was interrupted by app crash or process termination.
+     * Returns the recovered state if it was stale, or the original state if still valid.
+     */
+    suspend fun recoverStaleRunning(staleThresholdMs: Long = 30_000L): SyncStateEntity? {
+        val state = get() ?: return null
+        if (state.status != "running") return state
+        
+        val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
+        if (age < staleThresholdMs) return state
+        
+        val recovered = state.copy(
+            status = "failed",
+            message = state.message ?: "Synchronization was interrupted"
+        )
+        upsert(recovered)
+        return recovered
+    }
 }
 
 @Dao

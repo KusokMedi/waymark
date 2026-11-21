@@ -14,7 +14,7 @@ import androidx.room.RoomDatabase
         SyncStateEntity::class,
         WidgetConfigEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 abstract class WaymarkDatabase : RoomDatabase() {
@@ -26,19 +26,25 @@ abstract class WaymarkDatabase : RoomDatabase() {
     abstract fun widgetConfigDao(): WidgetConfigDao
 
     companion object {
+        private val instance: WaymarkDatabase by lazy {
+            throw IllegalStateException(
+                "Database must be initialized with get(context) before first access"
+            )
+        }
+        
         @Volatile
-        private var instance: WaymarkDatabase? = null
+        private var INSTANCE: WaymarkDatabase? = null
 
         fun get(context: Context): WaymarkDatabase =
-            instance ?: synchronized(this) {
-                instance ?: Room.databaseBuilder(
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     WaymarkDatabase::class.java,
                     "waymark.db",
                 )
                     .addMigrations(*Migrations.ALL)
                     .build()
-                    .also { instance = it }
+                    .also { INSTANCE = it }
             }
     }
 }

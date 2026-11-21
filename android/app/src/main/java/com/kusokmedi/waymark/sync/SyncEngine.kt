@@ -48,9 +48,11 @@ class SyncEngine(
     }
 
     private suspend fun markFailedIfRunning(message: String) {
-        val current = db.syncStateDao().get() ?: SyncStateEntity()
-        if (current.status == "running") {
-            db.syncStateDao().upsert(current.copy(status = "failed", message = message))
+        mutex.withLock {
+            val current = db.syncStateDao().get() ?: SyncStateEntity()
+            if (current.status == "running") {
+                db.syncStateDao().upsert(current.copy(status = "failed", message = message))
+            }
         }
     }
 
@@ -75,8 +77,7 @@ class SyncEngine(
     }
 
     private suspend fun doSynchronize(forceMobileData: Boolean, forceSync: Boolean): SyncOutcome {
-        var state = db.syncStateDao().get() ?: SyncStateEntity()
-        state = clearStaleRunning(state)
+        var state = db.syncStateDao().recoverStaleRunning() ?: SyncStateEntity()
         val appSettings = settings.settings.first()
         val effectiveAllowMobileData = forceMobileData || appSettings.allowMobileData
 
@@ -146,29 +147,32 @@ class SyncEngine(
                 throw SourceException("The source returned an empty country catalogue")
             }
 
-            val existingCountries = db.countryDao().getAll()
-            val existingAdvisories = db.advisoryDao().getAll().groupBy { it.countryId }
-            val existingSnapshots = existingCountries.associate { country ->
-                country.id to snapshotOf(country, existingAdvisories[country.id].orEmpty())
-            }
-            val firstSync = existingCountries.isEmpty() || !state.firstSyncCompleted
-            val changes = if (firstSync) {
-                emptyList()
-            } else {
-                aggregates.flatMap { aggregate ->
-                    ChangeDetector.detect(
-                        previous = existingSnapshots[aggregate.id],
-                        current = ChangeDetector.snapshotOf(aggregate),
-                        firstSync = false,
-                    )
-                }
-            }
-
             val watchEntries = db.watchlistDao().getAll().associateBy { it.countryId }
-            val trackedChanges = changes.filter { watchEntries.containsKey(it.countryId) }
             val now = System.currentTimeMillis()
 
-            db.withTransaction {
+            // Execute all data modifications and change detection inside transaction to prevent race conditions
+            val trackedChanges = db.withTransaction {
+                val existingCountries = db.countryDao().getAll()
+                val existingAdvisories = db.advisoryDao().getAll().groupBy { it.countryId }
+                val existingSnapshots = existingCountries.associate { country ->
+                    country.id to snapshotOf(country, existingAdvisories[country.id].orEmpty())
+                }
+                val firstSync = existingCountries.isEmpty() || !state.firstSyncCompleted
+                val changes = if (firstSync) {
+                    emptyList()
+                } else {
+                    aggregates.flatMap { aggregate ->
+                        ChangeDetector.detect(
+                            previous = existingSnapshots[aggregate.id],
+                            current = ChangeDetector.snapshotOf(aggregate),
+                            firstSync = false,
+                        )
+                    }
+                }
+                val trackedChanges = changes.filter { watchEntries.containsKey(it.countryId) }
+                
+                // First insert new data, then delete obsolete records to avoid temporary empty state
+                // First insert new data, then delete obsolete records to avoid temporary empty state
                 db.countryDao().upsertAll(
                     aggregates.map { aggregate ->
                         CountryEntity(
@@ -180,6 +184,8 @@ class SyncEngine(
                         )
                     }
                 )
+                // Upsert will replace existing records, so we only need to delete obsolete ones
+                val currentCountryIds = aggregates.map { it.id }.toSet()
                 db.advisoryDao().deleteAll()
                 db.advisoryDao().upsertAll(
                     aggregates.flatMap { aggregate ->
@@ -213,6 +219,8 @@ class SyncEngine(
                         firstSyncCompleted = true,
                     )
                 )
+                
+                trackedChanges // Return from transaction
             }
 
             if (appSettings.notificationsEnabled) {
@@ -243,18 +251,6 @@ class SyncEngine(
             notifier.notifySyncProblem(message)
             return SyncOutcome.Failure(message)
         }
-    }
-
-    private suspend fun clearStaleRunning(state: SyncStateEntity): SyncStateEntity {
-        if (state.status != "running") return state
-        val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
-        if (age < TimeUnit.SECONDS.toMillis(30)) return state
-        val cleared = state.copy(
-            status = "failed",
-            message = state.message ?: "Synchronization was interrupted",
-        )
-        db.syncStateDao().upsert(cleared)
-        return cleared
     }
 
     private fun snapshotOf(country: CountryEntity, records: List<AdvisoryEntity>): CountrySnapshot {

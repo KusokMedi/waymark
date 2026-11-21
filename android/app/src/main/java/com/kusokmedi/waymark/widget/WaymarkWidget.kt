@@ -556,14 +556,5 @@ private fun dateText(value: String?): String {
 }
 
 private suspend fun recoverStaleRunningSyncState(db: WaymarkDatabase): SyncStateEntity? {
-    val state = db.syncStateDao().get() ?: return null
-    if (state.status != "running") return state
-    val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
-    if (age < TimeUnit.SECONDS.toMillis(30)) return state
-    val recovered = state.copy(
-        status = "failed",
-        message = state.message ?: "Synchronization was interrupted",
-    )
-    db.syncStateDao().upsert(recovered)
-    return recovered
+    return db.syncStateDao().recoverStaleRunning()
 }
