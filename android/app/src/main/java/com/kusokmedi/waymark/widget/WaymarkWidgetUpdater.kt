@@ -123,7 +123,8 @@ object WaymarkWidgetUpdater {
                 forceUpdateAll(app)
 
                 try {
-                    app.waymarkContainer().syncEngine.synchronize(forceMobileData = true, forceSync = true)
+                    // Same path as in-app Watchlist refresh: SyncEngine.synchronize() with defaults.
+                    app.waymarkContainer().syncEngine.synchronize()
                 } catch (e: Exception) {
                     Log.e(TAG, "Immediate widget sync failed", e)
                 }
