@@ -152,7 +152,7 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
     val size = LocalSize.current
     val compact = size.height < 80.dp || size.width < 150.dp
     val outerPadding = if (compact) 6.dp else 10.dp
-    val cardSpacing = 2.dp
+    val cardSpacing = 4.dp
 
     Box(
         modifier = GlanceModifier
@@ -188,14 +188,16 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
                         itemId = { index -> snapshot.cards[index].id.hashCode().toLong() },
                     ) { index ->
                         val card = snapshot.cards[index]
-                        CountryItem(
-                            card = card,
-                            config = snapshot.config,
-                            colors = colors,
-                            compact = compact,
-                        )
-                        if (index < cardCount - 1) {
-                            Spacer(GlanceModifier.height(cardSpacing))
+                        Column(modifier = GlanceModifier.fillMaxWidth()) {
+                            CountryItem(
+                                card = card,
+                                config = snapshot.config,
+                                colors = colors,
+                                compact = compact,
+                            )
+                            if (index < cardCount - 1) {
+                                Spacer(GlanceModifier.height(cardSpacing))
+                            }
                         }
                     }
                 }

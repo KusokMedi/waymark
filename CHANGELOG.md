@@ -5,6 +5,16 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.12] - 2026-11-21
+
+### Changed
+
+- Level chips in the app now use a consistent fixed size for each variant.
+
+### Fixed
+
+- Widget country items now have clearer, reliably rendered spacing.
+
 ## [1.3.11] - 2026-11-21
 
 ### Fixed

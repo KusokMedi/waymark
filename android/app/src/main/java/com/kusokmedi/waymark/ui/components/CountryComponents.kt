@@ -64,19 +64,32 @@ fun LevelChip(
     modifier: Modifier = Modifier,
 ) {
     val label = if (level == null) "Unknown" else "Level ${level.number}"
+    val chipWidth = if (compact) 172.dp else 260.dp
+    val chipHeight = if (compact) 74.dp else 84.dp
     Surface(
-        modifier = modifier,
+        modifier = modifier.size(width = chipWidth, height = chipHeight),
         color = levelContainerColor(level),
         contentColor = levelColor(level),
         shape = RoundedCornerShape(10.dp),
     ) {
-        Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = if (compact) 4.dp else 6.dp)) {
-            Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = if (compact) 4.dp else 6.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                label,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
             if (showLabel) {
                 Text(
                     AdvisoryLevels.label(level),
                     style = MaterialTheme.typography.labelSmall,
-                    maxLines = if (compact) 1 else 2,
+                    maxLines = if (compact) 2 else 2,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
