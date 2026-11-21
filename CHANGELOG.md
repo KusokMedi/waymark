@@ -5,6 +5,13 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-11-21
+
+### Fixed
+
+- Stabilized widget refresh button: immediate feedback on tap, 1.5s debounce, preserved sync state fields, and removed the 3-second false timeout that marked active syncs as failed.
+- Improved widget sync animation with a short dot/progress refresh window while keeping the real sync outcome owned by WorkManager/SyncEngine.
+
 ## [1.4.1] - 2026-11-21
 
 ### Fixed
