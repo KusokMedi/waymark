@@ -447,36 +447,8 @@ private const val TAG_WIDGET = "WaymarkWidget"
 
 class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val appContext = context.applicationContext
-        val db = WaymarkDatabase.get(appContext)
-        val now = System.currentTimeMillis()
-        val currentState = db.syncStateDao().get() ?: SyncStateEntity()
-        val lastAttempt = currentState.lastAttemptAt ?: 0L
-        val age = now - lastAttempt
-        val running = currentState.status == "running"
-        val staleRunning = running && age > TimeUnit.SECONDS.toMillis(30)
-
-        Log.i(TAG_WIDGET, "refresh tap age=${age}ms status=${currentState.status} staleRunning=$staleRunning")
-
-        // Debounce rapid taps, but always give immediate visual feedback.
-        if (running && !staleRunning && age < 1_500) {
-            WaymarkWidgetUpdater.forceUpdateAll(appContext)
-            return
-        }
-
-        // Immediate visual feedback while preserving known sync metadata.
-        db.syncStateDao().upsert(
-            currentState.copy(
-                lastAttemptAt = now,
-                status = "running",
-                message = if (staleRunning) "Retrying sync..." else null,
-            )
-        )
-        WaymarkWidgetUpdater.forceUpdateAll(appContext)
-
-        // Run the same direct sync path as the in-app refresh action.
-        // Returns immediately; sync and animation updates run in background scope.
-        WaymarkWidgetUpdater.requestImmediateSync(appContext)
+        // Return immediately; all DB/sync work runs in background to avoid UI lag.
+        WaymarkWidgetUpdater.requestImmediateSync(context.applicationContext)
     }
 }
 

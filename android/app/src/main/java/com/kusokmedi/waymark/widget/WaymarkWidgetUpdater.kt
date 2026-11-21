@@ -18,7 +18,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import com.kusokmedi.waymark.data.local.SyncStateEntity
+import com.kusokmedi.waymark.data.local.WaymarkDatabase
 import com.kusokmedi.waymark.waymarkContainer
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -88,27 +91,42 @@ object WaymarkWidgetUpdater {
 
     fun requestImmediateSync(context: Context) {
         val app = context.applicationContext
-        if (!immediateSyncInFlight.compareAndSet(false, true)) {
-            Log.d(TAG, "Immediate widget sync already in flight")
-            forceUpdateAll(app)
-            return
-        }
         scope.launch {
+            if (!immediateSyncInFlight.compareAndSet(false, true)) {
+                Log.d(TAG, "Immediate widget sync already in flight")
+                forceUpdateAll(app)
+                return@launch
+            }
             try {
-                val syncJob = launch {
-                    try {
-                        app.waymarkContainer().syncEngine.synchronize(forceMobileData = true, forceSync = true)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Immediate widget sync failed", e)
-                    }
+                val db = WaymarkDatabase.get(app)
+                val now = System.currentTimeMillis()
+                val currentState = db.syncStateDao().get() ?: SyncStateEntity()
+                val lastAttempt = currentState.lastAttemptAt ?: 0L
+                val age = now - lastAttempt
+                val running = currentState.status == "running"
+                val staleRunning = running && age > TimeUnit.SECONDS.toMillis(30)
+
+                Log.i(TAG, "widget refresh tap age=${age}ms status=${currentState.status} staleRunning=$staleRunning")
+
+                if (running && !staleRunning && age < 1_500) {
+                    forceUpdateAll(app)
+                    return@launch
                 }
 
-                // Drive widget animation updates while sync is running.
-                while (syncJob.isActive) {
-                    delay(700)
-                    forceUpdateAll(app)
+                db.syncStateDao().upsert(
+                    currentState.copy(
+                        lastAttemptAt = now,
+                        status = "running",
+                        message = if (staleRunning) "Retrying sync..." else null,
+                    )
+                )
+                forceUpdateAll(app)
+
+                try {
+                    app.waymarkContainer().syncEngine.synchronize(forceMobileData = true, forceSync = true)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Immediate widget sync failed", e)
                 }
-                syncJob.join()
             } finally {
                 immediateSyncInFlight.set(false)
                 forceUpdateAll(app)
@@ -208,16 +226,12 @@ object WaymarkWidgetUpdater {
                 runCatching {
                     updateAppWidgetState(context, glanceId) { prefs ->
                         val current = prefs[tickKey] ?: 0
-                        // Use Long to avoid overflow at 1M updates
                         val next = ((current.toLong() + 1) % Long.MAX_VALUE).toInt()
                         prefs[tickKey] = next
                     }
                     WatchlistWidget().update(context, glanceId)
                 }.onFailure { Log.e(TAG, "state bump/update failed for $glanceId", it) }
             }
-
-            runCatching { WatchlistWidget().updateAll(context) }
-                .onFailure { Log.e(TAG, "updateAll failed", it) }
 
             sendAppWidgetUpdateBroadcast(context)
         } catch (e: Exception) {
