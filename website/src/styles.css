@@ -1121,22 +1121,42 @@ a {
   }
 
   .site-header nav {
-    display: none;
     width: 100%;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 0.82rem;
-    justify-content: flex-start;
-    padding-top: 8px;
+    align-items: stretch;
+    gap: 4px;
+    font-size: 0.88rem;
+    padding: 8px 0 4px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: max-height 220ms ease, opacity 180ms ease, transform 180ms ease;
   }
 
   .site-header nav.open {
-    display: flex;
+    max-height: 320px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .site-header nav a {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+
+  .site-header nav a:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
   }
 
   .nav-download {
-    margin-left: auto;
+    margin-left: 0;
+    text-align: center;
   }
 
   .section {
