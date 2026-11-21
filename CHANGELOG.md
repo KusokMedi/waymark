@@ -5,6 +5,15 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.11] - 2026-11-21
+
+### Fixed
+
+- Widget country cards now use a consistent 2 dp spacing between items.
+- Widget no longer shows an infinite/stuck loading state when a previous sync
+  was interrupted; stale sync status is handled correctly.
+- Widget configuration is no longer rewritten on every refresh.
+
 ## [1.3.10] - 2026-11-20
 
 ### Fixed

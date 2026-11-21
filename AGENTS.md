@@ -620,10 +620,10 @@ Release signing materials for the Android app are stored locally and must never 
 
 These are **Repository secrets** in GitHub Actions (Settings → Secrets and variables → Actions → Secrets), not Environment secrets. Keep the keystore and passwords backed up securely; losing them prevents publishing updates signed with the same key.
 
-## 19. Current project state (updated 2026-11-20)
+## 19. Current project state (updated 2026-11-21)
 
-- **Version:** v1.3.10 (versionCode 14), released and published on GitHub.
-- **Latest commit:** `b450213` (master), tag `v1.3.10`.
+- **Version:** v1.3.11 (versionCode 15), in progress.
+- **Latest commit:** `e9db58c` (master), tag `v1.3.10`.
 - **Website:** React+Vite, deployed to GitHub Pages. Mobile-responsive, flexbox grids.
 - **Widget (simplified):** No settings UI. Fixed defaults: flag+name+level (no date), 2×2/2×1,
   transparency 100%, corner radius 12dp. Vector icons (refresh). Per-position corner rounding.

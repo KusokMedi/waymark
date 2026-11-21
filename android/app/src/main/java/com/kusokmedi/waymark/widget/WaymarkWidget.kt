@@ -124,8 +124,8 @@ internal data class WidgetSnapshot(
         }
 
         private fun normalizeConfig(existing: WidgetConfigEntity?, widgetId: Int): WidgetConfigEntity {
-            // Fixed defaults: no settings UI. Use current default appearance.
-            return WidgetConfigEntity(
+            // Fixed defaults: no settings UI. Keep updatedAt stable unless values change.
+            val base = WidgetConfigEntity(
                 widgetId = widgetId,
                 preset = "watchlist",
                 widgetType = "watchlist",
@@ -137,8 +137,9 @@ internal data class WidgetSnapshot(
                 backgroundAlpha = 100,
                 cornerRadius = 12,
                 columns = 1,
-                updatedAt = System.currentTimeMillis(),
+                updatedAt = existing?.updatedAt ?: 0L,
             )
+            return if (existing == base) existing else base.copy(updatedAt = System.currentTimeMillis())
         }
     }
 }
@@ -151,7 +152,7 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
     val size = LocalSize.current
     val compact = size.height < 80.dp || size.width < 150.dp
     val outerPadding = if (compact) 6.dp else 10.dp
-    val cardSpacing = if (compact) 2.dp else 4.dp
+    val cardSpacing = 2.dp
 
     Box(
         modifier = GlanceModifier
@@ -228,7 +229,7 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
                 maxLines = 1,
             )
         }
-        val isSyncing = snapshot.syncState?.status == "running"
+        val isSyncing = snapshot.syncState?.let { effectiveStatus(it) == "running" } ?: false
         if (isSyncing) {
             CircularProgressIndicator(
                 GlanceModifier.size(progressSize),
