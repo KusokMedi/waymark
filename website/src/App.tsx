@@ -28,13 +28,16 @@ export default function App() {
           <span>Waymark</span>
         </a>
         <button
-          className="menu-toggle"
+          className={`menu-toggle ${menuOpen ? "open" : ""}`}
           type="button"
           aria-expanded={menuOpen}
           aria-controls="primary-nav"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMenuOpen((value) => !value)}
         >
-          Menu
+          <span className="bar" />
+          <span className="bar" />
+          <span className="bar" />
         </button>
         <nav
           id="primary-nav"
