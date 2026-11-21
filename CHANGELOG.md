@@ -5,6 +5,11 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+### Fixed
+
+- Widget refresh button now responds reliably: simplified sync path to use only WorkManager, reduced stale-state timeout from 3 minutes to 30 seconds, added 2-second debounce to prevent rapid duplicate syncs, and added force-sync flag to bypass minimum sync interval. Widget no longer gets stuck in infinite "Syncing..." state.
+- Widget UI updates are now immediate for force refreshes, bypassing rate limiting and coalescing delays.
+
 ## [1.3.19] - 2026-11-21
 
 ### Changed

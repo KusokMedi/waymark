@@ -35,7 +35,17 @@ object WaymarkWidgetUpdater {
     }
 
     fun forceUpdateAll(context: Context) {
-        requestUpdate(context.applicationContext, force = true)
+        val app = context.applicationContext
+        // Force update bypasses rate limiting and coalescing
+        scope.launch {
+            try {
+                mutex.withLock {
+                    doUpdate(app)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "forceUpdateAll failed", e)
+            }
+        }
     }
 
     fun markWidgetRefreshed(context: Context, at: Long = System.currentTimeMillis()) {

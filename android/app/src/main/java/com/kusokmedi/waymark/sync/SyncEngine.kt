@@ -54,10 +54,10 @@ class SyncEngine(
         }
     }
 
-    suspend fun synchronize(forceMobileData: Boolean = false): SyncOutcome {
+    suspend fun synchronize(forceMobileData: Boolean = false, forceSync: Boolean = false): SyncOutcome {
         val outcome = try {
             withTimeoutOrNull(SYNC_TIMEOUT_MS) {
-                mutex.withLock { doSynchronize(forceMobileData) }
+                mutex.withLock { doSynchronize(forceMobileData, forceSync) }
             }
         } catch (e: Exception) {
             Log.w(TAG, "synchronize exception", e)
@@ -74,7 +74,7 @@ class SyncEngine(
         return SyncOutcome.Failure("Synchronization timed out")
     }
 
-    private suspend fun doSynchronize(forceMobileData: Boolean): SyncOutcome {
+    private suspend fun doSynchronize(forceMobileData: Boolean, forceSync: Boolean): SyncOutcome {
         var state = db.syncStateDao().get() ?: SyncStateEntity()
         state = clearStaleRunning(state)
         val appSettings = settings.settings.first()
@@ -99,7 +99,9 @@ class SyncEngine(
 
         val attemptAt = System.currentTimeMillis()
         val lastSuccess = state.lastSuccessAt ?: 0L
-        if (state.firstSyncCompleted && attemptAt - lastSuccess < MIN_SYNC_INTERVAL_MS) {
+        
+        // Skip sync if recent success, unless forceSync is true
+        if (!forceSync && state.firstSyncCompleted && attemptAt - lastSuccess < MIN_SYNC_INTERVAL_MS) {
             Log.d(TAG, "sync skipped: recent success ${attemptAt - lastSuccess}ms ago")
             // Keep UX responsive: show that we checked now, without a redundant network fetch.
             db.syncStateDao().upsert(
@@ -246,7 +248,7 @@ class SyncEngine(
     private suspend fun clearStaleRunning(state: SyncStateEntity): SyncStateEntity {
         if (state.status != "running") return state
         val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
-        if (age < TimeUnit.MINUTES.toMillis(3)) return state
+        if (age < TimeUnit.SECONDS.toMillis(30)) return state
         val cleared = state.copy(
             status = "failed",
             message = state.message ?: "Synchronization was interrupted",

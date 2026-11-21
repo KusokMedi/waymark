@@ -26,11 +26,12 @@ class SyncWorker(
         val app = applicationContext as? WaymarkApp ?: return Result.failure()
         val forceMobileData = inputData.getBoolean(KEY_FORCE_MOBILE_DATA, false)
         val fromWidget = inputData.getBoolean(KEY_FROM_WIDGET, false)
-        Log.d(TAG, "doWork start forceMobileData=$forceMobileData fromWidget=$fromWidget attempt=$runAttemptCount")
+        val forceSync = inputData.getBoolean("forceSync", false)
+        Log.d(TAG, "doWork start forceMobileData=$forceMobileData fromWidget=$fromWidget forceSync=$forceSync attempt=$runAttemptCount")
 
         val outcome = try {
             withTimeoutOrNull(WORK_TIMEOUT_MS) {
-                app.container.syncEngine.synchronize(forceMobileData = forceMobileData)
+                app.container.syncEngine.synchronize(forceMobileData = forceMobileData, forceSync = forceSync)
             }
         } catch (e: Exception) {
             Log.w(TAG, "doWork exception", e)
@@ -70,6 +71,7 @@ class SyncWorker(
         private const val TAG = "WaymarkSyncWorker"
         private const val KEY_FORCE_MOBILE_DATA = "forceMobileData"
         private const val KEY_FROM_WIDGET = "fromWidget"
+        private const val KEY_FORCE_SYNC = "forceSync"
         private val WORK_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(150)
     }
 }
@@ -116,11 +118,15 @@ object SyncScheduler {
         )
     }
 
-    fun syncNowFromWidget(context: Context, initialDelayMs: Long = 0L) {
-        Log.d(TAG, "enqueue widget sync delayMs=$initialDelayMs")
+    fun syncNowFromWidget(context: Context, initialDelayMs: Long = 0L, forceSync: Boolean = false) {
+        Log.d(TAG, "enqueue widget sync delayMs=$initialDelayMs forceSync=$forceSync")
         val builder = OneTimeWorkRequestBuilder<SyncWorker>()
             .setConstraints(constraints(allowMobileData = true))
-            .setInputData(workDataOf(KEY_FORCE_MOBILE_DATA to true, KEY_FROM_WIDGET to true))
+            .setInputData(workDataOf(
+                KEY_FORCE_MOBILE_DATA to true, 
+                KEY_FROM_WIDGET to true,
+                "forceSync" to forceSync
+            ))
         if (initialDelayMs > 0) {
             builder.setInitialDelay(initialDelayMs, TimeUnit.MILLISECONDS)
         }

@@ -440,38 +440,40 @@ private fun widgetColors(context: Context, dynamicColor: Boolean, backgroundAlph
     }
 }
 
-private val widgetActionScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-private val widgetDirectSyncInProgress = java.util.concurrent.atomic.AtomicBoolean(false)
 private const val TAG_WIDGET = "WaymarkWidget"
 
 class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         val appContext = context.applicationContext
-        val container = appContext.waymarkContainer()
-        val db = container.database
+        val db = WaymarkDatabase.get(appContext)
         val now = System.currentTimeMillis()
         val currentState = db.syncStateDao().get()
         val lastAttempt = currentState?.lastAttemptAt ?: 0L
         val age = now - lastAttempt
         val running = currentState?.status == "running"
-        val staleRunning = running && age > TimeUnit.SECONDS.toMillis(60)
+        val staleRunning = running && age > TimeUnit.SECONDS.toMillis(30)
 
         Log.i(TAG_WIDGET, "refresh tap age=${age}ms status=${currentState?.status} staleRunning=$staleRunning")
 
-        // Hard refresh: always nudge Glance, even on rapid taps.
-        WaymarkWidgetUpdater.forceUpdateAll(appContext)
-
+        // Recover from stuck "Syncing..." state
         if (staleRunning) {
-            // Unblock stuck "Syncing..." state (e.g. process death / interrupted worker).
-            widgetDirectSyncInProgress.set(false)
-        } else if (age < 800) {
-            Log.i(TAG_WIDGET, "refresh tap debounced (sync), UI force-refreshed")
-            runCatching { WatchlistWidget().update(context, glanceId) }
-                .onFailure { Log.w(TAG_WIDGET, "debounced direct update failed", it) }
+            Log.i(TAG_WIDGET, "recovering stale running state")
+            db.syncStateDao().upsert(
+                (currentState ?: com.kusokmedi.waymark.data.local.SyncStateEntity()).copy(
+                    status = "failed",
+                    message = "Previous sync was interrupted",
+                )
+            )
+        }
+
+        // Debounce: prevent rapid taps from triggering multiple syncs
+        if (!staleRunning && age < 2000) {
+            Log.i(TAG_WIDGET, "refresh tap debounced, age=${age}ms")
+            WaymarkWidgetUpdater.forceUpdateAll(appContext)
             return
         }
 
-        // Immediate visual feedback: show loading right away.
+        // Immediate visual feedback: show loading right away
         db.syncStateDao().upsert(
             (currentState ?: com.kusokmedi.waymark.data.local.SyncStateEntity()).copy(
                 lastAttemptAt = now,
@@ -479,43 +481,14 @@ class RefreshAction : ActionCallback {
                 message = null,
             )
         )
-        runCatching { WatchlistWidget().update(context, glanceId) }
-            .onFailure { Log.w(TAG_WIDGET, "direct glance update failed", it) }
+        
+        // Force immediate UI update to show "Syncing..."
         WaymarkWidgetUpdater.forceUpdateAll(appContext)
 
-        // If another direct sync is in-flight, still enqueue a reliable WM sync.
-        if (!widgetDirectSyncInProgress.compareAndSet(false, true)) {
-            Log.i(TAG_WIDGET, "direct sync already in progress, enqueueing widget sync")
-            SyncScheduler.syncNowFromWidget(appContext)
-            return
-        }
-
-        // Reliable path: WorkManager fallback. Delay so it doesn't overwrite the loading frame.
-        SyncScheduler.syncNowFromWidget(appContext, initialDelayMs = 1200)
-
-        widgetActionScope.launch {
-            try {
-                kotlinx.coroutines.delay(700)
-                val outcome = withTimeoutOrNull(TimeUnit.SECONDS.toMillis(150)) {
-                    container.syncEngine.synchronize(forceMobileData = true)
-                }
-                Log.i(TAG_WIDGET, "direct sync outcome=$outcome")
-                when (outcome) {
-                    null -> markSyncFailedIfRunning(db, "Synchronization timed out")
-                    is com.kusokmedi.waymark.sync.SyncOutcome.Success -> WaymarkWidgetUpdater.markWidgetRefreshed(appContext)
-                    is com.kusokmedi.waymark.sync.SyncOutcome.Offline -> markSyncFailedIfRunning(db, "No network connection")
-                    is com.kusokmedi.waymark.sync.SyncOutcome.Failure -> markSyncFailedIfRunning(db, outcome.message)
-                }
-            } catch (e: Exception) {
-                Log.w(TAG_WIDGET, "direct sync failed", e)
-                markSyncFailedIfRunning(db, e.message ?: "Synchronization was interrupted")
-            } finally {
-                widgetDirectSyncInProgress.set(false)
-                runCatching { WatchlistWidget().update(context, glanceId) }
-                    .onFailure { Log.w(TAG_WIDGET, "final direct update failed", it) }
-                WaymarkWidgetUpdater.forceUpdateAll(appContext)
-            }
-        }
+        // Start sync via WorkManager with force flag to bypass interval check
+        SyncScheduler.syncNowFromWidget(appContext, forceSync = true)
+        
+        Log.i(TAG_WIDGET, "widget refresh initiated via WorkManager")
     }
 }
 
@@ -526,18 +499,6 @@ private suspend fun markSyncFailedIfRunning(db: WaymarkDatabase, message: String
     }
 }
 
-private suspend fun recoverStaleRunningSyncState(db: WaymarkDatabase): SyncStateEntity? {
-    val state = db.syncStateDao().get() ?: return null
-    if (state.status != "running") return state
-    val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
-    if (age < TimeUnit.MINUTES.toMillis(3)) return state
-    val recovered = state.copy(
-        status = "failed",
-        message = state.message ?: "Synchronization was interrupted",
-    )
-    db.syncStateDao().upsert(recovered)
-    return recovered
-}
 
 private fun statusText(state: SyncStateEntity?): String {
     if (state == null) return "Not synced yet"
@@ -592,4 +553,17 @@ private fun dateText(value: String?): String {
     } catch (_: Exception) {
         "Advisory date unknown"
     }
+}
+
+private suspend fun recoverStaleRunningSyncState(db: WaymarkDatabase): SyncStateEntity? {
+    val state = db.syncStateDao().get() ?: return null
+    if (state.status != "running") return state
+    val age = System.currentTimeMillis() - (state.lastAttemptAt ?: 0L)
+    if (age < TimeUnit.SECONDS.toMillis(30)) return state
+    val recovered = state.copy(
+        status = "failed",
+        message = state.message ?: "Synchronization was interrupted",
+    )
+    db.syncStateDao().upsert(recovered)
+    return recovered
 }
