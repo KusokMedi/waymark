@@ -95,6 +95,10 @@ object ChangeDetector {
         return changes
     }
 
-    private fun fingerprint(snapshot: CountrySnapshot, type: ChangeType, suffix: String): String =
-        "${snapshot.countryId}|${type.name}|$suffix"
+    private fun fingerprint(snapshot: CountrySnapshot, type: ChangeType, suffix: String): String {
+        // Use URL-safe Base64 encoding to prevent pipe character collisions in countryId or suffix
+        val combined = "${snapshot.countryId}::${type.name}::$suffix"
+        return java.util.Base64.getUrlEncoder().withoutPadding()
+            .encodeToString(combined.toByteArray(Charsets.UTF_8))
+    }
 }

@@ -152,7 +152,14 @@ private fun MainNavigation(
     LaunchedEffect(deepLinkCountry) {
         val id = deepLinkCountry
         if (!id.isNullOrBlank()) {
-            navController.navigate("country/$id") { launchSingleTop = true }
+            // Validate country exists before navigating
+            val countryExists = countries.any { it.id == id }
+            if (countryExists) {
+                navController.navigate("country/$id") { launchSingleTop = true }
+            } else {
+                // Log invalid deeplink attempt but don't crash
+                android.util.Log.w("MainActivity", "Invalid deeplink countryId: $id")
+            }
             onDeepLinkHandled()
         }
     }

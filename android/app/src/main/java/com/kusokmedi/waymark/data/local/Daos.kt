@@ -22,7 +22,7 @@ interface CountryDao {
     suspend fun getByIds(ids: List<String>): List<CountryEntity>
 
     @Query(
-        "SELECT * FROM countries WHERE LOWER(name) LIKE '%' || LOWER(:query) || '%' " +
+        "SELECT * FROM countries WHERE LOWER(name) LIKE '%' || LOWER(REPLACE(REPLACE(REPLACE(:query, '\\', '\\\\'), '%', '\\%'), '_', '\\_')) || '%' ESCAPE '\\' " +
             "OR LOWER(isoAlpha2) = LOWER(:query) OR LOWER(isoAlpha3) = LOWER(:query) " +
             "ORDER BY name COLLATE NOCASE",
     )
