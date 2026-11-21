@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.6] - 2026-11-21
+
+### Fixed
+
+- Widget refresh now uses the same default `SyncEngine.synchronize()` path as in-app Watchlist refresh, allowing the recent-success fast path instead of forcing a full network sync on every tap.
+
 ## [1.4.5] - 2026-11-21
 
 ### Fixed
