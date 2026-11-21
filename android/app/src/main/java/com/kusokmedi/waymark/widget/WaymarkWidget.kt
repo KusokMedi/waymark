@@ -28,7 +28,6 @@ import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
@@ -459,14 +458,13 @@ class RefreshAction : ActionCallback {
 
         Log.i(TAG_WIDGET, "refresh tap age=${age}ms status=${currentState.status} staleRunning=$staleRunning")
 
-        // Debounce rapid taps, but still give immediate visual feedback.
+        // Debounce rapid taps, but always give immediate visual feedback.
         if (running && !staleRunning && age < 1_500) {
-            Log.d(TAG_WIDGET, "refresh tap debounced")
             WaymarkWidgetUpdater.forceUpdateAll(appContext)
             return
         }
 
-        // Immediate visual feedback: mark running while preserving known state.
+        // Immediate visual feedback while preserving known sync metadata.
         db.syncStateDao().upsert(
             currentState.copy(
                 lastAttemptAt = now,
@@ -477,21 +475,8 @@ class RefreshAction : ActionCallback {
         WaymarkWidgetUpdater.forceUpdateAll(appContext)
 
         // Run the same direct sync path as the in-app refresh action.
+        // Returns immediately; sync and animation updates run in background scope.
         WaymarkWidgetUpdater.requestImmediateSync(appContext)
-
-        // Drive short dot/progress animation updates while sync is running.
-        // Do not mark failure here; SyncWorker/SyncEngine own real sync outcome.
-        for (i in 0 until 12) {
-            delay(700)
-            val state = db.syncStateDao().get() ?: break
-            if (state.status != "running") {
-                WaymarkWidgetUpdater.forceUpdateAll(appContext)
-                return
-            }
-            WaymarkWidgetUpdater.updateAll(appContext)
-        }
-
-        Log.d(TAG_WIDGET, "refresh animation window ended; sync still running")
     }
 }
 

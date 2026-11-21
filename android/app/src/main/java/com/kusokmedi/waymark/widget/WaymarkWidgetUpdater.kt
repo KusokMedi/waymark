@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import com.kusokmedi.waymark.waymarkContainer
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 private sealed class UpdateState {
@@ -39,6 +40,7 @@ object WaymarkWidgetUpdater {
     private val updateState = MutableStateFlow<UpdateState>(UpdateState.Idle)
     private val lastUpdateAt = AtomicLong(0L)
     private val lastForceAt = AtomicLong(0L)
+    private val immediateSyncInFlight = AtomicBoolean(false)
 
     fun updateAll(context: Context) {
         requestUpdate(context.applicationContext, force = false)
@@ -86,12 +88,29 @@ object WaymarkWidgetUpdater {
 
     fun requestImmediateSync(context: Context) {
         val app = context.applicationContext
+        if (!immediateSyncInFlight.compareAndSet(false, true)) {
+            Log.d(TAG, "Immediate widget sync already in flight")
+            forceUpdateAll(app)
+            return
+        }
         scope.launch {
             try {
-                app.waymarkContainer().syncEngine.synchronize(forceMobileData = true, forceSync = true)
-            } catch (e: Exception) {
-                Log.e(TAG, "Immediate widget sync failed", e)
+                val syncJob = launch {
+                    try {
+                        app.waymarkContainer().syncEngine.synchronize(forceMobileData = true, forceSync = true)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Immediate widget sync failed", e)
+                    }
+                }
+
+                // Drive widget animation updates while sync is running.
+                while (syncJob.isActive) {
+                    delay(700)
+                    forceUpdateAll(app)
+                }
+                syncJob.join()
             } finally {
+                immediateSyncInFlight.set(false)
                 forceUpdateAll(app)
             }
         }
