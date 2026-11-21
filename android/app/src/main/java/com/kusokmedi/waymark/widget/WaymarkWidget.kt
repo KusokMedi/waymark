@@ -25,8 +25,6 @@ import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
-import androidx.glance.appwidget.action.ActionCallback
-import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
 import kotlinx.coroutines.flow.first
 import androidx.glance.appwidget.lazy.LazyColumn
@@ -242,6 +240,7 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
     val titleSize = if (compact) 11.sp else 13.sp
     val statusSize = if (compact) 9.sp else 11.sp
     val progressSize = if (compact) 16.dp else 20.dp
+    val isSyncing = snapshot.syncState?.let { effectiveStatus(it) == "running" } ?: false
     Row(
         modifier = GlanceModifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -256,22 +255,12 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
                 ),
                 maxLines = 1,
             )
-            val isSyncing = snapshot.syncState?.let { effectiveStatus(it) == "running" } ?: false
-            val statusBaseText = statusText(snapshot.syncState)
-            val displayText = if (isSyncing) {
-                // Add animated dots when syncing
-                val dotCount = ((System.currentTimeMillis() / 500) % 4).toInt()
-                statusBaseText + ".".repeat(dotCount)
-            } else {
-                statusBaseText
-            }
             Text(
-                text = displayText,
+                text = statusText(snapshot.syncState),
                 style = TextStyle(color = colors.muted, fontSize = statusSize),
                 maxLines = 1,
             )
         }
-        val isSyncing = snapshot.syncState?.let { effectiveStatus(it) == "running" } ?: false
         if (isSyncing) {
             CircularProgressIndicator(
                 GlanceModifier.size(progressSize),
@@ -279,7 +268,7 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
             )
             Spacer(GlanceModifier.width(if (compact) 4.dp else 6.dp))
         }
-        IconButton(iconRes = R.drawable.ic_widget_refresh, contentDescription = "Refresh", colors = colors, compact = compact) { actionRunCallback<RefreshAction>() }
+        IconButton(iconRes = R.drawable.ic_widget_open, contentDescription = "Open app", colors = colors, compact = compact) { actionStartActivity<MainActivity>() }
     }
 }
 
@@ -445,27 +434,11 @@ private fun widgetColors(context: Context, dynamicColor: Boolean, backgroundAlph
 
 private const val TAG_WIDGET = "WaymarkWidget"
 
-class RefreshAction : ActionCallback {
-    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        // Return immediately; all DB/sync work runs in background to avoid UI lag.
-        runCatching {
-            WaymarkWidgetUpdater.requestImmediateSync(context.applicationContext)
-        }.onFailure { Log.e(TAG_WIDGET, "refresh action failed", it) }
-    }
-}
-
-private suspend fun markSyncFailedIfRunning(db: WaymarkDatabase, message: String) {
-    val latest = db.syncStateDao().get() ?: com.kusokmedi.waymark.data.local.SyncStateEntity()
-    if (latest.status == "running") {
-        db.syncStateDao().upsert(latest.copy(status = "failed", message = message))
-    }
-}
-
 
 private fun statusText(state: SyncStateEntity?): String {
     if (state == null) return "Not synced yet"
     return when (effectiveStatus(state)) {
-        "running" -> "Syncing" // Dots will be added via animation in UI
+        "running" -> "Syncing…"
         "offline" -> if (state.lastSuccessAt != null) "Offline · Updated ${timeText(state.lastSuccessAt)}" else "Offline · Not synced yet"
         "failed" -> if (state.lastSuccessAt != null) "Update failed · ${timeText(state.lastSuccessAt)}" else "Update failed"
         "success", "idle" -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"

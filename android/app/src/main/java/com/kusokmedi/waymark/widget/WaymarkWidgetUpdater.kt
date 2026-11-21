@@ -18,11 +18,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withTimeoutOrNull
-import com.kusokmedi.waymark.data.local.SyncStateEntity
-import com.kusokmedi.waymark.data.local.WaymarkDatabase
-import com.kusokmedi.waymark.waymarkContainer
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 
 private sealed class UpdateState {
@@ -43,8 +38,6 @@ object WaymarkWidgetUpdater {
     private val updateState = MutableStateFlow<UpdateState>(UpdateState.Idle)
     private val lastUpdateAt = AtomicLong(0L)
     private val lastForceAt = AtomicLong(0L)
-    private val immediateSyncInFlightAt = AtomicLong(0L)
-    private val IMMEDIATE_SYNC_STALE_MS = TimeUnit.SECONDS.toMillis(45)
 
     fun updateAll(context: Context) {
         requestUpdate(context.applicationContext, force = false)
@@ -88,71 +81,6 @@ object WaymarkWidgetUpdater {
             .getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .getLong(KEY_LAST_WIDGET_REFRESH_AT, 0L)
         return value.takeIf { it > 0L }
-    }
-
-    fun requestImmediateSync(context: Context) {
-        val app = context.applicationContext
-        scope.launch {
-            val now = System.currentTimeMillis()
-            val inFlightAt = immediateSyncInFlightAt.get()
-            if (inFlightAt != 0L && now - inFlightAt < IMMEDIATE_SYNC_STALE_MS) {
-                Log.d(TAG, "Immediate widget sync already in flight")
-                forceUpdateAll(app)
-                return@launch
-            }
-            immediateSyncInFlightAt.set(now)
-            try {
-                withTimeoutOrNull(IMMEDIATE_SYNC_STALE_MS) {
-                    val db = WaymarkDatabase.get(app)
-                    val tapNow = System.currentTimeMillis()
-                    val currentState = db.syncStateDao().get() ?: SyncStateEntity()
-                    val lastAttempt = currentState.lastAttemptAt ?: 0L
-                    val age = tapNow - lastAttempt
-                    val running = currentState.status == "running"
-                    val staleRunning = running && age > TimeUnit.SECONDS.toMillis(30)
-
-                    Log.i(TAG, "widget refresh tap age=${age}ms status=${currentState.status} staleRunning=$staleRunning")
-
-                    if (running && !staleRunning && age < 1_500) {
-                        forceUpdateAll(app)
-                        return@withTimeoutOrNull
-                    }
-
-                    db.syncStateDao().upsert(
-                        currentState.copy(
-                            lastAttemptAt = tapNow,
-                            status = "running",
-                            message = if (staleRunning) "Retrying sync..." else null,
-                        )
-                    )
-                    forceUpdateAll(app)
-
-                    val outcome = try {
-                        // Same path as in-app Watchlist refresh: SyncEngine.synchronize() with defaults.
-                        withTimeoutOrNull(TimeUnit.SECONDS.toMillis(35)) {
-                            app.waymarkContainer().syncEngine.synchronize()
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Immediate widget sync failed", e)
-                        null
-                    }
-                    if (outcome == null) {
-                        Log.w(TAG, "Immediate widget sync timed out or returned null")
-                        val latest = db.syncStateDao().get() ?: SyncStateEntity()
-                        if (latest.status == "running") {
-                            db.syncStateDao().upsert(
-                                latest.copy(status = "failed", message = "Sync timed out. Tap to retry.")
-                            )
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Immediate widget sync flow failed", e)
-            } finally {
-                immediateSyncInFlightAt.set(0L)
-                forceUpdateAll(app)
-            }
-        }
     }
 
     private fun requestUpdate(app: Context, force: Boolean) {
