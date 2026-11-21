@@ -161,11 +161,6 @@ export default function App() {
               <div className="widget-row"><span className="demo-flag small">MX</span><div><strong>Mexico</strong></div><span className="level level-2">L2</span></div>
               <div className="widget-row"><span className="demo-flag small">CO</span><div><strong>Colombia</strong></div><span className="level level-3">L3</span></div>
             </div>
-            <div className="widget-surface widget-compact">
-              <span className="demo-flag small">FI</span>
-              <div><strong>Finland</strong></div>
-              <span className="level level-1">L1</span>
-            </div>
             <p className="widget-caption">Illustrative widget layouts with sample data. Actual widget rendering follows Android launcher constraints.</p>
           </div>
         </section>
