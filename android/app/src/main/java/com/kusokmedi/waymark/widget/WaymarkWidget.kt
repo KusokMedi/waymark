@@ -448,7 +448,9 @@ private const val TAG_WIDGET = "WaymarkWidget"
 class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         // Return immediately; all DB/sync work runs in background to avoid UI lag.
-        WaymarkWidgetUpdater.requestImmediateSync(context.applicationContext)
+        runCatching {
+            WaymarkWidgetUpdater.requestImmediateSync(context.applicationContext)
+        }.onFailure { Log.e(TAG_WIDGET, "refresh action failed", it) }
     }
 }
 
