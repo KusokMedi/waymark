@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.7] - 2026-11-21
+
+### Fixed
+
+- Added a 35-second widget sync timeout guard so a stuck synchronization no longer leaves the widget in an indefinite "Syncing..." state.
+
 ## [1.4.6] - 2026-11-21
 
 ### Fixed
