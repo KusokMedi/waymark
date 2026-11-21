@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.15] - 2026-11-21
+
+### Changed
+
+- Widget refresh hardening: added widget-triggered sync path, timeout/failure guards, sync-state recovery, and widget update coalescing to improve refresh reliability.
+
 ## [1.3.14] - 2026-11-21
 
 ### Fixed
