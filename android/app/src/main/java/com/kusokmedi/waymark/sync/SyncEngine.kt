@@ -32,6 +32,12 @@ sealed interface SyncOutcome {
     data class Failure(val message: String) : SyncOutcome
 }
 
+/**
+ * Core synchronization engine for Travel Advisory data.
+ * 
+ * **IMPORTANT**: Must be initialized with Application Context to prevent memory leaks.
+ * Never pass Activity or Service context to the constructor.
+ */
 class SyncEngine(
     private val context: Context,
     private val db: WaymarkDatabase,

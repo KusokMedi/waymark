@@ -20,6 +20,12 @@ import com.kusokmedi.waymark.domain.ChangeType
 import com.kusokmedi.waymark.ui.MainActivity
 import java.security.MessageDigest
 
+/**
+ * Manages advisory change notifications.
+ * 
+ * **IMPORTANT**: Must be initialized with Application Context to prevent memory leaks.
+ * Never pass Activity or Service context to the constructor.
+ */
 class ChangeNotifier(private val context: Context) {
     @Volatile private var soundUri: String = ""
     @Volatile private var importanceSetting: String = "high"

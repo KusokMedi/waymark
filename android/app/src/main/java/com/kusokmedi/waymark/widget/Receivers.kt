@@ -30,9 +30,20 @@ class WatchlistWidgetReceiver : GlanceAppWidgetReceiver() {
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
+        // Use goAsync() to ensure database operations complete even if process is killed
+        val pendingResult = goAsync()
         val db = WaymarkDatabase.get(context)
         CoroutineScope(Dispatchers.IO).launch {
-            appWidgetIds.forEach { db.widgetConfigDao().delete(it) }
+            try {
+                appWidgetIds.forEach { widgetId ->
+                    db.widgetConfigDao().delete(widgetId)
+                    Log.d("WaymarkWidgetReceiver", "Deleted config for widget $widgetId")
+                }
+            } catch (e: Exception) {
+                Log.e("WaymarkWidgetReceiver", "Failed to delete widget configs", e)
+            } finally {
+                pendingResult.finish()
+            }
         }
     }
 }

@@ -16,15 +16,22 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/**
+ * Application-wide dependency container.
+ * 
+ * All components are initialized with Application Context to prevent memory leaks.
+ * The ArcGisClient holds a singleton OkHttpClient which is never explicitly closed,
+ * but this is acceptable as it lives for the application lifetime.
+ */
 class AppContainer(context: Context) {
     val context: Context = context.applicationContext
     val database: WaymarkDatabase = WaymarkDatabase.get(context)
     val settings: SettingsRepository = SettingsRepository(context)
     val client: ArcGisClient = ArcGisClient()
     val repository: AdvisoryRepository = AdvisoryRepository(database)
-    val notifier: ChangeNotifier = ChangeNotifier(context)
-    val syncEngine: SyncEngine = SyncEngine(context, database, client, settings, notifier)
-    val backupManager: BackupManager = BackupManager(context, database, settings)
+    val notifier: ChangeNotifier = ChangeNotifier(this.context)
+    val syncEngine: SyncEngine = SyncEngine(this.context, database, client, settings, notifier)
+    val backupManager: BackupManager = BackupManager(this.context, database, settings)
 }
 
 class WaymarkApp : Application() {

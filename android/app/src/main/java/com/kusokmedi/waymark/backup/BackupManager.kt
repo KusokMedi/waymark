@@ -127,6 +127,12 @@ data class ImportResult(
     val warnings: List<String> = emptyList(),
 )
 
+/**
+ * Manages backup and restore operations for Waymark data.
+ * 
+ * **IMPORTANT**: Must be initialized with Application Context to prevent memory leaks.
+ * Never pass Activity or Service context to the constructor.
+ */
 class BackupManager(
     private val context: android.content.Context,
     private val db: WaymarkDatabase,
