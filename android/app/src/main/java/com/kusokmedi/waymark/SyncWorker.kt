@@ -130,9 +130,10 @@ object SyncScheduler {
         if (initialDelayMs > 0) {
             builder.setInitialDelay(initialDelayMs, TimeUnit.MILLISECONDS)
         }
+        // Use KEEP instead of REPLACE to avoid cancelling already-running sync
         WorkManager.getInstance(context).enqueueUniqueWork(
             UNIQUE_WIDGET_SYNC,
-            ExistingWorkPolicy.REPLACE,
+            ExistingWorkPolicy.KEEP,
             builder.build(),
         )
     }

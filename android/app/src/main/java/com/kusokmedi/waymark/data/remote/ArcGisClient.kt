@@ -30,7 +30,12 @@ class SourceException(message: String, cause: Throwable? = null) : IOException(m
 class ArcGisClient(
     private val http: OkHttpClient = defaultClient(),
 ) {
-    private val json = Json { ignoreUnknownKeys = true; isLenient = true }
+    private val json = Json { 
+        ignoreUnknownKeys = true
+        isLenient = true
+        // Note: ignoreUnknownKeys silently drops new API fields. Consider logging in debug builds
+        // to detect schema changes early.
+    }
 
     suspend fun fetchAll(
         etag: String? = null,
@@ -94,6 +99,11 @@ class ArcGisClient(
                 }
             }
             if (pageComplete) break
+            
+            // Warn if we're approaching the page limit
+            if (page == MAX_PAGES - 1) {
+                android.util.Log.w("ArcGisClient", "Reached MAX_PAGES limit ($MAX_PAGES). Data may be incomplete. Total records: ${records.size}")
+            }
         }
 
         FetchResult(records, responseEtag, responseLastModified, notModified = false)
