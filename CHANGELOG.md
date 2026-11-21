@@ -5,6 +5,19 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.18] - 2026-11-21
+
+### Changed
+
+- Country detail screen now shows a clear not-found state for invalid links and a richer official advisory card.
+- Country cards show advisory dates in Watchlist and Explore, and Explore now supports favorite toggling.
+- Widget status text now distinguishes offline from failed syncs and shows higher-risk areas in level text.
+
+### Fixed
+
+- Widget empty state is now tappable to open Waymark.
+- Notification permission flow no longer flickers enabled state before Android permission is granted.
+
 ## [1.3.17] - 2026-11-21
 
 ### Changed

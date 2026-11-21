@@ -152,9 +152,10 @@ fun ExploreScreen(
                             CountryCardView(
                                 card = card,
                                 onClick = { onOpenCountry(card.id) },
-                                onFavorite = null,
+                                onFavorite = { onToggleFavorite(card) },
                                 onWatchlist = { onToggleWatchlist(card) },
                                 showWatchlistAction = true,
+                                showDate = true,
                                 modifier = Modifier.animateItem(),
                             )
                         }

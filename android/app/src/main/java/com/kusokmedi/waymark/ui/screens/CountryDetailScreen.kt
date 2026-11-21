@@ -60,6 +60,13 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlinx.coroutines.flow.map
+
+private sealed interface CountryDetailState {
+    data object Loading : CountryDetailState
+    data object NotFound : CountryDetailState
+    data class Loaded(val data: CountryDetailData) : CountryDetailState
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,15 +75,22 @@ fun CountryDetailScreen(
     viewModel: AppViewModel,
     onBack: () -> Unit,
 ) {
-    val detail by remember(countryId) { viewModel.observeCountry(countryId) }
-        .collectAsState(initial = null)
+    val state by remember(countryId) {
+        viewModel.observeCountry(countryId).map {
+            if (it == null) CountryDetailState.NotFound else CountryDetailState.Loaded(it)
+        }
+    }.collectAsState(initial = CountryDetailState.Loading)
     val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = {
+                val title = when (val s = state) {
+                    is CountryDetailState.Loaded -> s.data.country.name
+                    else -> countryId
+                }
                 Text(
-                    detail?.country?.name ?: countryId,
+                    title,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -87,7 +101,7 @@ fun CountryDetailScreen(
                 }
             },
             actions = {
-                val watch = detail?.watchlist
+                val watch = (state as? CountryDetailState.Loaded)?.data?.watchlist
                 if (watch != null) {
                     IconButton(onClick = { viewModel.setFavorite(countryId, !watch.isFavorite) }) {
                         Icon(
@@ -98,21 +112,47 @@ fun CountryDetailScreen(
                 }
             },
         )
-        val current = detail
-        if (current == null) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    androidx.compose.material3.CircularProgressIndicator()
-                    Spacer(Modifier.height(12.dp))
-                    Text(
-                        "Loading country…",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+
+        when (val s = state) {
+            CountryDetailState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        androidx.compose.material3.CircularProgressIndicator()
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            "Loading country…",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
+                return@Column
             }
-            return@Column
-        }
+            CountryDetailState.NotFound -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(24.dp),
+                    ) {
+                        Text(
+                            "Country not found",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            "This country may have been removed from the catalogue or the link is invalid.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Button(onClick = onBack) { Text("Go back") }
+                    }
+                }
+                return@Column
+            }
+            is CountryDetailState.Loaded -> {
+                val current = s.data
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
@@ -162,6 +202,8 @@ fun CountryDetailScreen(
                 )
             }
         }
+            }
+        }
     }
 }
 
@@ -195,30 +237,50 @@ private fun CountryHeader(detail: CountryDetailData) {
 @Composable
 private fun AdvisoryCard(detail: CountryDetailData, context: android.content.Context) {
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Text("Official advisory", style = MaterialTheme.typography.labelLarge)
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Official advisory", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = detail.countryRecord?.officialLabel ?: AdvisoryLevels.label(detail.level),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+            )
+            if (detail.containsHigherRiskAreas) {
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "Includes areas with higher security risk",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+            Spacer(Modifier.height(8.dp))
             com.kusokmedi.waymark.ui.components.AdvisoryDateText(detail.advisoryDate, showYear = true)
+
             val record = detail.countryRecord
             if (!record?.assistedDepartureText.isNullOrBlank()) {
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(12.dp))
                 Text("Departure notice", fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.height(2.dp))
                 Text(record?.assistedDepartureText ?: "", style = MaterialTheme.typography.bodySmall)
                 if (!record?.assistedDepartureDate.isNullOrBlank()) {
                     Text(
                         "Notice date: ${record?.assistedDepartureDate}",
                         style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
-            Spacer(Modifier.height(10.dp))
+
+            Spacer(Modifier.height(12.dp))
             Text(
-                "Waymark shows the published level and metadata. Read the full advisory on the official site for current guidance.",
+                "Read the full advisory on the official U.S. Department of State website for current guidance and details.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             val url = detail.advisoryUrl
             if (url != null) {
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(10.dp))
                 Button(
                     onClick = {
                         try {
@@ -233,6 +295,7 @@ private fun AdvisoryCard(detail: CountryDetailData, context: android.content.Con
                     Text("Open official advisory")
                 }
             } else {
+                Spacer(Modifier.height(8.dp))
                 Text(
                     "The official advisory URL is not available for this record.",
                     style = MaterialTheme.typography.bodySmall,

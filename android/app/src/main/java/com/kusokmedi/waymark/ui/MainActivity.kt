@@ -40,7 +40,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kusokmedi.waymark.AppContainer
 import com.kusokmedi.waymark.data.local.ThemeMode
-import com.kusokmedi.waymark.ui.components.LevelChip
 import com.kusokmedi.waymark.ui.screens.CountryDetailScreen
 import com.kusokmedi.waymark.ui.screens.ExploreScreen
 import com.kusokmedi.waymark.ui.screens.HistoryScreen

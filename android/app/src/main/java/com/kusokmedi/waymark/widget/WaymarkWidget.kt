@@ -193,20 +193,29 @@ private fun WatchlistWidgetContent(snapshot: WidgetSnapshot) {
             Header(snapshot, colors, compact)
 
             if (snapshot.cards.isEmpty()) {
-                Spacer(GlanceModifier.height(if (compact) 8.dp else 16.dp))
-                Text(
-                    text = "Your watchlist is empty",
-                    style = TextStyle(
-                        color = colors.foreground,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = if (compact) 12.sp else 14.sp,
-                    ),
-                )
-                Spacer(GlanceModifier.height(4.dp))
-                Text(
-                    text = "Open Waymark to add countries.",
-                    style = TextStyle(color = colors.muted, fontSize = if (compact) 10.sp else 12.sp),
-                )
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .defaultWeight()
+                        .clickable(actionStartActivity<MainActivity>()),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Your watchlist is empty",
+                            style = TextStyle(
+                                color = colors.foreground,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = if (compact) 12.sp else 14.sp,
+                            ),
+                        )
+                        Spacer(GlanceModifier.height(4.dp))
+                        Text(
+                            text = "Tap to open Waymark and add countries.",
+                            style = TextStyle(color = colors.muted, fontSize = if (compact) 10.sp else 12.sp),
+                        )
+                    }
+                }
             } else {
                 Spacer(GlanceModifier.height(if (compact) 4.dp else 6.dp))
                 val cardCount = snapshot.cards.size
@@ -363,7 +372,6 @@ private fun CountryItem(
     val r = config.cornerRadius.coerceIn(0, 20)
     val horizontalPadding = if (compact) 8.dp else 10.dp
     val verticalPadding = if (compact) 6.dp else 10.dp
-
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
@@ -530,8 +538,9 @@ private suspend fun recoverStaleRunningSyncState(db: WaymarkDatabase): SyncState
 private fun statusText(state: SyncStateEntity?): String {
     if (state == null) return "Not synced yet"
     return when (effectiveStatus(state)) {
-        "running" -> "Loading..."
-        "failed", "offline" -> "Error, last update at ${timeText(state.lastSuccessAt)}"
+        "running" -> "Syncing..."
+        "offline" -> if (state.lastSuccessAt != null) "Offline · Updated ${timeText(state.lastSuccessAt)}" else "Offline · Not synced yet"
+        "failed" -> if (state.lastSuccessAt != null) "Update failed · ${timeText(state.lastSuccessAt)}" else "Update failed"
         "success", "idle" -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"
         else -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"
     }
@@ -559,7 +568,8 @@ private fun timeText(at: Long?): String {
 
 private fun levelText(card: CountryCard): String {
     val level = card.level ?: return "Unknown"
-    return "Level ${level.number}"
+    val base = "Level ${level.number}"
+    return if (card.containsHigherRiskAreas) "$base · Higher risk" else base
 }
 
 private fun levelColor(card: CountryCard): ColorProvider = when (card.level?.number) {

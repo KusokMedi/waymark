@@ -206,8 +206,8 @@ fun NotificationSettingsScreen(viewModel: AppViewModel, onBack: () -> Unit) {
     val container = remember { context.applicationContext.waymarkContainer() }
 
     val notificationPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        viewModel.setNotificationsEnabled(granted)
         if (!granted) {
-            viewModel.setNotificationsEnabled(false)
             scope.launch { snackbar.showSnackbar("Notification permission was denied.") }
         }
     }
@@ -243,8 +243,9 @@ fun NotificationSettingsScreen(viewModel: AppViewModel, onBack: () -> Unit) {
                 onCheckedChange = { enabled ->
                     if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        viewModel.setNotificationsEnabled(enabled)
                     }
-                    viewModel.setNotificationsEnabled(enabled)
                 },
             )
             Text(
