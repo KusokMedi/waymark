@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import com.kusokmedi.waymark.waymarkContainer
 import java.util.concurrent.atomic.AtomicLong
 
 private sealed class UpdateState {
@@ -81,6 +82,19 @@ object WaymarkWidgetUpdater {
             .getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .getLong(KEY_LAST_WIDGET_REFRESH_AT, 0L)
         return value.takeIf { it > 0L }
+    }
+
+    fun requestImmediateSync(context: Context) {
+        val app = context.applicationContext
+        scope.launch {
+            try {
+                app.waymarkContainer().syncEngine.synchronize(forceMobileData = true, forceSync = true)
+            } catch (e: Exception) {
+                Log.e(TAG, "Immediate widget sync failed", e)
+            } finally {
+                forceUpdateAll(app)
+            }
+        }
     }
 
     private fun requestUpdate(app: Context, force: Boolean) {

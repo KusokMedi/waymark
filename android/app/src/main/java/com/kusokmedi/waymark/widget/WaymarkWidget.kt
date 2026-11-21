@@ -49,7 +49,6 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import com.kusokmedi.waymark.SyncScheduler
 import com.kusokmedi.waymark.data.AdvisoryRepository
 import com.kusokmedi.waymark.data.local.SettingsRepository
 import com.kusokmedi.waymark.data.local.SyncStateEntity
@@ -477,8 +476,8 @@ class RefreshAction : ActionCallback {
         )
         WaymarkWidgetUpdater.forceUpdateAll(appContext)
 
-        // Enqueue sync (KEEP policy avoids cancelling an active widget sync).
-        SyncScheduler.syncNowFromWidget(appContext, forceSync = true)
+        // Run the same direct sync path as the in-app refresh action.
+        WaymarkWidgetUpdater.requestImmediateSync(appContext)
 
         // Drive short dot/progress animation updates while sync is running.
         // Do not mark failure here; SyncWorker/SyncEngine own real sync outcome.

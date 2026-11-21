@@ -10,10 +10,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -275,8 +272,6 @@ private fun WelcomeStep() {
 @Composable
 private fun LevelsStep() {
     val scrollState = rememberScrollState()
-    var revealed by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { revealed = true }
 
     val levels = listOf(
         Triple(
@@ -315,34 +310,16 @@ private fun LevelsStep() {
         )
         Spacer(Modifier.height(18.dp))
 
-        levels.forEachIndexed { index, (level, headline, detail) ->
-            AnimatedVisibility(
-                visible = revealed,
-                enter = fadeIn(tween(durationMillis = 350, delayMillis = index * 70)) +
-                    slideInVertically(
-                        animationSpec = tween(durationMillis = 350, delayMillis = index * 70),
-                        initialOffsetY = { it / 4 },
-                    ),
-            ) {
-                LevelCard(
-                    level = level,
-                    headline = headline,
-                    detail = detail,
-                    modifier = Modifier.padding(bottom = 10.dp),
-                )
-            }
+        levels.forEachIndexed { _, (level, headline, detail) ->
+            LevelCard(
+                level = level,
+                headline = headline,
+                detail = detail,
+                modifier = Modifier.padding(bottom = 10.dp),
+            )
         }
 
-        AnimatedVisibility(
-            visible = revealed,
-            enter = fadeIn(tween(durationMillis = 350, delayMillis = 320)) +
-                slideInVertically(
-                    animationSpec = tween(durationMillis = 350, delayMillis = 320),
-                    initialOffsetY = { it / 4 },
-                ),
-        ) {
-            HigherRiskCallout(modifier = Modifier.padding(top = 4.dp, bottom = 14.dp))
-        }
+        HigherRiskCallout(modifier = Modifier.padding(top = 4.dp, bottom = 14.dp))
 
         Text(
             "Advisories are written for U.S. citizens and are not a universal safety rating. Always consult the official advisory before travel.",
