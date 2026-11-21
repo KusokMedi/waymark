@@ -1,6 +1,7 @@
 package com.kusokmedi.waymark
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -10,7 +11,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.Constraints
+import androidx.work.workDataOf
+import com.kusokmedi.waymark.data.local.SyncStateEntity
 import com.kusokmedi.waymark.sync.SyncOutcome
+import com.kusokmedi.waymark.widget.WaymarkWidgetUpdater
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeUnit
 
 class SyncWorker(
@@ -19,17 +24,63 @@ class SyncWorker(
 ) : CoroutineWorker(appContext, params) {
     override suspend fun doWork(): Result {
         val app = applicationContext as? WaymarkApp ?: return Result.failure()
-        return when (val outcome = app.container.syncEngine.synchronize()) {
-            is SyncOutcome.Success -> Result.success()
-            is SyncOutcome.Offline -> if (runAttemptCount < 2) Result.retry() else Result.success()
-            is SyncOutcome.Failure -> if (runAttemptCount < 3) Result.retry() else Result.failure()
+        val forceMobileData = inputData.getBoolean(KEY_FORCE_MOBILE_DATA, false)
+        val fromWidget = inputData.getBoolean(KEY_FROM_WIDGET, false)
+        Log.d(TAG, "doWork start forceMobileData=$forceMobileData fromWidget=$fromWidget attempt=$runAttemptCount")
+
+        val outcome = try {
+            withTimeoutOrNull(WORK_TIMEOUT_MS) {
+                app.container.syncEngine.synchronize(forceMobileData = forceMobileData)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "doWork exception", e)
+            markFailedIfRunning(app, e.message ?: "Synchronization was interrupted")
+            WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
+            return if (runAttemptCount < 2 && !fromWidget) Result.retry() else Result.failure()
         }
+
+        val result = when (outcome) {
+            null -> {
+                Log.w(TAG, "doWork timed out")
+                markFailedIfRunning(app, "Synchronization timed out")
+                Result.failure()
+            }
+            is SyncOutcome.Success -> {
+                if (fromWidget) WaymarkWidgetUpdater.markWidgetRefreshed(applicationContext)
+                Result.success()
+            }
+            is SyncOutcome.Offline -> if (runAttemptCount < 2 && !fromWidget) Result.retry() else Result.success()
+            is SyncOutcome.Failure -> if (runAttemptCount < 3 && !fromWidget) Result.retry() else Result.failure()
+        }
+
+        WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
+        Log.d(TAG, "doWork finished result=$result outcome=$outcome")
+        return result
+    }
+
+    private suspend fun markFailedIfRunning(app: WaymarkApp, message: String) {
+        val dao = app.container.database.syncStateDao()
+        val current = dao.get() ?: SyncStateEntity()
+        if (current.status == "running") {
+            dao.upsert(current.copy(status = "failed", message = message))
+        }
+    }
+
+    companion object {
+        private const val TAG = "WaymarkSyncWorker"
+        private const val KEY_FORCE_MOBILE_DATA = "forceMobileData"
+        private const val KEY_FROM_WIDGET = "fromWidget"
+        private val WORK_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(150)
     }
 }
 
 object SyncScheduler {
+    private const val TAG = "WaymarkSyncScheduler"
     private const val UNIQUE_PERIODIC = "waymark-periodic-sync"
     private const val UNIQUE_ONE_TIME = "waymark-one-time-sync"
+    private const val UNIQUE_WIDGET_SYNC = "waymark-widget-sync"
+    private const val KEY_FORCE_MOBILE_DATA = "forceMobileData"
+    private const val KEY_FROM_WIDGET = "fromWidget"
 
     private fun constraints(allowMobileData: Boolean): Constraints =
         Constraints.Builder()
@@ -62,6 +113,21 @@ object SyncScheduler {
             UNIQUE_ONE_TIME,
             ExistingWorkPolicy.REPLACE,
             request,
+        )
+    }
+
+    fun syncNowFromWidget(context: Context, initialDelayMs: Long = 0L) {
+        Log.d(TAG, "enqueue widget sync delayMs=$initialDelayMs")
+        val builder = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints(allowMobileData = true))
+            .setInputData(workDataOf(KEY_FORCE_MOBILE_DATA to true, KEY_FROM_WIDGET to true))
+        if (initialDelayMs > 0) {
+            builder.setInitialDelay(initialDelayMs, TimeUnit.MILLISECONDS)
+        }
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            UNIQUE_WIDGET_SYNC,
+            ExistingWorkPolicy.REPLACE,
+            builder.build(),
         )
     }
 }

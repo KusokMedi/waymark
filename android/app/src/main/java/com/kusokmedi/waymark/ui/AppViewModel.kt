@@ -55,23 +55,23 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun addToWatchlist(countryId: String) = viewModelScope.launch {
         container.repository.addToWatchlist(countryId, settings.value.notificationsEnabled)
-        WaymarkWidgetUpdater.updateAll(container.context)
+        WaymarkWidgetUpdater.forceUpdateAll(container.context)
     }
 
     fun removeFromWatchlist(countryId: String) = viewModelScope.launch {
         container.repository.removeFromWatchlist(countryId)
-        WaymarkWidgetUpdater.updateAll(container.context)
+        WaymarkWidgetUpdater.forceUpdateAll(container.context)
     }
 
     fun toggleWatchlist(countryId: String, currentlyInWatchlist: Boolean) = viewModelScope.launch {
         if (currentlyInWatchlist) container.repository.removeFromWatchlist(countryId)
         else container.repository.addToWatchlist(countryId, settings.value.notificationsEnabled)
-        WaymarkWidgetUpdater.updateAll(container.context)
+        WaymarkWidgetUpdater.forceUpdateAll(container.context)
     }
 
     fun setFavorite(countryId: String, favorite: Boolean) = viewModelScope.launch {
         container.repository.setFavorite(countryId, favorite)
-        WaymarkWidgetUpdater.updateAll(container.context)
+        WaymarkWidgetUpdater.forceUpdateAll(container.context)
     }
 
     fun setNotifications(countryId: String, enabled: Boolean) = viewModelScope.launch {
@@ -80,7 +80,7 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun reorderWatchlist(ids: List<String>) = viewModelScope.launch {
         container.repository.reorderWatchlist(ids)
-        WaymarkWidgetUpdater.updateAll(container.context)
+        WaymarkWidgetUpdater.forceUpdateAll(container.context)
     }
 
     fun completeOnboarding(
@@ -100,7 +100,7 @@ class AppViewModel(private val container: AppContainer) : ViewModel() {
 
     fun syncNow() = viewModelScope.launch {
         container.syncEngine.synchronize()
-        WaymarkWidgetUpdater.updateAll(container.context)
+        WaymarkWidgetUpdater.forceUpdateAll(container.context)
     }
 
     fun syncNowWithMobileData(allowMobileData: Boolean) = viewModelScope.launch {

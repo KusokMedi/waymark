@@ -1,6 +1,7 @@
 package com.kusokmedi.waymark.sync
 
 import android.content.Context
+import android.util.Log
 import com.kusokmedi.waymark.data.NetworkMonitor
 import com.kusokmedi.waymark.data.local.AdvisoryEntity
 import com.kusokmedi.waymark.data.local.CountryEntity
@@ -22,6 +23,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeUnit
 
 sealed interface SyncOutcome {
@@ -39,7 +41,40 @@ class SyncEngine(
 ) {
     private val mutex = Mutex()
 
-    suspend fun synchronize(forceMobileData: Boolean = false): SyncOutcome = mutex.withLock {
+    companion object {
+        private const val TAG = "WaymarkSyncEngine"
+        private val SYNC_TIMEOUT_MS = TimeUnit.SECONDS.toMillis(150)
+        private val MIN_SYNC_INTERVAL_MS = TimeUnit.SECONDS.toMillis(30)
+    }
+
+    private suspend fun markFailedIfRunning(message: String) {
+        val current = db.syncStateDao().get() ?: SyncStateEntity()
+        if (current.status == "running") {
+            db.syncStateDao().upsert(current.copy(status = "failed", message = message))
+        }
+    }
+
+    suspend fun synchronize(forceMobileData: Boolean = false): SyncOutcome {
+        val outcome = try {
+            withTimeoutOrNull(SYNC_TIMEOUT_MS) {
+                mutex.withLock { doSynchronize(forceMobileData) }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "synchronize exception", e)
+            markFailedIfRunning(e.message ?: "Synchronization was interrupted")
+            WaymarkWidgetUpdater.forceUpdateAll(context)
+            return SyncOutcome.Failure(e.message ?: "Synchronization was interrupted")
+        }
+
+        if (outcome != null) return outcome
+
+        Log.w(TAG, "synchronize timed out or lock wait exceeded")
+        markFailedIfRunning("Synchronization timed out")
+        WaymarkWidgetUpdater.forceUpdateAll(context)
+        return SyncOutcome.Failure("Synchronization timed out")
+    }
+
+    private suspend fun doSynchronize(forceMobileData: Boolean): SyncOutcome {
         var state = db.syncStateDao().get() ?: SyncStateEntity()
         state = clearStaleRunning(state)
         val appSettings = settings.settings.first()
@@ -58,13 +93,29 @@ class SyncEngine(
                     message = if (!NetworkMonitor.isOnline(context)) "No network connection" else "Mobile data disabled",
                 )
             )
-            WaymarkWidgetUpdater.updateAll(context)
+            WaymarkWidgetUpdater.forceUpdateAll(context)
             return SyncOutcome.Offline(offlineMessage)
         }
 
         val attemptAt = System.currentTimeMillis()
+        val lastSuccess = state.lastSuccessAt ?: 0L
+        if (state.firstSyncCompleted && attemptAt - lastSuccess < MIN_SYNC_INTERVAL_MS) {
+            Log.d(TAG, "sync skipped: recent success ${attemptAt - lastSuccess}ms ago")
+            // Keep UX responsive: show that we checked now, without a redundant network fetch.
+            db.syncStateDao().upsert(
+                state.copy(
+                    lastAttemptAt = attemptAt,
+                    lastSuccessAt = attemptAt,
+                    status = "success",
+                    message = null,
+                )
+            )
+            WaymarkWidgetUpdater.forceUpdateAll(context)
+            return SyncOutcome.Success(changeCount = 0, notModified = true)
+        }
+
         db.syncStateDao().upsert(state.copy(lastAttemptAt = attemptAt, status = "running", message = null))
-        WaymarkWidgetUpdater.updateAll(context)
+        WaymarkWidgetUpdater.forceUpdateAll(context)
 
         try {
             val fetched = client.fetchAll(etag = state.etag, lastModified = state.lastModified)
@@ -78,7 +129,7 @@ class SyncEngine(
                         firstSyncCompleted = true,
                     )
                 )
-                WaymarkWidgetUpdater.updateAll(context)
+                WaymarkWidgetUpdater.forceUpdateAll(context)
                 return SyncOutcome.Success(changeCount = 0, notModified = true)
             }
 
@@ -169,13 +220,13 @@ class SyncEngine(
                     .toSet()
                 notifier.notifyChanges(trackedChanges.filter { it.countryId in enabledCountryIds })
             }
-            WaymarkWidgetUpdater.updateAll(context)
-            SyncOutcome.Success(trackedChanges.size)
+            WaymarkWidgetUpdater.forceUpdateAll(context)
+            return SyncOutcome.Success(trackedChanges.size)
         } catch (e: CancellationException) {
             db.syncStateDao().upsert(
                 state.copy(lastAttemptAt = attemptAt, status = "idle", message = "Synchronization cancelled")
             )
-            WaymarkWidgetUpdater.updateAll(context)
+            WaymarkWidgetUpdater.forceUpdateAll(context)
             throw e
         } catch (e: Exception) {
             val message = e.message ?: "Synchronization failed"
@@ -186,9 +237,9 @@ class SyncEngine(
                     message = message,
                 )
             )
-            WaymarkWidgetUpdater.updateAll(context)
+            WaymarkWidgetUpdater.forceUpdateAll(context)
             notifier.notifySyncProblem(message)
-            SyncOutcome.Failure(message)
+            return SyncOutcome.Failure(message)
         }
     }
 

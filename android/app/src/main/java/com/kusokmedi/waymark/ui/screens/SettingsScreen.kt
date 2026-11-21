@@ -375,7 +375,7 @@ fun DataManagementScreen(viewModel: AppViewModel, onBack: () -> Unit) {
                         SyncScheduler.cancelPeriodic(context)
                     }
                     // Reflect imported watchlist/widget data on home-screen widgets.
-                    com.kusokmedi.waymark.widget.WaymarkWidgetUpdater.updateAll(context)
+                    com.kusokmedi.waymark.widget.WaymarkWidgetUpdater.forceUpdateAll(context)
                 }
                 val detail = if (result.warnings.isEmpty()) result.message else "${result.message} ${result.warnings.size} warning(s)."
                 snackbar.showSnackbar(detail)

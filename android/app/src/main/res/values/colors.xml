@@ -3,4 +3,5 @@
     <color name="waymark_primary">#335F52</color>
     <color name="waymark_background">#FBF9F4</color>
     <color name="waymark_icon_background">#DCE9E2</color>
+    <color name="widget_initial_bg">#FBFBF4</color>
 </resources>
