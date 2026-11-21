@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Add
@@ -29,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -65,19 +67,13 @@ fun LevelChip(
 ) {
     val label = if (level == null) "Unknown" else "Level ${level.number}"
     val chipWidth = if (compact) 172.dp else 260.dp
-    val chipHeight = if (compact) 74.dp else 84.dp
     Surface(
-        modifier = modifier.size(width = chipWidth, height = chipHeight),
+        modifier = modifier.width(chipWidth),
         color = levelContainerColor(level),
         contentColor = levelColor(level),
         shape = RoundedCornerShape(10.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = if (compact) 4.dp else 6.dp),
-            verticalArrangement = Arrangement.Center,
-        ) {
+        Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = if (compact) 4.dp else 6.dp)) {
             Text(
                 label,
                 style = MaterialTheme.typography.labelLarge,
@@ -89,7 +85,7 @@ fun LevelChip(
                 Text(
                     AdvisoryLevels.label(level),
                     style = MaterialTheme.typography.labelSmall,
-                    maxLines = if (compact) 2 else 2,
+                    maxLines = if (compact) 1 else 2,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
@@ -134,6 +130,7 @@ fun CountryCardView(
     showDate: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
+    val uriHandler = LocalUriHandler.current
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -181,6 +178,24 @@ fun CountryCardView(
                     if (showDate) {
                         AdvisoryDateText(card.advisoryDate)
                     }
+                }
+                if (card.regionCount > 0) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = if (card.regionCount == 1) "1 regional warning" else "${card.regionCount} regional warnings",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+            val advisoryUrl = card.advisoryUrl
+            if (!advisoryUrl.isNullOrBlank()) {
+                IconButton(onClick = { runCatching { uriHandler.openUri(advisoryUrl) } }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = "Open official advisory",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
             if (onFavorite != null) {

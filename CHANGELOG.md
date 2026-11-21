@@ -5,6 +5,17 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.13] - 2026-11-21
+
+### Changed
+
+- Level chips keep a consistent width while restoring content-based height.
+- Country cards show regional warning counts and provide a direct link to the official advisory when available.
+
+### Fixed
+
+- Explore no longer lists countries with unknown advisory levels.
+
 ## [1.3.12] - 2026-11-21
 
 ### Changed

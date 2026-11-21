@@ -40,10 +40,10 @@ import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.ui.components.CountryCardView
 
 private enum class ExploreSort(val label: String) {
-    NAME_ASC("A–Z"),
-    NAME_DESC("Z–A"),
-    LEVEL_ASC("Level 1–4"),
-    LEVEL_DESC("Level 4–1"),
+    NAME_ASC("A-Z"),
+    NAME_DESC("Z-A"),
+    LEVEL_ASC("Level 1-4"),
+    LEVEL_DESC("Level 4-1"),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,8 +57,9 @@ fun ExploreScreen(
     var query by remember { mutableStateOf("") }
     var sort by remember { mutableStateOf(ExploreSort.NAME_ASC) }
 
-    val filtered = remember(countries, query, sort) {
-        val base = countries.filter {
+    val knownCountries = remember(countries) { countries.filter { it.level != null } }
+    val filtered = remember(knownCountries, query, sort) {
+        val base = knownCountries.filter {
             query.isBlank() ||
                 it.name.contains(query, ignoreCase = true) ||
                 it.isoAlpha2?.equals(query, ignoreCase = true) == true ||
@@ -78,7 +79,7 @@ fun ExploreScreen(
                 Column {
                     Text("Explore", fontWeight = FontWeight.Bold)
                     Text(
-                        "${countries.size} destinations",
+                        "${knownCountries.size} destinations",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -108,7 +109,7 @@ fun ExploreScreen(
             }
         }
         AnimatedContent(
-            targetState = Triple(countries.isEmpty(), filtered.isEmpty(), query),
+            targetState = Triple(knownCountries.isEmpty(), filtered.isEmpty(), query),
             transitionSpec = { fadeIn() togetherWith fadeOut() },
             label = "explore-content",
         ) { (catalogueEmpty, noResults, _) ->
