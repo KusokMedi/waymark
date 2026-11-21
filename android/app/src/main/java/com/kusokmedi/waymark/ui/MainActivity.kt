@@ -139,6 +139,8 @@ private fun MainNavigation(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val route = backStackEntry?.destination?.route
     val showBottomBar = route == "watchlist" || route == "explore" || route == "history" || route == "settings"
+    
+    val snackbarHostState = androidx.compose.material3.SnackbarHostState()
 
     fun navigateTopLevel(target: String) {
         if (route == target) return
@@ -148,10 +150,26 @@ private fun MainNavigation(
             restoreState = true
         }
     }
+    
+    // Collect error events and show snackbar
+    LaunchedEffect(Unit) {
+        viewModel.errorEvents.collect { errorEvent ->
+            val message = when (errorEvent) {
+                is com.kusokmedi.waymark.ui.ErrorEvent.WatchlistOperationFailed -> errorEvent.message
+                is com.kusokmedi.waymark.ui.ErrorEvent.SyncFailed -> errorEvent.message
+                is com.kusokmedi.waymark.ui.ErrorEvent.SettingsUpdateFailed -> errorEvent.message
+            }
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = androidx.compose.material3.SnackbarDuration.Short
+            )
+        }
+    }
 
-    LaunchedEffect(deepLinkCountry) {
+    // Handle deeplink - wait for countries to load if needed
+    LaunchedEffect(deepLinkCountry, countries) {
         val id = deepLinkCountry
-        if (!id.isNullOrBlank()) {
+        if (!id.isNullOrBlank() && countries.isNotEmpty()) {
             // Validate country exists before navigating
             val countryExists = countries.any { it.id == id }
             if (countryExists) {
@@ -165,6 +183,7 @@ private fun MainNavigation(
     }
 
     Scaffold(
+        snackbarHost = { androidx.compose.material3.SnackbarHost(snackbarHostState) },
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar {

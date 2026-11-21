@@ -177,8 +177,9 @@ class SyncEngine(
                 }
                 val trackedChanges = changes.filter { watchEntries.containsKey(it.countryId) }
                 
-                // First insert new data, then delete obsolete records to avoid temporary empty state
-                // First insert new data, then delete obsolete records to avoid temporary empty state
+                // Upsert countries and advisories. Room @Upsert handles both insert and update.
+                // We deleteAll advisories first to remove obsolete records from removed countries/regions.
+                // This happens within a transaction, so no temporary empty state is visible to readers.
                 db.countryDao().upsertAll(
                     aggregates.map { aggregate ->
                         CountryEntity(
@@ -190,8 +191,6 @@ class SyncEngine(
                         )
                     }
                 )
-                // Upsert will replace existing records, so we only need to delete obsolete ones
-                val currentCountryIds = aggregates.map { it.id }.toSet()
                 db.advisoryDao().deleteAll()
                 db.advisoryDao().upsertAll(
                     aggregates.flatMap { aggregate ->

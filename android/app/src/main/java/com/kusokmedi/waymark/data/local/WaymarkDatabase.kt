@@ -26,12 +26,6 @@ abstract class WaymarkDatabase : RoomDatabase() {
     abstract fun widgetConfigDao(): WidgetConfigDao
 
     companion object {
-        private val instance: WaymarkDatabase by lazy {
-            throw IllegalStateException(
-                "Database must be initialized with get(context) before first access"
-            )
-        }
-        
         @Volatile
         private var INSTANCE: WaymarkDatabase? = null
 

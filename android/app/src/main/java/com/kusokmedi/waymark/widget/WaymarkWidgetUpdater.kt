@@ -84,21 +84,24 @@ object WaymarkWidgetUpdater {
     }
 
     private fun requestUpdate(app: Context, force: Boolean) {
+        // Check current state and determine if we need to start update loop
+        val shouldStartLoop = updateState.value is UpdateState.Idle
+        
+        // Update state without side effects
         updateState.update { current ->
             when (current) {
-                is UpdateState.Idle -> {
-                    startUpdateLoop(app, force)
-                    UpdateState.Pending(force)
-                }
-                is UpdateState.Pending -> {
-                    Log.d(TAG, "update coalesced during pending force=${force || current.force}")
-                    UpdateState.Pending(force || current.force)
-                }
+                is UpdateState.Idle -> UpdateState.Pending(force)
+                is UpdateState.Pending -> UpdateState.Pending(force || current.force)
                 is UpdateState.Running -> {
                     Log.d(TAG, "update coalesced during running force=${force || current.force}")
                     UpdateState.Running(dirty = true, force = force || current.force)
                 }
             }
+        }
+        
+        // Start update loop outside of state update to avoid CAS retry side effects
+        if (shouldStartLoop) {
+            startUpdateLoop(app, force)
         }
     }
     
