@@ -40,10 +40,16 @@ class ChangeNotifier(private val context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
 
-        // Remove previous advisory channel variants to avoid stale duplicates.
+        // NOTE: Deleting notification channels removes user customization.
+        // We keep this approach to ensure sound/importance settings are applied,
+        // but Android guidelines recommend against frequent channel deletion.
+        // Consider using fixed channels in future versions.
         manager.notificationChannels
             .filter { it.id.startsWith(CHANNEL_CHANGES_PREFIX) && it.id != changesChannelId }
-            .forEach { manager.deleteNotificationChannel(it.id) }
+            .forEach { 
+                android.util.Log.i("ChangeNotifier", "Removing stale notification channel: ${it.id}")
+                manager.deleteNotificationChannel(it.id)
+            }
 
         val importance = when (normalizeImportance(importanceSetting)) {
             "low" -> NotificationManager.IMPORTANCE_LOW
@@ -105,8 +111,9 @@ class ChangeNotifier(private val context: Context) {
 
             try {
                 NotificationManagerCompat.from(context).notify(change.fingerprint.hashCode(), builder.build())
-            } catch (_: SecurityException) {
+            } catch (e: SecurityException) {
                 // Permission was revoked between the check and notify().
+                android.util.Log.w("ChangeNotifier", "Failed to post notification for ${change.countryId}: permission revoked", e)
             }
         }
     }
@@ -126,8 +133,9 @@ class ChangeNotifier(private val context: Context) {
             .build()
         try {
             NotificationManagerCompat.from(context).notify(SYNC_NOTIFICATION_ID, notification)
-        } catch (_: SecurityException) {
-            // Ignore revoked permission.
+        } catch (e: SecurityException) {
+            // Ignore revoked permission but log for debugging.
+            android.util.Log.w("ChangeNotifier", "Failed to post sync problem notification: permission revoked", e)
         }
     }
 

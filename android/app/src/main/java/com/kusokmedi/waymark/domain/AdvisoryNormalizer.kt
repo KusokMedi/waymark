@@ -140,7 +140,8 @@ object AdvisoryNormalizer {
         return try {
             val uri = java.net.URI(trimmed)
             if (uri.scheme == "https" || uri.scheme == "http") uri.toString() else null
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            android.util.Log.d("AdvisoryNormalizer", "Invalid URL encountered: $trimmed", e)
             null
         }
     }
@@ -152,7 +153,8 @@ object AdvisoryNormalizer {
                 .atZone(java.time.ZoneOffset.UTC)
                 .toLocalDate()
                 .toString()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            android.util.Log.d("AdvisoryNormalizer", "Invalid date millis: $millis", e)
             null
         }
     }
