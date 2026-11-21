@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.9] - 2026-11-21
+
+### Changed
+
+- Simplified the home-screen widget: replaced the manual refresh button with an Open app action, removed widget-side refresh/sync complexity, and kept sync status display while auto-sync continues updating widgets.
+
 ## [1.4.8] - 2026-11-21
 
 ### Fixed
