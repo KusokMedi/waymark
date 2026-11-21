@@ -13,22 +13,31 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.concurrent.atomic.AtomicLong
+
+private sealed class UpdateState {
+    object Idle : UpdateState()
+    data class Pending(val force: Boolean) : UpdateState()
+    data class Running(val dirty: Boolean, val force: Boolean) : UpdateState()
+}
 
 object WaymarkWidgetUpdater {
     private const val TAG = "WaymarkWidgetUpdater"
     private const val PREFS = "waymark_widget_prefs"
     private const val KEY_LAST_WIDGET_REFRESH_AT = "last_widget_refresh_at"
+    private const val MIN_UPDATE_INTERVAL_MS = 500L
+    private const val FORCE_THROTTLE_MS = 200L
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val mutex = Mutex()
-
-    @Volatile private var updateInFlight: Boolean = false
-    @Volatile private var dirty: Boolean = false
-    @Volatile private var forceRequested: Boolean = false
-    @Volatile private var lastUpdateAt: Long = 0L
+    private val updateState = MutableStateFlow<UpdateState>(UpdateState.Idle)
+    private val lastUpdateAt = AtomicLong(0L)
+    private val lastForceAt = AtomicLong(0L)
 
     fun updateAll(context: Context) {
         requestUpdate(context.applicationContext, force = false)
@@ -36,11 +45,22 @@ object WaymarkWidgetUpdater {
 
     fun forceUpdateAll(context: Context) {
         val app = context.applicationContext
-        // Force update bypasses rate limiting and coalescing
+        val now = System.currentTimeMillis()
+        val timeSinceLastForce = now - lastForceAt.get()
+        
+        // Apply minimal throttling even for force updates to prevent excessive widget refreshes
+        if (timeSinceLastForce < FORCE_THROTTLE_MS) {
+            Log.d(TAG, "forceUpdateAll throttled, requesting coalesced update instead")
+            requestUpdate(app, force = true)
+            return
+        }
+        
+        lastForceAt.set(now)
         scope.launch {
             try {
                 mutex.withLock {
                     doUpdate(app)
+                    lastUpdateAt.set(System.currentTimeMillis())
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "forceUpdateAll failed", e)
@@ -64,48 +84,78 @@ object WaymarkWidgetUpdater {
     }
 
     private fun requestUpdate(app: Context, force: Boolean) {
-        if (force) forceRequested = true
-        dirty = true
-        if (updateInFlight) {
-            Log.d(TAG, "update coalesced force=$force")
-            return
+        updateState.update { current ->
+            when (current) {
+                is UpdateState.Idle -> {
+                    startUpdateLoop(app, force)
+                    UpdateState.Pending(force)
+                }
+                is UpdateState.Pending -> {
+                    Log.d(TAG, "update coalesced during pending force=${force || current.force}")
+                    UpdateState.Pending(force || current.force)
+                }
+                is UpdateState.Running -> {
+                    Log.d(TAG, "update coalesced during running force=${force || current.force}")
+                    UpdateState.Running(dirty = true, force = force || current.force)
+                }
+            }
         }
-        updateInFlight = true
+    }
+    
+    private fun startUpdateLoop(app: Context, initialForce: Boolean) {
         scope.launch {
             try {
-                while (true) {
-                    val shouldForce = forceRequested
-                    dirty = false
-                    forceRequested = false
+                var shouldContinue = true
+                while (shouldContinue) {
+                    val (shouldForce, wasDirty) = updateState.value.let { state ->
+                        when (state) {
+                            is UpdateState.Pending -> {
+                                updateState.value = UpdateState.Running(dirty = false, force = state.force)
+                                state.force to false
+                            }
+                            is UpdateState.Running -> {
+                                updateState.value = UpdateState.Running(dirty = false, force = state.force)
+                                state.force to state.dirty
+                            }
+                            else -> false to false
+                        }
+                    }
 
                     if (!shouldForce) {
                         val now = System.currentTimeMillis()
-                        val waitMs = (lastUpdateAt + 500L) - now
+                        val waitMs = (lastUpdateAt.get() + MIN_UPDATE_INTERVAL_MS) - now
                         if (waitMs > 0) delay(waitMs)
                     }
 
                     mutex.withLock {
                         doUpdate(app)
-                        lastUpdateAt = System.currentTimeMillis()
+                        lastUpdateAt.set(System.currentTimeMillis())
                     }
 
-                    // Absorb bursts into one trailing pass.
-                    delay(500)
-                    if (!dirty) break
-                    Log.d(TAG, "trailing widget update dirty=$dirty force=$forceRequested")
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "requestUpdate failed", e)
-            } finally {
-                updateInFlight = false
-                if (dirty) {
-                    updateInFlight = true
-                    scope.launch {
-                        delay(300)
-                        updateInFlight = false
-                        requestUpdate(app, force = forceRequested)
+                    // Absorb bursts into one trailing pass
+                    delay(MIN_UPDATE_INTERVAL_MS)
+                    
+                    shouldContinue = updateState.value.let { state ->
+                        when (state) {
+                            is UpdateState.Running -> {
+                                if (state.dirty) {
+                                    Log.d(TAG, "trailing widget update dirty=true force=${state.force}")
+                                    true
+                                } else {
+                                    updateState.value = UpdateState.Idle
+                                    false
+                                }
+                            }
+                            else -> {
+                                updateState.value = UpdateState.Idle
+                                false
+                            }
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "updateLoop failed", e)
+                updateState.value = UpdateState.Idle
             }
         }
     }
@@ -121,7 +171,9 @@ object WaymarkWidgetUpdater {
             glanceIds.forEach { glanceId ->
                 runCatching {
                     updateAppWidgetState(context, glanceId) { prefs ->
-                        val next = ((prefs[tickKey] ?: 0) + 1) % 1_000_000
+                        val current = prefs[tickKey] ?: 0
+                        // Use Long to avoid overflow at 1M updates
+                        val next = ((current.toLong() + 1) % Long.MAX_VALUE).toInt()
                         prefs[tickKey] = next
                     }
                     WatchlistWidget().update(context, glanceId)
