@@ -622,13 +622,14 @@ These are **Repository secrets** in GitHub Actions (Settings → Secrets and var
 
 ## 19. Current project state (updated 2026-11-21)
 
-- **Version:** v1.3.16 (versionCode 20), released and published on GitHub.
-- **Latest commit:** pending release commit, tag `v1.3.16`.
+- **Version:** v1.3.17 (versionCode 21), released and published on GitHub.
+- **Latest commit:** pending release commit, tag `v1.3.17`.
 - **Website:** React+Vite, deployed to GitHub Pages. Mobile-responsive, flexbox grids.
 - **Widget (simplified):** No settings UI. Fixed defaults: flag+name+level (no date), 2×2/2×1,
   transparency 100%, corner radius 12dp. Vector icons (refresh). Per-position corner rounding.
   Debounce on refresh (2s). Tap country → country detail.
 - **Key recent changes:**
+  - All onboarding steps redesigned: welcome hero/value cards, clearer setup cards for permissions/network/background updates, richer country selection with flags and selection feedback, polished step indicator.
   - Onboarding advisory levels step redesigned: richer level cards with official labels, action-oriented descriptions, higher-risk areas example, and subtle animated reveal.
   - Widget refresh hardening: widget-triggered sync path, timeout/failure guards, sync-state recovery, and widget update coalescing.
   - Removed widget settings (config fixed to defaults).

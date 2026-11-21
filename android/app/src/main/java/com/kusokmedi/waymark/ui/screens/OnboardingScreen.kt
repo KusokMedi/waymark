@@ -65,11 +65,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import kotlinx.coroutines.delay
 import com.kusokmedi.waymark.domain.AdvisoryLevel
 import com.kusokmedi.waymark.domain.AdvisoryLevels
-import com.kusokmedi.waymark.SyncScheduler
 import com.kusokmedi.waymark.domain.CountryCard
+import com.kusokmedi.waymark.domain.flagEmoji
 import com.kusokmedi.waymark.ui.components.LevelChip
 import com.kusokmedi.waymark.ui.components.levelColor
 import com.kusokmedi.waymark.ui.components.levelContainerColor
@@ -179,52 +178,99 @@ fun OnboardingScreen(
 
 @Composable
 private fun StepIndicator(step: Int) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        repeat(4) { index ->
-            Box(
-                modifier = Modifier
-                    .height(4.dp)
-                    .weight(1f),
-            ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = if (index <= step) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.surfaceVariant,
-                    content = {},
+    val labels = listOf("Welcome", "Levels", "Setup", "Countries")
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            repeat(4) { index ->
+                val active = index <= step
+                val current = index == step
+                Box(
+                    modifier = Modifier
+                        .height(if (current) 5.dp else 4.dp)
+                        .weight(1f)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(
+                            if (active) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.surfaceVariant,
+                        ),
                 )
             }
         }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = "Step ${step + 1} of 4 · ${labels[step]}",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 
 @Composable
 private fun WelcomeStep() {
-    Column {
-        Text("Waymark", style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.Bold)
-        Text(
-            "Know before you go.",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Spacer(Modifier.height(16.dp))
-        Text(
-            "Waymark keeps official U.S. Department of State travel advisories for the countries you choose.",
-            style = MaterialTheme.typography.bodyLarge,
-        )
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ) {
+                    Text(
+                        text = "W",
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    "Waymark",
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    "Know before you go.",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "Official U.S. travel advisories for the countries you care about — private, on your device.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+
         Spacer(Modifier.height(18.dp))
-        InfoLine("Local-first", "Your watchlist, history and settings stay on this device.")
-        InfoLine("No account", "There is no Waymark account, server or cloud sync.")
-        InfoLine(
-            "Official source",
-            "Advisory data is retrieved directly from the U.S. Department of State's public ArcGIS service.",
+        WelcomeValueCard(
+            accent = MaterialTheme.colorScheme.primary,
+            title = "Local-first",
+            body = "Your watchlist, history and settings stay on this device.",
         )
-        InfoLine(
-            "Independent",
-            "Waymark is not affiliated with or endorsed by the U.S. Department of State.",
+        WelcomeValueCard(
+            accent = MaterialTheme.colorScheme.secondary,
+            title = "No account, no tracking",
+            body = "No Waymark server, cloud sync, analytics or advertising.",
         )
+        WelcomeValueCard(
+            accent = MaterialTheme.colorScheme.tertiary,
+            title = "Official source",
+            body = "Data comes directly from the U.S. Department of State's public service.",
+        )
+        WelcomeValueCard(
+            accent = MaterialTheme.colorScheme.primary,
+            title = "Independent",
+            body = "Waymark is not affiliated with or endorsed by the U.S. Department of State.",
+        )
+        Spacer(Modifier.height(8.dp))
     }
 }
 
@@ -422,64 +468,128 @@ private fun CountryStep(
     onRequestSync: (Boolean) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text("Choose countries", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text("Choose your watchlist", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(8.dp))
         Text(
-            "Select the destinations you want to follow. You can change this at any time.",
+            "Pick the destinations you want to follow. You can always change this later.",
             style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(14.dp))
         OutlinedTextField(
             value = query,
             onValueChange = onQueryChange,
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
+            shape = RoundedCornerShape(14.dp),
             label = { Text("Search countries") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
         )
-        Text(
-            if (countries.isEmpty()) "Loading country catalogue… (this may take a moment)" else "${selected.size} selected",
-            modifier = Modifier.padding(vertical = 6.dp),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-        )
+        Spacer(Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                if (countries.isEmpty()) "Preparing catalogue"
+                else "${selected.size} selected · ${countries.size} shown",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Medium,
+            )
+            if (selected.isNotEmpty()) {
+                Text(
+                    "Ready to follow",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+
         if (countries.isEmpty()) {
-            Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(24.dp),
+                ) {
                     androidx.compose.material3.CircularProgressIndicator()
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(14.dp))
                     Text(
-                        "Downloading catalogue…",
+                        "Downloading country catalogue",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "This can take a moment on first launch. Search will be ready as soon as data arrives.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
         } else {
-            LazyColumn(modifier = Modifier.weight(1f)) {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 items(countries, key = { it.id }) { card ->
+                    val isSelected = card.id in selected
                     Surface(
                         onClick = {
-                            if (card.id in selected) selected.remove(card.id) else selected.add(card.id)
+                            if (isSelected) selected.remove(card.id) else selected.add(card.id)
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.background,
+                        shape = RoundedCornerShape(14.dp),
+                        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+                        else MaterialTheme.colorScheme.surface,
+                        tonalElevation = if (isSelected) 0.dp else 1.dp,
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Checkbox(
-                                checked = card.id in selected,
+                                checked = isSelected,
                                 onCheckedChange = {
-                                    if (card.id in selected) selected.remove(card.id) else selected.add(card.id)
+                                    if (isSelected) selected.remove(card.id) else selected.add(card.id)
                                 },
                             )
-                            Text(card.name, modifier = Modifier.weight(1f))
                             Text(
-                                card.isoAlpha2 ?: "",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                text = flagEmoji(card.isoAlpha2 ?: card.isoAlpha3.orEmpty()),
+                                modifier = Modifier.padding(end = 10.dp),
+                                style = MaterialTheme.typography.titleMedium,
                             )
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    card.name,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                                )
+                                if (!card.isoAlpha2.isNullOrBlank()) {
+                                    Text(
+                                        card.isoAlpha2,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                            if (isSelected) {
+                                Icon(
+                                    Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -510,98 +620,154 @@ private fun PermissionsStep(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    Column {
-        Text("Permissions & network", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Text("Set up your way", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Text(
-            "Choose how Waymark keeps you informed and downloads updates. You can change these later in Settings.",
+            "A few optional choices for updates and alerts. Everything can be changed later in Settings.",
             style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(18.dp))
 
-        Text("Notifications", fontWeight = FontWeight.SemiBold)
-        Spacer(Modifier.height(6.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("Advisory notifications")
+        PermissionCard {
+            PermissionToggleRow(
+                title = "Advisory notifications",
+                body = "Get notified when a followed country has a meaningful advisory change.",
+                checked = notificationsEnabled,
+                onCheckedChange = onNotificationsChange,
+            )
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
+            PermissionToggleRow(
+                title = "Use mobile data",
+                body = "When off, Waymark syncs on Wi-Fi only. Useful if you want to limit mobile data.",
+                checked = allowMobileData,
+                onCheckedChange = onAllowMobileDataChange,
+            )
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        PermissionCard {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text("Background updates", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.height(4.dp))
                 Text(
-                    "Notify about meaningful changes for the countries you follow. Uses Android notifications.",
+                    "Allowing battery optimization exemption can reduce delays in background sync. This is optional.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                Spacer(Modifier.height(12.dp))
+                if (ignoringBattery) {
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f),
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                "Background updates are allowed",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+                    }
+                } else {
+                    OutlinedButton(onClick = onRequestBatteryExemption) {
+                        Text("Allow background updates")
+                    }
+                }
             }
-            Switch(checked = notificationsEnabled, onCheckedChange = onNotificationsChange)
         }
 
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider()
-        Spacer(Modifier.height(16.dp))
-
-        Text("Network", fontWeight = FontWeight.SemiBold)
-        Spacer(Modifier.height(6.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("Use mobile data for updates")
-                Text(
-                    "When off, Waymark syncs only on Wi-Fi. Default is Wi-Fi only.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            Switch(checked = allowMobileData, onCheckedChange = onAllowMobileDataChange)
-        }
-
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider()
-        Spacer(Modifier.height(16.dp))
-
-        Text("Background updates", fontWeight = FontWeight.SemiBold)
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(14.dp))
         Text(
-            "To reduce delays in background synchronization, you can allow Waymark to ignore battery optimizations. This is optional.",
+            "Waymark asks for Android notification permission only if you enable notifications.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(Modifier.height(8.dp))
-        if (ignoringBattery) {
-            Text(
-                "Battery optimization exemption is already allowed.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-            )
-        } else {
-            OutlinedButton(onClick = onRequestBatteryExemption) {
-                Text("Allow background updates")
-            }
-        }
-
-        Spacer(Modifier.height(20.dp))
-        Text(
-            "You can change these later in Settings. Waymark will not ask for notification permission unless you enable notifications.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
     }
 }
 
 @Composable
-private fun InfoLine(title: String, body: String) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-        Icon(
-            Icons.Default.Check,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(top = 2.dp),
-        )
-        Column(modifier = Modifier.padding(start = 10.dp)) {
-            Text(title, fontWeight = FontWeight.SemiBold)
-            Text(body, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+private fun PermissionCard(content: @Composable () -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp,
+    ) {
+        Column { content() }
+    }
+}
+
+@Composable
+private fun PermissionToggleRow(
+    title: String,
+    body: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f).padding(end = 12.dp)) {
+            Text(title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(2.dp))
+            Text(
+                body,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Switch(checked = checked, onCheckedChange = onCheckedChange)
+    }
+}
+
+@Composable
+private fun WelcomeValueCard(
+    accent: Color,
+    title: String,
+    body: String,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth().padding(bottom = 10.dp),
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp,
+    ) {
+        Row(
+            modifier = Modifier.padding(14.dp),
+            verticalAlignment = Alignment.Top,
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .size(10.dp)
+                    .clip(RoundedCornerShape(3.dp))
+                    .background(accent),
+            )
+            Column(modifier = Modifier.padding(start = 12.dp)) {
+                Text(title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    body,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

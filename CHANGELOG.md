@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.17] - 2026-11-21
+
+### Changed
+
+- Redesigned all onboarding steps: welcome hero with value cards, clearer permissions/setup cards, richer country selection with flags and selection feedback, and a polished step indicator.
+
 ## [1.3.16] - 2026-11-21
 
 ### Changed
