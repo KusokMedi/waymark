@@ -14,6 +14,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +49,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -65,6 +68,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.kusokmedi.waymark.R
 import com.kusokmedi.waymark.domain.AdvisoryLevel
 import com.kusokmedi.waymark.domain.AdvisoryLevels
 import com.kusokmedi.waymark.domain.CountryCard
@@ -217,18 +221,12 @@ private fun WelcomeStep() {
             color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
-                Surface(
-                    shape = RoundedCornerShape(14.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                ) {
-                    Text(
-                        text = "W",
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.ic_notification),
+                    contentDescription = "Waymark app icon",
+                    modifier = Modifier.size(56.dp),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                )
                 Spacer(Modifier.height(16.dp))
                 Text(
                     "Waymark",

@@ -48,6 +48,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -443,9 +444,10 @@ fun AboutSettingsScreen(onBack: () -> Unit) {
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Image(
-                        painter = painterResource(id = R.mipmap.ic_launcher),
+                        painter = painterResource(id = R.drawable.ic_notification),
                         contentDescription = "Waymark app icon",
-                        modifier = Modifier.size(64.dp).clip(RoundedCornerShape(16.dp)),
+                        modifier = Modifier.size(64.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
                     )
                     Spacer(Modifier.height(14.dp))
                     Text("Waymark", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
