@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-11-21
+
+### Fixed
+
+- Replaced the letter "W" placeholder with the actual app icon in onboarding and fixed an About screen crash.
+
 ## [1.4.0] - 2026-11-21
 
 ### Fixed
