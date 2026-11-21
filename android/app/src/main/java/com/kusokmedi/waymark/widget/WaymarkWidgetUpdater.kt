@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
 import com.kusokmedi.waymark.data.local.SyncStateEntity
 import com.kusokmedi.waymark.data.local.WaymarkDatabase
 import com.kusokmedi.waymark.waymarkContainer
@@ -122,11 +123,23 @@ object WaymarkWidgetUpdater {
                 )
                 forceUpdateAll(app)
 
-                try {
+                val outcome = try {
                     // Same path as in-app Watchlist refresh: SyncEngine.synchronize() with defaults.
-                    app.waymarkContainer().syncEngine.synchronize()
+                    withTimeoutOrNull(TimeUnit.SECONDS.toMillis(35)) {
+                        app.waymarkContainer().syncEngine.synchronize()
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Immediate widget sync failed", e)
+                    null
+                }
+                if (outcome == null) {
+                    Log.w(TAG, "Immediate widget sync timed out or returned null")
+                    val latest = db.syncStateDao().get() ?: SyncStateEntity()
+                    if (latest.status == "running") {
+                        db.syncStateDao().upsert(
+                            latest.copy(status = "failed", message = "Sync timed out. Tap to retry.")
+                        )
+                    }
                 }
             } finally {
                 immediateSyncInFlight.set(false)
