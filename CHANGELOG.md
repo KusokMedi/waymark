@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.4] - 2026-11-21
+
+### Fixed
+
+- Made widget refresh button non-blocking: the Glance action callback now returns immediately, while sync animation updates run in a guarded background scope, preventing lag during rapid taps/spam.
+
 ## [1.4.3] - 2026-11-21
 
 ### Changed
