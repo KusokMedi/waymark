@@ -8,6 +8,7 @@ import {
   Github,
   Globe2,
   History,
+  Image,
   LayoutGrid,
   Lock,
   MapPin,
@@ -18,26 +19,8 @@ import {
   WifiOff,
 } from "lucide-react";
 
-const DEMO_ITEMS = [
-  { id: "FIN", name: "Finland", iso2: "FI", level: 1, higher: false, date: "2026-03-13", regions: [] as string[] },
-  { id: "MEX", name: "Mexico", iso2: "MX", level: 2, higher: true, date: "2026-02-01", regions: ["Jalisco", "Yucatan"] },
-  { id: "COL", name: "Colombia", iso2: "CO", level: 3, higher: false, date: "2026-01-15", regions: ["Border regions"] },
-  { id: "DEU", name: "Germany", iso2: "DE", level: 1, higher: false, date: "2026-03-20", regions: [] as string[] },
-  { id: "BRA", name: "Brazil", iso2: "BR", level: 2, higher: false, date: "2026-02-20", regions: ["Some states"] },
-];
-
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [demoTab, setDemoTab] = useState<"watchlist" | "explore">("watchlist");
-  const [demoQuery, setDemoQuery] = useState("");
-  const [demoSelected, setDemoSelected] = useState("MEX");
-  const demoBase = demoTab === "watchlist" ? DEMO_ITEMS.slice(0, 3) : DEMO_ITEMS;
-  const filteredDemo = demoBase.filter(
-    (item) =>
-      item.name.toLowerCase().includes(demoQuery.toLowerCase()) ||
-      item.iso2.toLowerCase().includes(demoQuery.toLowerCase()),
-  );
-  const demoItem = DEMO_ITEMS.find((item) => item.id === demoSelected) ?? null;
 
   return (
     <div className="site">
@@ -66,7 +49,7 @@ export default function App() {
         >
           <a href="#features">Features</a>
           <a href="#widgets">Widgets</a>
-          <a href="#demo">Demo</a>
+          <a href="#screenshots">Screenshots</a>
           <a href="#data">Data</a>
           <a href="#docs">Docs</a>
           <a className="nav-download" href="https://github.com/KusokMedi/waymark/releases/latest" target="_blank" rel="noopener noreferrer">Download</a>
@@ -157,73 +140,34 @@ export default function App() {
           <div className="widget-preview" aria-label="Illustration of sample Waymark widgets">
             <div className="widget-surface widget-large">
               <div className="widget-head"><strong>Waymark</strong><RefreshCw size={13} /></div>
-              <div className="widget-row"><span className="demo-flag small">FI</span><div><strong>Finland</strong></div><span className="level level-1">L1</span></div>
-              <div className="widget-row"><span className="demo-flag small">MX</span><div><strong>Mexico</strong></div><span className="level level-2">L2</span></div>
-              <div className="widget-row"><span className="demo-flag small">CO</span><div><strong>Colombia</strong></div><span className="level level-3">L3</span></div>
+              <div className="widget-row"><span className="mini-flag">FI</span><div><strong>Finland</strong></div><span className="level level-1">L1</span></div>
+              <div className="widget-row"><span className="mini-flag">MX</span><div><strong>Mexico</strong></div><span className="level level-2">L2</span></div>
+              <div className="widget-row"><span className="mini-flag">CO</span><div><strong>Colombia</strong></div><span className="level level-3">L3</span></div>
             </div>
             <p className="widget-caption">Illustrative widget layouts with sample data. Actual widget rendering follows Android launcher constraints.</p>
           </div>
         </section>
 
-        <section id="demo" className="section">
+        <section id="screenshots" className="section">
           <div className="section-heading">
             <div>
-              <div className="eyebrow"><Sparkles size={14} /> Sample data</div>
-              <h2>Try the interface</h2>
-              <p>Interactive demonstration using clearly labeled sample data. Not real current travel advice.</p>
+              <div className="eyebrow"><Image size={14} /> App preview</div>
+              <h2>Screenshots</h2>
+              <p>See how Waymark looks on Android. Actual screenshots will be added soon.</p>
             </div>
           </div>
-          <div className="demo-shell">
-            <div className="demo-app">
-              <div className="demo-tabs">
-                <button className={demoTab === "watchlist" ? "active" : ""} type="button" onClick={() => setDemoTab("watchlist")}>Watchlist</button>
-                <button className={demoTab === "explore" ? "active" : ""} type="button" onClick={() => setDemoTab("explore")}>Explore</button>
-                <input type="search" placeholder="Search sample destinations" value={demoQuery} onChange={(e) => setDemoQuery(e.target.value)} aria-label="Search sample destinations" />
-              </div>
-              <div className="demo-list">
-                {filteredDemo.length === 0 ? (
-                  <div className="demo-empty">No sample destinations match.</div>
-                ) : (
-                  filteredDemo.map((item) => (
-                    <button key={item.id} type="button" className={`demo-country ${demoSelected === item.id ? "selected" : ""}`} onClick={() => setDemoSelected(item.id)}>
-                      <span className="demo-flag small">{item.iso2}</span>
-                      <div className="demo-country-text">
-                        <strong>{item.name}</strong>
-                        <small>{item.regions.length ? item.regions.join(", ") : "Country advisory"}</small>
-                      </div>
-                      <span className="demo-country-meta">
-                        <span className={`level level-${item.level}`}>L{item.level}</span>
-                      </span>
-                    </button>
-                  ))
-                )}
-              </div>
+          <div className="screenshot-grid">
+            <div className="screenshot-placeholder">
+              <span>Watchlist</span>
+              <small>Screenshot placeholder</small>
             </div>
-            <div className="demo-detail">
-              {demoItem ? (
-                <>
-                  <div className="demo-detail-head">
-                    <span className="demo-flag large">{demoItem.iso2}</span>
-                    <div>
-                      <h3>{demoItem.name}</h3>
-                      <small>{demoItem.iso2} / {demoItem.id}</small>
-                    </div>
-                  </div>
-                  <div className={`advisory-banner level-${demoItem.level}`}>
-                    <strong>Level {demoItem.level}</strong>
-                    <span>{demoItem.higher ? "Contains areas with higher security risk." : "No higher-risk areas noted."}</span>
-                    <em>Sample advisory date: {demoItem.date}</em>
-                  </div>
-                  <p className="demo-note">Sample record. Real advisories come from the official U.S. Department of State source.</p>
-                  <dl className="demo-facts">
-                    <div><dt>Regions</dt><dd>{demoItem.regions.length ? demoItem.regions.join(", ") : "None"}</dd></div>
-                    <div><dt>Sample advisory date</dt><dd>{demoItem.date}</dd></div>
-                  </dl>
-                  <p className="demo-disclaimer">Sample data only. Not real current travel advice.</p>
-                </>
-              ) : (
-                <div className="demo-empty">Select a sample destination.</div>
-              )}
+            <div className="screenshot-placeholder">
+              <span>Country details</span>
+              <small>Screenshot placeholder</small>
+            </div>
+            <div className="screenshot-placeholder">
+              <span>Home-screen widget</span>
+              <small>Screenshot placeholder</small>
             </div>
           </div>
         </section>
