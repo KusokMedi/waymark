@@ -28,6 +28,8 @@ import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
@@ -59,12 +61,6 @@ import com.kusokmedi.waymark.domain.flagEmoji
 import com.kusokmedi.waymark.R
 import com.kusokmedi.waymark.ui.MainActivity
 import com.kusokmedi.waymark.waymarkContainer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -262,8 +258,17 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
                 ),
                 maxLines = 1,
             )
+            val isSyncing = snapshot.syncState?.let { effectiveStatus(it) == "running" } ?: false
+            val statusBaseText = statusText(snapshot.syncState)
+            val displayText = if (isSyncing) {
+                // Add animated dots when syncing
+                val dotCount = ((System.currentTimeMillis() / 500) % 4).toInt()
+                statusBaseText + ".".repeat(dotCount)
+            } else {
+                statusBaseText
+            }
             Text(
-                text = statusText(snapshot.syncState),
+                text = displayText,
                 style = TextStyle(color = colors.muted, fontSize = statusSize),
                 maxLines = 1,
             )
@@ -447,48 +452,47 @@ class RefreshAction : ActionCallback {
         val appContext = context.applicationContext
         val db = WaymarkDatabase.get(appContext)
         val now = System.currentTimeMillis()
-        val currentState = db.syncStateDao().get()
-        val lastAttempt = currentState?.lastAttemptAt ?: 0L
+        val currentState = db.syncStateDao().get() ?: SyncStateEntity()
+        val lastAttempt = currentState.lastAttemptAt ?: 0L
         val age = now - lastAttempt
-        val running = currentState?.status == "running"
+        val running = currentState.status == "running"
         val staleRunning = running && age > TimeUnit.SECONDS.toMillis(30)
 
-        Log.i(TAG_WIDGET, "refresh tap age=${age}ms status=${currentState?.status} staleRunning=$staleRunning")
+        Log.i(TAG_WIDGET, "refresh tap age=${age}ms status=${currentState.status} staleRunning=$staleRunning")
 
-        // Recover from stuck "Syncing..." state
-        if (staleRunning) {
-            Log.i(TAG_WIDGET, "recovering stale running state")
-            db.syncStateDao().upsert(
-                (currentState ?: com.kusokmedi.waymark.data.local.SyncStateEntity()).copy(
-                    status = "failed",
-                    message = "Previous sync was interrupted",
-                )
-            )
-        }
-
-        // Debounce: prevent rapid taps from triggering multiple syncs
-        if (!staleRunning && age < 2000) {
-            Log.i(TAG_WIDGET, "refresh tap debounced, age=${age}ms")
+        // Debounce rapid taps, but still give immediate visual feedback.
+        if (running && !staleRunning && age < 1_500) {
+            Log.d(TAG_WIDGET, "refresh tap debounced")
             WaymarkWidgetUpdater.forceUpdateAll(appContext)
             return
         }
 
-        // Immediate visual feedback: show loading right away
+        // Immediate visual feedback: mark running while preserving known state.
         db.syncStateDao().upsert(
-            (currentState ?: com.kusokmedi.waymark.data.local.SyncStateEntity()).copy(
+            currentState.copy(
                 lastAttemptAt = now,
                 status = "running",
-                message = null,
+                message = if (staleRunning) "Retrying sync..." else null,
             )
         )
-        
-        // Force immediate UI update to show "Syncing..."
         WaymarkWidgetUpdater.forceUpdateAll(appContext)
 
-        // Start sync via WorkManager with force flag to bypass interval check
+        // Enqueue sync (KEEP policy avoids cancelling an active widget sync).
         SyncScheduler.syncNowFromWidget(appContext, forceSync = true)
-        
-        Log.i(TAG_WIDGET, "widget refresh initiated via WorkManager")
+
+        // Drive short dot/progress animation updates while sync is running.
+        // Do not mark failure here; SyncWorker/SyncEngine own real sync outcome.
+        for (i in 0 until 12) {
+            delay(700)
+            val state = db.syncStateDao().get() ?: break
+            if (state.status != "running") {
+                WaymarkWidgetUpdater.forceUpdateAll(appContext)
+                return
+            }
+            WaymarkWidgetUpdater.updateAll(appContext)
+        }
+
+        Log.d(TAG_WIDGET, "refresh animation window ended; sync still running")
     }
 }
 
@@ -503,7 +507,7 @@ private suspend fun markSyncFailedIfRunning(db: WaymarkDatabase, message: String
 private fun statusText(state: SyncStateEntity?): String {
     if (state == null) return "Not synced yet"
     return when (effectiveStatus(state)) {
-        "running" -> "Syncing..."
+        "running" -> "Syncing" // Dots will be added via animation in UI
         "offline" -> if (state.lastSuccessAt != null) "Offline · Updated ${timeText(state.lastSuccessAt)}" else "Offline · Not synced yet"
         "failed" -> if (state.lastSuccessAt != null) "Update failed · ${timeText(state.lastSuccessAt)}" else "Update failed"
         "success", "idle" -> if (state.lastSuccessAt != null) "Updated ${timeText(state.lastSuccessAt)}" else "Not synced yet"
@@ -556,5 +560,5 @@ private fun dateText(value: String?): String {
 }
 
 private suspend fun recoverStaleRunningSyncState(db: WaymarkDatabase): SyncStateEntity? {
-    return db.syncStateDao().recoverStaleRunning()
+    return db.syncStateDao().recoverStaleRunning(staleThresholdMs = 30_000L)
 }
