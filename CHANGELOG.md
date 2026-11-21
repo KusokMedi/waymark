@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.8] - 2026-11-21
+
+### Fixed
+
+- Hardened widget refresh tap responsiveness with a safe instant action callback, stale in-flight takeover guard, overall timeout, and guaranteed widget update on completion.
+
 ## [1.4.7] - 2026-11-21
 
 ### Fixed
