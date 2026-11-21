@@ -5,6 +5,12 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.4.5] - 2026-11-21
+
+### Fixed
+
+- Removed widget refresh hammering that caused lag on first tap: the Glance action callback now returns immediately, debounce/running feedback/sync run in background, and widget updates happen at key sync points instead of every 700ms.
+
 ## [1.4.4] - 2026-11-21
 
 ### Fixed
