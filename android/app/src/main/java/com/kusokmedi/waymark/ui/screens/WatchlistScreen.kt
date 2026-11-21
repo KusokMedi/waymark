@@ -127,7 +127,6 @@ fun WatchlistScreen(
                                 card = card,
                                 onClick = { onOpenCountry(card.id) },
                                 onFavorite = { onToggleFavorite(card) },
-                                showDate = true,
                                 modifier = Modifier.animateItem(),
                             )
                         }

@@ -155,7 +155,6 @@ fun ExploreScreen(
                                 onFavorite = { onToggleFavorite(card) },
                                 onWatchlist = { onToggleWatchlist(card) },
                                 showWatchlistAction = true,
-                                showDate = true,
                                 modifier = Modifier.animateItem(),
                             )
                         }

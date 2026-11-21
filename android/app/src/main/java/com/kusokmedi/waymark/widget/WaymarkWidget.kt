@@ -452,14 +452,19 @@ class RefreshAction : ActionCallback {
         val now = System.currentTimeMillis()
         val currentState = db.syncStateDao().get()
         val lastAttempt = currentState?.lastAttemptAt ?: 0L
+        val age = now - lastAttempt
+        val running = currentState?.status == "running"
+        val staleRunning = running && age > TimeUnit.SECONDS.toMillis(60)
 
-        Log.i(TAG_WIDGET, "refresh tap, lastAttemptAge=${now - lastAttempt}ms, status=${currentState?.status}")
+        Log.i(TAG_WIDGET, "refresh tap age=${age}ms status=${currentState?.status} staleRunning=$staleRunning")
 
         // Hard refresh: always nudge Glance, even on rapid taps.
         WaymarkWidgetUpdater.forceUpdateAll(appContext)
 
-        // Debounce accidental duplicate sync requests, but keep the hard UI refresh above.
-        if (now - lastAttempt < 800) {
+        if (staleRunning) {
+            // Unblock stuck "Syncing..." state (e.g. process death / interrupted worker).
+            widgetDirectSyncInProgress.set(false)
+        } else if (age < 800) {
             Log.i(TAG_WIDGET, "refresh tap debounced (sync), UI force-refreshed")
             runCatching { WatchlistWidget().update(context, glanceId) }
                 .onFailure { Log.w(TAG_WIDGET, "debounced direct update failed", it) }
@@ -474,14 +479,13 @@ class RefreshAction : ActionCallback {
                 message = null,
             )
         )
-        // Direct Glance update in the action's context for fastest response.
         runCatching { WatchlistWidget().update(context, glanceId) }
             .onFailure { Log.w(TAG_WIDGET, "direct glance update failed", it) }
         WaymarkWidgetUpdater.forceUpdateAll(appContext)
 
-        // Fast path: direct sync in app scope for quicker response; SyncEngine mutex serializes.
+        // If another direct sync is in-flight, still enqueue a reliable WM sync.
         if (!widgetDirectSyncInProgress.compareAndSet(false, true)) {
-            Log.i(TAG_WIDGET, "direct sync already in progress, relying on running job")
+            Log.i(TAG_WIDGET, "direct sync already in progress, enqueueing widget sync")
             SyncScheduler.syncNowFromWidget(appContext)
             return
         }
@@ -491,7 +495,6 @@ class RefreshAction : ActionCallback {
 
         widgetActionScope.launch {
             try {
-                // Give Glance a moment to render the loading state before sync completes instantly.
                 kotlinx.coroutines.delay(700)
                 val outcome = withTimeoutOrNull(TimeUnit.SECONDS.toMillis(150)) {
                     container.syncEngine.synchronize(forceMobileData = true)
@@ -500,7 +503,8 @@ class RefreshAction : ActionCallback {
                 when (outcome) {
                     null -> markSyncFailedIfRunning(db, "Synchronization timed out")
                     is com.kusokmedi.waymark.sync.SyncOutcome.Success -> WaymarkWidgetUpdater.markWidgetRefreshed(appContext)
-                    else -> Unit
+                    is com.kusokmedi.waymark.sync.SyncOutcome.Offline -> markSyncFailedIfRunning(db, "No network connection")
+                    is com.kusokmedi.waymark.sync.SyncOutcome.Failure -> markSyncFailedIfRunning(db, outcome.message)
                 }
             } catch (e: Exception) {
                 Log.w(TAG_WIDGET, "direct sync failed", e)

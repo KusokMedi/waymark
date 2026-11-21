@@ -5,6 +5,17 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.3.19] - 2026-11-21
+
+### Changed
+
+- Removed advisory date from Watchlist and Explore list cards; advisory date remains visible on the full country detail screen.
+- Redesigned the About settings screen with clearer app, privacy, source, and license information.
+
+### Fixed
+
+- Widget refresh no longer stays stuck in an infinite loading state as easily: stale running syncs can be overridden after 60 seconds, and refresh outcomes are handled more reliably.
+
 ## [1.3.18] - 2026-11-21
 
 ### Changed

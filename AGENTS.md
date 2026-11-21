@@ -622,13 +622,14 @@ These are **Repository secrets** in GitHub Actions (Settings → Secrets and var
 
 ## 19. Current project state (updated 2026-11-21)
 
-- **Version:** v1.3.18 (versionCode 22), released and published on GitHub.
-- **Latest commit:** pending release commit, tag `v1.3.18`.
+- **Version:** v1.3.19 (versionCode 23), released and published on GitHub.
+- **Latest commit:** pending release commit, tag `v1.3.19`.
 - **Website:** React+Vite, deployed to GitHub Pages. Mobile-responsive, flexbox grids.
 - **Widget (simplified):** No settings UI. Fixed defaults: flag+name+level (no date), 2×2/2×1,
   transparency 100%, corner radius 12dp. Vector icons (refresh). Per-position corner rounding.
   Debounce on refresh (2s). Tap country → country detail.
 - **Key recent changes:**
+  - Watchlist/Explore cards no longer show advisory date (date remains in full country detail), About screen redesigned, widget refresh hardened against stuck "Syncing..." state with stale-running override and clearer outcome handling.
   - App UX/bugfix pass: country detail not-found state and richer advisory card, watchlist/explore cards show dates, Explore favorite toggle, widget empty-state tap/open, clearer widget offline/error status, higher-risk shown in widget level text, notification permission race fix.
   - All onboarding steps redesigned: welcome hero/value cards, clearer setup cards for permissions/network/background updates, richer country selection with flags and selection feedback, polished step indicator.
   - Onboarding advisory levels step redesigned: richer level cards with official labels, action-oriented descriptions, higher-risk areas example, and subtle animated reveal.
