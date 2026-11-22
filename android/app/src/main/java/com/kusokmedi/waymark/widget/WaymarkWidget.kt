@@ -66,7 +66,6 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 internal val COUNTRY_ID_KEY = ActionParameters.Key<String>("countryId")
-internal val WIDGET_REFRESH_ACTION_KEY = ActionParameters.Key<Boolean>("widgetRefresh")
 
 class WatchlistWidget : GlanceAppWidget() {
 
@@ -273,7 +272,7 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
             Spacer(GlanceModifier.width(if (compact) 4.dp else 6.dp))
         } else {
             IconButton(iconRes = R.drawable.ic_widget_refresh, contentDescription = "Refresh", colors = colors, compact = compact) { 
-                actionStartActivity<MainActivity>(actionParametersOf(WIDGET_REFRESH_ACTION_KEY to true))
+                actionStartActivity<MainActivity>()
             }
             Spacer(GlanceModifier.width(if (compact) 2.dp else 4.dp))
         }

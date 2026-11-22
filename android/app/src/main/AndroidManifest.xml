@@ -39,6 +39,14 @@
         </receiver>
 
         <receiver
+            android:name=".widget.WidgetSyncReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.kusokmedi.waymark.WIDGET_SYNC_REQUEST" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
             android:name=".widget.SyncRestoreReceiver"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">

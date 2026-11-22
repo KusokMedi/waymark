@@ -53,7 +53,33 @@ class WatchlistWidgetReceiver : GlanceAppWidgetReceiver() {
 }
 
 /**
+ * Handles widget refresh button click.
+ * Triggered by widget refresh button without opening the app.
+ */
+class WidgetSyncReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action != "com.kusokmedi.waymark.WIDGET_SYNC_REQUEST") return
+        
+        Log.d("WidgetSyncReceiver", "Widget sync request received")
+        
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                // Trigger sync with forceSync=true to reload all countries
+                SyncScheduler.syncNowFromWidget(context, forceSync = true)
+                Log.d("WidgetSyncReceiver", "Widget sync triggered successfully")
+            } catch (e: Exception) {
+                Log.e("WidgetSyncReceiver", "Failed to trigger widget sync", e)
+            } finally {
+                pendingResult.finish()
+            }
+        }
+    }
+}
+
+/**
  * Ensures WorkManager jobs resume after device boot or app update.
+ * Also handles normal app lifecycle pauses - triggers sync on resume.
  * Triggered by ACTION_BOOT_COMPLETED and ACTION_MY_PACKAGE_REPLACED.
  */
 class SyncRestoreReceiver : BroadcastReceiver() {
@@ -81,18 +107,18 @@ class SyncRestoreReceiver : BroadcastReceiver() {
                             Log.e("SyncRestoreReceiver", "Failed to restore periodic sync", e)
                         }
                         
-                        // Trigger immediate sync
+                        // Trigger immediate sync - use forceSync to reload all data quickly
                         try {
-                            SyncScheduler.syncNow(context, false)
-                            Log.d("SyncRestoreReceiver", "Immediate sync triggered")
+                            SyncScheduler.syncNowFromWidget(context, forceSync = true)
+                            Log.d("SyncRestoreReceiver", "Immediate sync triggered with forceSync=true")
                         } catch (e: Exception) {
                             Log.e("SyncRestoreReceiver", "Failed to trigger immediate sync", e)
                         }
                         
-                        // Update widgets
+                        // Update widgets immediately (don't wait for sync to complete)
                         try {
                             WaymarkWidgetUpdater.updateAll(context)
-                            Log.d("SyncRestoreReceiver", "Widgets updated")
+                            Log.d("SyncRestoreReceiver", "Widgets updated immediately")
                         } catch (e: Exception) {
                             Log.e("SyncRestoreReceiver", "Failed to update widgets", e)
                         }
