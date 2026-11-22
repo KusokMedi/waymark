@@ -5,6 +5,19 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-11-22
+
+### Added
+
+- Scroll support for widget - now displays all countries via vertical scroll
+- Removed limit on number of displayed countries (previously capped at 10)
+
+### Improved
+
+- Widget can handle watchlists of any size
+- Smooth scrolling with hidden scrollbar
+- Better space utilization
+
 ## [2.4.0] - 2026-11-22
 
 ### Changed
