@@ -131,34 +131,6 @@ export default function App() {
           </div>
         </section>
 
-        <section id="widgets" className="section widgets-section">
-          <div className="widget-copy">
-            <div className="eyebrow"><LayoutGrid size={14} /> Home screen</div>
-            <h2>Advisories where you already look</h2>
-            <p>
-              Waymark widgets are real Android App Widgets, not web shortcuts. The watchlist widget shows your
-              selected countries with flags, advisory levels, and the last update time. It is resizable and
-              refreshes automatically after synchronization.
-            </p>
-            <ul className="check-list">
-              <li><Check size={16} /> Watchlist widget with country flags, advisory levels, and last update</li>
-              <li><Check size={16} /> Resizable from 2 by 2 down to 2 by 1</li>
-              <li><Check size={16} /> Tap a country to open its dashboard</li>
-              <li><Check size={16} /> Automatic refresh after synchronization</li>
-              <li><Check size={16} /> Clear empty state when no countries are selected</li>
-            </ul>
-          </div>
-          <div className="widget-preview" aria-label="Illustration of sample Waymark widgets">
-            <div className="widget-surface widget-large">
-              <div className="widget-head"><strong>Waymark</strong><RefreshCw size={13} /></div>
-              <div className="widget-row"><span className="mini-flag">FI</span><div><strong>Finland</strong></div><span className="level level-1">L1</span></div>
-              <div className="widget-row"><span className="mini-flag">MX</span><div><strong>Mexico</strong></div><span className="level level-2">L2</span></div>
-              <div className="widget-row"><span className="mini-flag">CO</span><div><strong>Colombia</strong></div><span className="level level-3">L3</span></div>
-            </div>
-            <p className="widget-caption">Illustrative widget layouts with sample data. Actual widget rendering follows Android launcher constraints.</p>
-          </div>
-        </section>
-
         <section id="screenshots" className="section">
           <div className="section-heading">
             <div>
