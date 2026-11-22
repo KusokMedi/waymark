@@ -5,6 +5,37 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-22
+
+### BREAKING CHANGES
+
+- **Widget completely rewritten from reactive/suspend chaos to proper async architecture**
+  - Removed initialLayout loading state that caused "Can't load widget" errors
+  - Now uses three distinct states: Loading → Data/Empty/Error
+  - All DB access moved to IO dispatcher (never blocks main thread)
+  - Removed runBlocking calls
+  - Removed StackView (replaced with LinearLayout)
+
+### Added
+
+- Proper error state layout when DB access fails
+- Empty watchlist state with helpful message
+- Loading state that shows immediately without blocking
+- Full error logging for all widget operations
+
+### Fixed
+
+- "Can't load widget" error now completely gone
+- Main thread never blocked during widget updates
+- Proper async/await pattern throughout
+- Error states are caught and displayed properly
+
+### Changed
+
+- Widget initialLayout now uses simple, always-safe layout
+- onUpdate() is 100% non-blocking
+- All suspend function calls run on IO dispatcher
+
 ## [2.0.1] - 2026-11-22
 
 ### Fixed
