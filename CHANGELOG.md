@@ -5,6 +5,26 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-11-22
+
+### Changed
+
+- Widget now uses RemoteViewsService for scrollable ListView
+- Removed hardcoded 5-country display limit
+- All countries in watchlist now accessible via vertical scroll
+- Smooth scrolling with proper RecyclerView-like behavior
+
+### Added
+
+- WaymarkRemoteViewsService for dynamic content delivery
+- RemoteViewsFactory for efficient country item rendering
+
+### Improved
+
+- Widget can handle watchlists of any size
+- Better performance with large watchlists
+- Cleaner separation between widget provider and data service
+
 ## [2.5.0] - 2026-11-22
 
 ### Added
