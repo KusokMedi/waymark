@@ -5,6 +5,20 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-11-22
+
+### Added
+
+- Widget background with rounded corners (16dp)
+- Rounded corners on individual country items (12dp)
+- "Updated HH:mm" timestamp in widget header showing last update time
+
+### Improved
+
+- Visual polish for widget - now matches app design language
+- Better spacing and margins for rounded elements
+- More professional appearance overall
+
 ## [2.1.0] - 2026-11-22
 
 ### BREAKING CHANGES
