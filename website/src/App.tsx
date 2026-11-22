@@ -111,12 +111,14 @@ export default function App() {
             </div>
           </div>
           <div className="feature-grid">
-            <article className="feature"><Star size={20} /><h3>Your watchlist</h3><p>Choose countries manually. Favorites, ordering and per-country notification preferences stay on your device.</p></article>
-            <article className="feature"><Bell size={20} /><h3>Meaningful changes</h3><p>Notifications for worsening, improvement, new regional records and significant detail changes. Never on first sync.</p></article>
-            <article className="feature"><LayoutGrid size={20} /><h3>Real app widgets</h3><p>A watchlist widget with flags, advisory levels, and last update. Resizable, with an empty state and automatic refresh.</p></article>
-            <article className="feature"><History size={20} /><h3>Local history</h3><p>Advisory changes are recorded indefinitely on this device, with a chart built only from recorded transitions.</p></article>
-            <article className="feature"><WifiOff size={20} /><h3>Honest offline mode</h3><p>Cached advisories stay available. Failures never become Level 1, and the last successful update is always visible.</p></article>
-            <article className="feature"><Lock size={20} /><h3>No tracking</h3><p>No accounts, analytics, telemetry, advertising SDKs or Waymark backend. Only the official public source is contacted.</p></article>
+            <article className="feature"><Star size={20} /><h3>Your watchlist</h3><p>Choose countries to track. All favorites, ordering and per-country notification preferences stay completely on your device.</p></article>
+            <article className="feature"><RefreshCw size={20} /><h3>Auto-syncing</h3><p>Automatic background synchronization with exponential backoff. Manual refresh available. WorkManager handles battery efficiency.</p></article>
+            <article className="feature"><LayoutGrid size={20} /><h3>Real app widgets</h3><p>Genuine Android App Widgets with scrollable country lists, flags, advisory levels, tap to detail, and automatic refresh integration.</p></article>
+            <article className="feature"><History size={20} /><h3>Change history</h3><p>All advisory changes recorded indefinitely on your device. Charts built from your recorded transitions, never the cloud.</p></article>
+            <article className="feature"><Bell size={20} /><h3>Smart notifications</h3><p>Notifications for advisory worsening, improvement, new regional warnings, and significant changes. Respects your preferences per country.</p></article>
+            <article className="feature"><Lock size={20} /><h3>No accounts or tracking</h3><p>No backend, no analytics, no telemetry. Your data never leaves your phone. Only the official travel.state.gov API is contacted.</p></article>
+            <article className="feature"><WifiOff size={20} /><h3>Honest offline mode</h3><p>Cached advisories available offline. Failed syncs never become Level 1. Last successful update timestamp always visible.</p></article>
+            <article className="feature"><Database size={20} /><h3>All countries included</h3><p>Complete coverage of every country in the official U.S. Department of State Travel Advisory database.</p></article>
           </div>
         </section>
 
@@ -153,22 +155,30 @@ export default function App() {
             <div>
               <div className="eyebrow"><Image size={14} /> App preview</div>
               <h2>Screenshots</h2>
-              <p>See how Waymark looks on Android. Actual screenshots will be added soon.</p>
+              <p>Waymark on Android. Your watchlist, detailed country information, widget integration, and more.</p>
             </div>
           </div>
           <div className="screenshot-grid">
-            <div className="screenshot-placeholder">
-              <span>Watchlist</span>
-              <small>Screenshot placeholder</small>
-            </div>
-            <div className="screenshot-placeholder">
-              <span>Country details</span>
-              <small>Screenshot placeholder</small>
-            </div>
-            <div className="screenshot-placeholder">
-              <span>Home-screen widget</span>
-              <small>Screenshot placeholder</small>
-            </div>
+            <figure className="screenshot-item">
+              <img src="/watchlist.png" alt="Waymark watchlist showing tracked countries with advisory levels" loading="lazy" />
+              <figcaption><strong>Watchlist</strong><small>Your tracked countries with advisory levels and updates</small></figcaption>
+            </figure>
+            <figure className="screenshot-item">
+              <img src="/explore.png" alt="Country catalog for browsing and adding to watchlist" loading="lazy" />
+              <figcaption><strong>Explore</strong><small>Browse all countries and manage your watchlist</small></figcaption>
+            </figure>
+            <figure className="screenshot-item">
+              <img src="/settings.png" alt="Settings screen with notifications and sync options" loading="lazy" />
+              <figcaption><strong>Settings</strong><small>Customize notifications, sync, and app preferences</small></figcaption>
+            </figure>
+            <figure className="screenshot-item">
+              <img src="/aboutmenu.png" alt="About and history screens showing advisory changes over time" loading="lazy" />
+              <figcaption><strong>History & About</strong><small>Track advisory changes and app information</small></figcaption>
+            </figure>
+            <figure className="screenshot-item screenshot-widget">
+              <img src="/widget.png" alt="Real Android home-screen widget showing countries and advisory levels" loading="lazy" />
+              <figcaption><strong>Widget</strong><small>Resizable home-screen widget with live advisories</small></figcaption>
+            </figure>
           </div>
         </section>
 
