@@ -39,10 +39,8 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         Log.i(TAG, "onUpdate: ${appWidgetIds.size} widgets")
         
         for (appWidgetId in appWidgetIds) {
-            // Show loading state immediately (non-blocking)
-            showLoadingState(context, appWidgetManager, appWidgetId)
-            
-            // Load data asynchronously on IO thread
+            // Load data directly without showing loading state
+            // This prevents migation/flashing on widget update
             loadAndUpdateWidget(context, appWidgetManager, appWidgetId)
         }
     }
