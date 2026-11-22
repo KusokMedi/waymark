@@ -5,7 +5,33 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
-## [1.5.2] - 2026-11-22
+## [2.0.0] - 2026-11-22
+
+### BREAKING CHANGES
+
+- **Widget completely rewritten from Jetpack Glance to native RemoteViews**
+  - Removed "Open app" button - now only refresh button in header
+  - Much more reliable refresh - no Glance state issues
+  - Clicking any country opens its detail view in app
+  - Uses StackView for swipeable country list (displays up to 10 countries)
+
+### Added
+
+- Native Android AppWidget using RemoteViews (lightweight, no Glance overhead)
+- Refresh button broadcasts directly - no app opening needed
+- StackView for swipeable country list in widget
+
+### Changed
+
+- Widget now lightweight native RemoteViews instead of Glance/Compose
+- Simplified widget update mechanism - no Glance state management
+- Better performance and reliability
+
+### Removed
+
+- Glance framework dependencies (keeping only AndroidX)
+- "Open app" button from widget
+- Widget configuration UI (back to sensible defaults)
 
 ### Fixed
 
