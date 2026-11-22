@@ -96,6 +96,12 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         const val ACTION_WIDGET_REFRESH = "com.kusokmedi.waymark.WIDGET_REFRESH"
         const val ACTION_WIDGET_COUNTRY_CLICK = "com.kusokmedi.waymark.WIDGET_COUNTRY_CLICK"
         const val EXTRA_COUNTRY_ID = "countryId"
+        
+        private fun getFormattedUpdateTime(): String {
+            val now = Date()
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+            return "Updated ${format.format(now)}"
+        }
 
         /**
          * Show loading state - fast, non-blocking, safe
@@ -107,6 +113,7 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         ) {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
+                views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
                 
                 // Clear any previous content
                 views.removeAllViews(R.id.widget_countries_container)
@@ -158,6 +165,7 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
                     
                     // Build widget with data
                     val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
+                    views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
                     views.removeAllViews(R.id.widget_countries_container)
                     
                     // Add country items (limit to 10)
@@ -232,6 +240,7 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         ) {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
+                views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
                 views.removeAllViews(R.id.widget_countries_container)
                 
                 val emptyView = RemoteViews(context.packageName, R.layout.widget_state_empty)
@@ -256,6 +265,7 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         ) {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
+                views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
                 views.removeAllViews(R.id.widget_countries_container)
                 
                 val errorView = RemoteViews(context.packageName, R.layout.widget_state_error)

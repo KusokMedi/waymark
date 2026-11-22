@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:background="@android:color/transparent">
+    android:background="@drawable/widget_background"
+    android:padding="8dp">
 
-    <!-- Header with title and refresh button -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
-
-        <TextView
-            android:id="@+id/widget_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Waymark"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:textColor="#E8F0EB" />
-
-        <ImageButton
-            android:id="@+id/widget_btn_refresh"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/widget_button_background"
-            android:src="@drawable/ic_widget_refresh"
-            android:contentDescription="@string/widget_refresh_button"
-            android:scaleType="centerInside"
-            android:tint="#E8F0EB" />
-    </LinearLayout>
-
-    <!-- Dynamic content container - will hold country items -->
-    <LinearLayout
-        android:id="@+id/widget_countries_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:padding="8dp">
 
-</LinearLayout>
+        <!-- Header with title and refresh button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/widget_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waymark"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#E8F0EB" />
+
+                <TextView
+                    android:id="@+id/widget_last_updated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Updated now"
+                    android:textSize="10sp"
+                    android:textColor="#6E6E6E"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/widget_btn_refresh"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/widget_button_background"
+                android:src="@drawable/ic_widget_refresh"
+                android:contentDescription="@string/widget_refresh_button"
+                android:scaleType="centerInside"
+                android:tint="#E8F0EB" />
+        </LinearLayout>
+
+        <!-- Dynamic content container - will hold country items -->
+        <LinearLayout
+            android:id="@+id/widget_countries_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+
+</FrameLayout>
