@@ -5,6 +5,13 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-11-22
+
+### Fixed
+
+- Widget compilation error: wrapped suspend DB calls in runBlocking for synchronous update initialization
+- Widget now loads properly without "Can't load widget" error
+
 ## [2.0.0] - 2026-11-22
 
 ### BREAKING CHANGES
