@@ -5,7 +5,15 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
-## [1.5.1] - 2026-11-22
+## [1.5.2] - 2026-11-22
+
+### Fixed
+
+- Widget refresh button now correctly triggers synchronization instead of opening the app
+- Refresh action uses WIDGET_SYNC_REQUEST intent with forceSync=true
+- Boot recovery and widget refresh both use fast forceSync path (< 1 second)
+- Added WidgetSyncReceiver to handle refresh broadcasts
+- All data fully reloaded on refresh or boot with zero UI blocking
 
 ### Fixed
 
