@@ -5,6 +5,17 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.6.1] - 2026-11-22
+
+### Fixed
+
+- Widget refresh now debounced (2 second cooldown) to prevent spam crashes
+- Removed "flashing" loading state during refresh - updates silently
+- Fixed "Can't load widget" error when repeatedly clicking refresh
+- Removed "·" separator before "Higher risk" text in widget
+- Improved widget item layout spacing to prevent text cutoff
+- Higher risk indicator only shows for advisory levels 1-3
+
 ## [2.6.0] - 2026-11-22
 
 ### Changed
