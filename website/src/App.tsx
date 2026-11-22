@@ -160,23 +160,23 @@ export default function App() {
           </div>
           <div className="screenshot-grid">
             <figure className="screenshot-item">
-              <img src="/watchlist.png" alt="Waymark watchlist showing tracked countries with advisory levels" loading="lazy" />
+              <img src="./watchlist.png" alt="Waymark watchlist showing tracked countries with advisory levels" loading="lazy" />
               <figcaption><strong>Watchlist</strong><small>Your tracked countries with advisory levels and updates</small></figcaption>
             </figure>
             <figure className="screenshot-item">
-              <img src="/explore.png" alt="Country catalog for browsing and adding to watchlist" loading="lazy" />
+              <img src="./explore.png" alt="Country catalog for browsing and adding to watchlist" loading="lazy" />
               <figcaption><strong>Explore</strong><small>Browse all countries and manage your watchlist</small></figcaption>
             </figure>
             <figure className="screenshot-item">
-              <img src="/settings.png" alt="Settings screen with notifications and sync options" loading="lazy" />
+              <img src="./settings.png" alt="Settings screen with notifications and sync options" loading="lazy" />
               <figcaption><strong>Settings</strong><small>Customize notifications, sync, and app preferences</small></figcaption>
             </figure>
             <figure className="screenshot-item">
-              <img src="/aboutmenu.png" alt="About and history screens showing advisory changes over time" loading="lazy" />
+              <img src="./aboutmenu.png" alt="About and history screens showing advisory changes over time" loading="lazy" />
               <figcaption><strong>History & About</strong><small>Track advisory changes and app information</small></figcaption>
             </figure>
             <figure className="screenshot-item screenshot-widget">
-              <img src="/widget.png" alt="Real Android home-screen widget showing countries and advisory levels" loading="lazy" />
+              <img src="./widget.png" alt="Real Android home-screen widget showing countries and advisory levels" loading="lazy" />
               <figcaption><strong>Widget</strong><small>Resizable home-screen widget with live advisories</small></figcaption>
             </figure>
           </div>
