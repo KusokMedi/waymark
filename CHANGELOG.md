@@ -5,6 +5,19 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-11-22
+
+### Added
+
+- Dynamic Material You colors on Android 12+ (respects system theme)
+- Automatic color detection from system settings
+- Graceful fallback to default dark gray colors on older Android versions
+
+### Improved
+
+- Widget adapts to user's system color scheme on modern Android
+- Better visual consistency with device theme
+
 ## [2.2.0] - 2026-11-22
 
 ### Added
