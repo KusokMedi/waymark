@@ -5,6 +5,15 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.6.2] - 2026-11-22
+
+### Changed
+
+- Removed green background from flag area in widget items
+- Unified corner radius to 12dp for all widget elements
+- Reduced spacing between countries to 2px for compact display
+- Improved visual consistency and cleaner appearance
+
 ## [2.6.1] - 2026-11-22
 
 ### Fixed

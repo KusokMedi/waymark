@@ -23,8 +23,8 @@ android {
         applicationId = "com.kusokmedi.waymark"
         minSdk = 26
         targetSdk = 35
-        versionCode = 46
-        versionName = "2.6.1"
+        versionCode = 47
+        versionName = "2.6.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
