@@ -54,9 +54,18 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
             ACTION_WIDGET_REFRESH -> {
                 val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
                 if (appWidgetId >= 0) {
+                    // Debounce: ignore if clicked too recently
+                    if (isRefreshDebounced(appWidgetId)) {
+                        Log.d(TAG, "Refresh debounced for widget $appWidgetId")
+                        return
+                    }
+                    
+                    recordRefreshTime(appWidgetId)
                     Log.d(TAG, "Refresh pressed for widget $appWidgetId")
                     val appWidgetManager = AppWidgetManager.getInstance(context)
-                    showLoadingState(context, appWidgetManager, appWidgetId)
+                    
+                    // Don't show loading - just quietly refresh in background
+                    // This prevents flashing/migation
                     
                     // Trigger sync and update widget
                     CoroutineScope(Dispatchers.Default).launch {
@@ -97,6 +106,10 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         const val ACTION_WIDGET_COUNTRY_CLICK = "com.kusokmedi.waymark.WIDGET_COUNTRY_CLICK"
         const val EXTRA_COUNTRY_ID = "countryId"
         
+        // Debounce refresh requests
+        private const val REFRESH_DEBOUNCE_MS = 2000L
+        private val lastRefreshTime = mutableMapOf<Int, Long>()
+        
         // Fixed colors
         private const val COLOR_BG = 0xFF171717.toInt()
         private const val COLOR_ITEM = 0xFF303030.toInt()
@@ -107,6 +120,22 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
             val now = Date()
             val format = SimpleDateFormat("HH:mm", Locale.getDefault())
             return "Updated ${format.format(now)}"
+        }
+        
+        /**
+         * Check if refresh is debounced (too recent)
+         */
+        private fun isRefreshDebounced(appWidgetId: Int): Boolean {
+            val lastTime = lastRefreshTime[appWidgetId] ?: 0L
+            val now = System.currentTimeMillis()
+            return (now - lastTime) < REFRESH_DEBOUNCE_MS
+        }
+        
+        /**
+         * Record refresh time
+         */
+        private fun recordRefreshTime(appWidgetId: Int) {
+            lastRefreshTime[appWidgetId] = System.currentTimeMillis()
         }
 
         /**

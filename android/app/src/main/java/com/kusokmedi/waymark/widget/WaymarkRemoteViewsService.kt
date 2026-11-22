@@ -117,7 +117,7 @@ class WaymarkRemoteViewsFactory(private val context: Context) : RemoteViewsServi
         itemView.setTextColor(R.id.item_name, COLOR_TEXT_PRIMARY)
         
         val levelText = "Level ${card.level?.number ?: "?"}" +
-            if (card.containsHigherRiskAreas) " · Higher risk" else ""
+            if (card.containsHigherRiskAreas && card.level?.number in 1..3) " Higher risk" else ""
         itemView.setTextViewText(R.id.item_level, levelText)
         
         val levelColor = when (card.level?.number) {
