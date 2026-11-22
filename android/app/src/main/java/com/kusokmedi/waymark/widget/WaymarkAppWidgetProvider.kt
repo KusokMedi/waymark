@@ -97,95 +97,16 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         const val ACTION_WIDGET_COUNTRY_CLICK = "com.kusokmedi.waymark.WIDGET_COUNTRY_CLICK"
         const val EXTRA_COUNTRY_ID = "countryId"
         
-        // Default colors (dark theme)
-        private const val COLOR_BG_DEFAULT = 0xFF16201B.toInt()
-        private const val COLOR_ITEM_DEFAULT = 0xFF212B26.toInt()
-        private const val COLOR_TEXT_PRIMARY_DEFAULT = 0xFFE8F0EB.toInt()
-        private const val COLOR_TEXT_SECONDARY_DEFAULT = 0xFFA4B4AB.toInt()
-        private const val COLOR_TEXT_MUTED_DEFAULT = 0xFF6E6E6E.toInt()
+        // Fixed colors
+        private const val COLOR_BG = 0xFF171717.toInt()
+        private const val COLOR_ITEM = 0xFF303030.toInt()
+        private const val COLOR_TEXT_PRIMARY = 0xFFFFFFFF.toInt()  // White
+        private const val COLOR_TEXT_SECONDARY = 0xFFB0B0B0.toInt()  // Light gray
         
         private fun getFormattedUpdateTime(): String {
             val now = Date()
             val format = SimpleDateFormat("HH:mm", Locale.getDefault())
             return "Updated ${format.format(now)}"
-        }
-        
-        /**
-         * Get background color - default or dynamic if Android 12+
-         */
-        private fun getBackgroundColor(context: Context): Int {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                return try {
-                    // Try to get dynamic color from system
-                    val attrs = intArrayOf(android.R.attr.colorBackground)
-                    val typedArray = context.obtainStyledAttributes(attrs)
-                    val color = typedArray.getColor(0, COLOR_BG_DEFAULT)
-                    typedArray.recycle()
-                    color
-                } catch (e: Exception) {
-                    Log.d(TAG, "Failed to get dynamic background color", e)
-                    COLOR_BG_DEFAULT
-                }
-            }
-            return COLOR_BG_DEFAULT
-        }
-        
-        /**
-         * Get item background color - default or dynamic if Android 12+
-         */
-        private fun getItemBackgroundColor(context: Context): Int {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                return try {
-                    // Try to get dynamic secondary container color
-                    val attrs = intArrayOf(android.R.attr.colorPrimary)
-                    val typedArray = context.obtainStyledAttributes(attrs)
-                    val color = typedArray.getColor(0, COLOR_ITEM_DEFAULT)
-                    typedArray.recycle()
-                    color
-                } catch (e: Exception) {
-                    Log.d(TAG, "Failed to get dynamic item background color", e)
-                    COLOR_ITEM_DEFAULT
-                }
-            }
-            return COLOR_ITEM_DEFAULT
-        }
-        
-        /**
-         * Get text primary color - default or dynamic if Android 12+
-         */
-        private fun getTextPrimaryColor(context: Context): Int {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                return try {
-                    val attrs = intArrayOf(android.R.attr.textColorPrimary)
-                    val typedArray = context.obtainStyledAttributes(attrs)
-                    val color = typedArray.getColor(0, COLOR_TEXT_PRIMARY_DEFAULT)
-                    typedArray.recycle()
-                    color
-                } catch (e: Exception) {
-                    Log.d(TAG, "Failed to get dynamic text primary color", e)
-                    COLOR_TEXT_PRIMARY_DEFAULT
-                }
-            }
-            return COLOR_TEXT_PRIMARY_DEFAULT
-        }
-        
-        /**
-         * Get text secondary color - default or dynamic if Android 12+
-         */
-        private fun getTextSecondaryColor(context: Context): Int {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                return try {
-                    val attrs = intArrayOf(android.R.attr.textColorSecondary)
-                    val typedArray = context.obtainStyledAttributes(attrs)
-                    val color = typedArray.getColor(0, COLOR_TEXT_SECONDARY_DEFAULT)
-                    typedArray.recycle()
-                    color
-                } catch (e: Exception) {
-                    Log.d(TAG, "Failed to get dynamic text secondary color", e)
-                    COLOR_TEXT_SECONDARY_DEFAULT
-                }
-            }
-            return COLOR_TEXT_SECONDARY_DEFAULT
         }
 
         /**
@@ -199,19 +120,15 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
                 
-                val textPrimaryColor = getTextPrimaryColor(context)
-                val textSecondaryColor = getTextSecondaryColor(context)
-                
                 views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
-                views.setTextColor(R.id.widget_title, textPrimaryColor)
-                views.setTextColor(R.id.widget_last_updated, textSecondaryColor)
+                views.setTextColor(R.id.widget_title, COLOR_TEXT_PRIMARY)
+                views.setTextColor(R.id.widget_last_updated, COLOR_TEXT_SECONDARY)
                 
                 // Clear any previous content
                 views.removeAllViews(R.id.widget_countries_container)
                 
                 // Show loading message
                 val loadingView = RemoteViews(context.packageName, R.layout.widget_state_loading)
-                loadingView.setTextColor(0xFFFFFFFF.toInt(), textSecondaryColor) // Set loading text color
                 views.addView(R.id.widget_countries_container, loadingView)
                 
                 // Setup refresh button
@@ -258,12 +175,9 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
                     // Build widget with data
                     val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
                     
-                    val textPrimaryColor = getTextPrimaryColor(context)
-                    val textSecondaryColor = getTextSecondaryColor(context)
-                    
                     views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
-                    views.setTextColor(R.id.widget_title, textPrimaryColor)
-                    views.setTextColor(R.id.widget_last_updated, textSecondaryColor)
+                    views.setTextColor(R.id.widget_title, COLOR_TEXT_PRIMARY)
+                    views.setTextColor(R.id.widget_last_updated, COLOR_TEXT_SECONDARY)
                     views.removeAllViews(R.id.widget_countries_container)
                     
                     // Add country items (limit to 10)
@@ -293,12 +207,9 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         ): RemoteViews {
             val itemView = RemoteViews(context.packageName, R.layout.widget_country_item)
             
-            val textPrimaryColor = getTextPrimaryColor(context)
-            val textSecondaryColor = getTextSecondaryColor(context)
-            
             itemView.setTextViewText(R.id.item_flag, flagEmoji(card.isoAlpha2))
             itemView.setTextViewText(R.id.item_name, card.name)
-            itemView.setTextColor(R.id.item_name, textPrimaryColor)
+            itemView.setTextColor(R.id.item_name, COLOR_TEXT_PRIMARY)
             
             val levelText = "Level ${card.level?.number ?: "?"}" +
                 if (card.containsHigherRiskAreas) " · Higher risk" else ""
@@ -343,12 +254,9 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
                 
-                val textPrimaryColor = getTextPrimaryColor(context)
-                val textSecondaryColor = getTextSecondaryColor(context)
-                
                 views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
-                views.setTextColor(R.id.widget_title, textPrimaryColor)
-                views.setTextColor(R.id.widget_last_updated, textSecondaryColor)
+                views.setTextColor(R.id.widget_title, COLOR_TEXT_PRIMARY)
+                views.setTextColor(R.id.widget_last_updated, COLOR_TEXT_SECONDARY)
                 views.removeAllViews(R.id.widget_countries_container)
                 
                 val emptyView = RemoteViews(context.packageName, R.layout.widget_state_empty)
@@ -374,12 +282,9 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
                 
-                val textPrimaryColor = getTextPrimaryColor(context)
-                val textSecondaryColor = getTextSecondaryColor(context)
-                
                 views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
-                views.setTextColor(R.id.widget_title, textPrimaryColor)
-                views.setTextColor(R.id.widget_last_updated, textSecondaryColor)
+                views.setTextColor(R.id.widget_title, COLOR_TEXT_PRIMARY)
+                views.setTextColor(R.id.widget_last_updated, COLOR_TEXT_SECONDARY)
                 views.removeAllViews(R.id.widget_countries_container)
                 
                 val errorView = RemoteViews(context.packageName, R.layout.widget_state_error)

@@ -42,7 +42,7 @@
             android:text="Country"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:textColor="#E8F0EB" />
+            android:textColor="#FFFFFF" />
 
         <TextView
             android:id="@+id/item_level"

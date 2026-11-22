@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Empty"
         android:textSize="12sp"
-        android:textColor="#A4B4AB"
+        android:textColor="#B0B0B0"
         android:gravity="center" />
 
     <TextView
@@ -21,5 +21,5 @@
         android:layout_marginTop="4dp"
         android:text="Open app to add countries"
         android:textSize="11sp"
-        android:textColor="#6E6E6E" />
+        android:textColor="#808080" />
 </LinearLayout>

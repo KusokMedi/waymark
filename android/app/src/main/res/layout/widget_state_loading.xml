@@ -24,6 +24,6 @@
             android:layout_marginTop="8dp"
             android:text="Loading..."
             android:textSize="12sp"
-            android:textColor="#A4B4AB" />
+            android:textColor="#B0B0B0" />
     </LinearLayout>
 </FrameLayout>
