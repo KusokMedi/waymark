@@ -55,12 +55,21 @@
                 android:tint="#FFFFFF" />
         </LinearLayout>
 
-        <!-- Dynamic content container - will hold country items -->
-        <LinearLayout
-            android:id="@+id/widget_countries_container"
+        <!-- ScrollView for countries list -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
+
+            <!-- Dynamic content container - will hold country items -->
+            <LinearLayout
+                android:id="@+id/widget_countries_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </ScrollView>
 
     </LinearLayout>
 
