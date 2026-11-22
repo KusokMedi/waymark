@@ -16,6 +16,7 @@ import com.kusokmedi.waymark.ui.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -34,7 +35,8 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
     ) {
         Log.i(TAG, "onUpdate appWidgetIds=${appWidgetIds.toList()}")
         for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            // Update synchronously for initial widget load
+            updateAppWidgetSync(context, appWidgetManager, appWidgetId)
         }
     }
 
@@ -88,12 +90,94 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         const val ACTION_WIDGET_COUNTRY_CLICK = "com.kusokmedi.waymark.WIDGET_COUNTRY_CLICK"
         const val EXTRA_COUNTRY_ID = "countryId"
         
+        fun updateAppWidgetSync(
+            context: Context,
+            appWidgetManager: AppWidgetManager,
+            appWidgetId: Int,
+        ) {
+            Log.d(TAG, "updateAppWidgetSync id=$appWidgetId")
+            try {
+                val views = RemoteViews(context.packageName, R.layout.widget_watchlist)
+                
+                val isDark = isSystemDarkTheme(context)
+                val fgColor = if (isDark) 0xFFE8F0EB.toInt() else 0xFF16201B.toInt()
+                val mutedColor = if (isDark) 0xFFA4B4AB.toInt() else 0xFF5E6E66.toInt()
+                
+                views.setInt(R.id.widget_title, "setTextColor", fgColor)
+                views.setInt(R.id.widget_status, "setTextColor", mutedColor)
+                
+                // Refresh button
+                val refreshIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
+                    action = ACTION_WIDGET_REFRESH
+                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                }
+                val refreshPending = android.app.PendingIntent.getBroadcast(
+                    context, appWidgetId, refreshIntent,
+                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or 
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
+                )
+                views.setOnClickPendingIntent(R.id.widget_btn_refresh, refreshPending)
+                
+                // Load countries synchronously
+                val db = WaymarkDatabase.get(context)
+                val (watchlistIds, cards) = runBlocking {
+                    val ids = db.watchlistDao().getAll().map { it.countryId }
+                    val cardList = AdvisoryRepository(db).countryCardsByIds(ids)
+                    ids to cardList
+                }
+                
+                if (cards.isEmpty()) {
+                    views.setTextViewText(R.id.widget_status, "Watchlist empty")
+                } else {
+                    views.setTextViewText(R.id.widget_status, "Updated · ${cards.size} countries")
+                    
+                    views.removeAllViews(R.id.widget_stack)
+                    
+                    for (card in cards.take(10)) {
+                        val itemView = RemoteViews(context.packageName, R.layout.widget_country_item)
+                        itemView.setTextViewText(R.id.item_name, card.name)
+                        itemView.setTextViewText(R.id.item_flag, flagEmoji(card.isoAlpha2))
+                        
+                        val levelText = "Level ${card.level?.number ?: "?"}" +
+                            if (card.containsHigherRiskAreas) " · Higher risk" else ""
+                        itemView.setTextViewText(R.id.item_level, levelText)
+                        
+                        val levelColor = when (card.level?.number) {
+                            4 -> 0xFFB3261E.toInt()
+                            3 -> 0xFFC77700.toInt()
+                            2 -> 0xFF7A6A00.toInt()
+                            1 -> 0xFF2E6B4F.toInt()
+                            else -> 0xFF6E6E6E.toInt()
+                        }
+                        itemView.setTextColor(R.id.item_level, levelColor)
+                        
+                        val clickIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
+                            action = ACTION_WIDGET_COUNTRY_CLICK
+                            putExtra(EXTRA_COUNTRY_ID, card.id)
+                        }
+                        val clickPending = android.app.PendingIntent.getBroadcast(
+                            context, card.id.hashCode(), clickIntent,
+                            android.app.PendingIntent.FLAG_UPDATE_CURRENT or
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
+                        )
+                        itemView.setOnClickPendingIntent(R.id.item_root, clickPending)
+                        views.addView(R.id.widget_stack, itemView)
+                    }
+                }
+                
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+                Log.d(TAG, "Widget updated sync")
+            } catch (e: Exception) {
+                Log.e(TAG, "Update sync failed", e)
+            }
+        }
+        
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int,
         ) {
-            Log.d(TAG, "updateAppWidget id=$appWidgetId")
+            Log.d(TAG, "updateAppWidget id=$appWidgetId (async)")
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val views = RemoteViews(context.packageName, R.layout.widget_watchlist)
@@ -117,7 +201,7 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
                     )
                     views.setOnClickPendingIntent(R.id.widget_btn_refresh, refreshPending)
                     
-                    // Load countries
+                    // Load countries - we're in a coroutine so suspend calls are fine
                     val db = WaymarkDatabase.get(context)
                     val watchlistIds = db.watchlistDao().getAll().map { it.countryId }
                     val cards = AdvisoryRepository(db).countryCardsByIds(watchlistIds)
@@ -162,9 +246,9 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
                     }
                     
                     appWidgetManager.updateAppWidget(appWidgetId, views)
-                    Log.d(TAG, "Widget updated")
+                    Log.d(TAG, "Widget updated async")
                 } catch (e: Exception) {
-                    Log.e(TAG, "Update failed", e)
+                    Log.e(TAG, "Update async failed", e)
                 }
             }
         }
