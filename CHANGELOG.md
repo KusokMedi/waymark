@@ -5,6 +5,26 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-22
+
+### Added
+
+- Refresh button on widget header: displays refresh icon when not syncing, hides during sync and shows progress indicator
+- Auto-sync on app launch: synchronization triggers automatically every time the app starts
+- Boot and package update recovery: WorkManager jobs automatically resume after device reboot or app update/reinstall
+- Automatic widget updates: widgets refresh immediately after each sync completes (success, failure, or offline)
+
+### Changed
+
+- WorkManager retry backoff reduced from 30 minutes to 15 minutes for faster error recovery
+- Periodic sync now uses KEEP policy instead of UPDATE to avoid unnecessary reschedules
+- SyncWorker now calls `forceUpdateAll` on all sync paths to ensure consistent widget updates
+
+### Fixed
+
+- Fixed potential app process kill issues by ensuring WorkManager and widgets restore on boot
+- Improved sync state tracking and widget update timing
+
 ## [1.4.9] - 2026-11-21
 
 ### Changed
