@@ -5,6 +5,16 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.6.3] - 2026-11-22
+
+### Fixed
+
+- Eliminated widget flashing/migation on update by removing loading state
+- Widget data loads silently without visual interruption
+- Improved "Can't load widget" error prevention with defensive error handling
+- Extended country cards to full widget width for better space usage
+- Added robustness against concurrent RemoteViews updates
+
 ## [2.6.2] - 2026-11-22
 
 ### Changed
