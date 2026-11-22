@@ -146,9 +146,14 @@ object WaymarkWidgetUpdater {
             
             for (id in ids) {
                 try {
-                    WaymarkAppWidgetProvider.updateAppWidget(context, appWidgetManager, id)
+                    // Trigger widget update through onUpdate mechanism
+                    val intent = android.content.Intent(context, WaymarkAppWidgetProvider::class.java).apply {
+                        action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(id))
+                    }
+                    context.sendBroadcast(intent)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to update widget $id", e)
+                    Log.e(TAG, "Failed to trigger widget update $id", e)
                 }
             }
         } catch (e: Exception) {

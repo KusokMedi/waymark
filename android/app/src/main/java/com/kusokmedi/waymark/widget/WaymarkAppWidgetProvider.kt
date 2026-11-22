@@ -16,43 +16,58 @@ import com.kusokmedi.waymark.ui.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.concurrent.atomic.AtomicBoolean
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
- * Native RemoteViews AppWidget - lightweight, no Glance overhead
- * - Refresh button sends broadcast directly (no app open)
- * - Clicking country opens MainActivity with country detail
- * - WorkManager handles sync in background
- * - StackView displays countries list (swipeable)
+ * Native RemoteViews widget with proper async data loading.
+ * 
+ * Key principles:
+ * 1. onUpdate() NEVER blocks or calls suspend functions
+ * 2. All DB access happens on IO dispatcher
+ * 3. Three states: Loading → Data/Empty/Error
+ * 4. Each state has a minimal, safe layout
  */
 class WaymarkAppWidgetProvider : AppWidgetProvider() {
-    
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray,
     ) {
-        Log.i(TAG, "onUpdate appWidgetIds=${appWidgetIds.toList()}")
+        Log.i(TAG, "onUpdate: ${appWidgetIds.size} widgets")
+        
         for (appWidgetId in appWidgetIds) {
-            // Update synchronously for initial widget load
-            updateAppWidgetSync(context, appWidgetManager, appWidgetId)
+            // Show loading state immediately (non-blocking)
+            showLoadingState(context, appWidgetManager, appWidgetId)
+            
+            // Load data asynchronously on IO thread
+            loadAndUpdateWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.i(TAG, "onReceive action=${intent.action}")
-        
+        Log.i(TAG, "onReceive: ${intent.action}")
+
         when (intent.action) {
             ACTION_WIDGET_REFRESH -> {
                 val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
-                Log.d(TAG, "Refresh requested for widget $appWidgetId")
-                CoroutineScope(Dispatchers.Default).launch {
-                    try {
-                        SyncScheduler.syncNowFromWidget(context, forceSync = true)
-                        Log.d(TAG, "Sync triggered")
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Sync failed", e)
+                if (appWidgetId >= 0) {
+                    Log.d(TAG, "Refresh pressed for widget $appWidgetId")
+                    val appWidgetManager = AppWidgetManager.getInstance(context)
+                    showLoadingState(context, appWidgetManager, appWidgetId)
+                    
+                    // Trigger sync and update widget
+                    CoroutineScope(Dispatchers.Default).launch {
+                        try {
+                            SyncScheduler.syncNowFromWidget(context, forceSync = true)
+                            // After sync, reload widget data
+                            loadAndUpdateWidget(context, appWidgetManager, appWidgetId)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Sync failed", e)
+                            showErrorState(context, appWidgetManager, appWidgetId)
+                        }
                     }
                 }
             }
@@ -60,28 +75,20 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
                 val countryId = intent.getStringExtra(EXTRA_COUNTRY_ID)
                 if (!countryId.isNullOrBlank()) {
                     val appIntent = Intent(context, MainActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                         putExtra(MainActivity.EXTRA_COUNTRY_ID, countryId)
                     }
                     context.startActivity(appIntent)
                 }
             }
         }
-        
+
         super.onReceive(context, intent)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
-        Log.d(TAG, "Widgets deleted")
-        val db = WaymarkDatabase.get(context)
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                appWidgetIds.forEach { db.widgetConfigDao().delete(it) }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to delete widget configs", e)
-            }
-        }
+        Log.d(TAG, "onDeleted: ${appWidgetIds.size} widgets")
     }
 
     companion object {
@@ -89,174 +96,205 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
         const val ACTION_WIDGET_REFRESH = "com.kusokmedi.waymark.WIDGET_REFRESH"
         const val ACTION_WIDGET_COUNTRY_CLICK = "com.kusokmedi.waymark.WIDGET_COUNTRY_CLICK"
         const val EXTRA_COUNTRY_ID = "countryId"
-        
-        fun updateAppWidgetSync(
+
+        /**
+         * Show loading state - fast, non-blocking, safe
+         */
+        private fun showLoadingState(
             context: Context,
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int,
         ) {
-            Log.d(TAG, "updateAppWidgetSync id=$appWidgetId")
             try {
-                val views = RemoteViews(context.packageName, R.layout.widget_watchlist)
+                val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
                 
-                val isDark = isSystemDarkTheme(context)
-                val fgColor = if (isDark) 0xFFE8F0EB.toInt() else 0xFF16201B.toInt()
-                val mutedColor = if (isDark) 0xFFA4B4AB.toInt() else 0xFF5E6E66.toInt()
+                // Clear any previous content
+                views.removeAllViews(R.id.widget_countries_container)
                 
-                views.setInt(R.id.widget_title, "setTextColor", fgColor)
-                views.setInt(R.id.widget_status, "setTextColor", mutedColor)
+                // Show loading message
+                val loadingView = RemoteViews(context.packageName, R.layout.widget_state_loading)
+                views.addView(R.id.widget_countries_container, loadingView)
                 
-                // Refresh button
+                // Setup refresh button
+                setupRefreshButton(context, views, appWidgetId)
+                
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+                Log.d(TAG, "Loading state shown for widget $appWidgetId")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to show loading state", e)
+            }
+        }
+
+        /**
+         * Load data from DB and update widget
+         * This runs on IO dispatcher - safe for DB calls
+         */
+        private fun loadAndUpdateWidget(
+            context: Context,
+            appWidgetManager: AppWidgetManager,
+            appWidgetId: Int,
+        ) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val db = WaymarkDatabase.get(context)
+                    
+                    // Get watchlist
+                    val watchlistEntities = db.watchlistDao().getAll()
+                    if (watchlistEntities.isEmpty()) {
+                        showEmptyState(context, appWidgetManager, appWidgetId)
+                        return@launch
+                    }
+                    
+                    val watchlistIds = watchlistEntities.map { it.countryId }
+                    
+                    // Get country cards
+                    val repository = AdvisoryRepository(db)
+                    val cards = repository.countryCardsByIds(watchlistIds)
+                    
+                    if (cards.isEmpty()) {
+                        showEmptyState(context, appWidgetManager, appWidgetId)
+                        return@launch
+                    }
+                    
+                    // Build widget with data
+                    val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
+                    views.removeAllViews(R.id.widget_countries_container)
+                    
+                    // Add country items (limit to 10)
+                    for (card in cards.take(10)) {
+                        val itemView = buildCountryItemView(context, card, appWidgetId)
+                        views.addView(R.id.widget_countries_container, itemView)
+                    }
+                    
+                    setupRefreshButton(context, views, appWidgetId)
+                    appWidgetManager.updateAppWidget(appWidgetId, views)
+                    
+                    Log.d(TAG, "Widget $appWidgetId updated with ${cards.size} countries")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load and update widget $appWidgetId", e)
+                    showErrorState(context, appWidgetManager, appWidgetId)
+                }
+            }
+        }
+
+        /**
+         * Build a single country item
+         */
+        private fun buildCountryItemView(
+            context: Context,
+            card: com.kusokmedi.waymark.domain.CountryCard,
+            appWidgetId: Int,
+        ): RemoteViews {
+            val itemView = RemoteViews(context.packageName, R.layout.widget_country_item)
+            
+            itemView.setTextViewText(R.id.item_flag, flagEmoji(card.isoAlpha2))
+            itemView.setTextViewText(R.id.item_name, card.name)
+            
+            val levelText = "Level ${card.level?.number ?: "?"}" +
+                if (card.containsHigherRiskAreas) " · Higher risk" else ""
+            itemView.setTextViewText(R.id.item_level, levelText)
+            
+            val levelColor = when (card.level?.number) {
+                4 -> 0xFFB3261E.toInt()
+                3 -> 0xFFC77700.toInt()
+                2 -> 0xFF7A6A00.toInt()
+                1 -> 0xFF2E6B4F.toInt()
+                else -> 0xFF6E6E6E.toInt()
+            }
+            itemView.setTextColor(R.id.item_level, levelColor)
+            
+            // Click handler
+            val clickIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
+                action = ACTION_WIDGET_COUNTRY_CLICK
+                putExtra(EXTRA_COUNTRY_ID, card.id)
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            }
+            val clickPending = android.app.PendingIntent.getBroadcast(
+                context,
+                card.id.hashCode(),
+                clickIntent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or
+                (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) 
+                    android.app.PendingIntent.FLAG_IMMUTABLE else 0)
+            )
+            itemView.setOnClickPendingIntent(R.id.item_root, clickPending)
+            
+            return itemView
+        }
+
+        /**
+         * Show empty watchlist state
+         */
+        private fun showEmptyState(
+            context: Context,
+            appWidgetManager: AppWidgetManager,
+            appWidgetId: Int,
+        ) {
+            try {
+                val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
+                views.removeAllViews(R.id.widget_countries_container)
+                
+                val emptyView = RemoteViews(context.packageName, R.layout.widget_state_empty)
+                views.addView(R.id.widget_countries_container, emptyView)
+                
+                setupRefreshButton(context, views, appWidgetId)
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+                
+                Log.d(TAG, "Empty state shown for widget $appWidgetId")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to show empty state", e)
+            }
+        }
+
+        /**
+         * Show error state
+         */
+        private fun showErrorState(
+            context: Context,
+            appWidgetManager: AppWidgetManager,
+            appWidgetId: Int,
+        ) {
+            try {
+                val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
+                views.removeAllViews(R.id.widget_countries_container)
+                
+                val errorView = RemoteViews(context.packageName, R.layout.widget_state_error)
+                views.addView(R.id.widget_countries_container, errorView)
+                
+                setupRefreshButton(context, views, appWidgetId)
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+                
+                Log.d(TAG, "Error state shown for widget $appWidgetId")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to show error state", e)
+            }
+        }
+
+        /**
+         * Setup refresh button on any state
+         */
+        private fun setupRefreshButton(
+            context: Context,
+            views: RemoteViews,
+            appWidgetId: Int,
+        ) {
+            try {
                 val refreshIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
                     action = ACTION_WIDGET_REFRESH
                     putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 }
                 val refreshPending = android.app.PendingIntent.getBroadcast(
-                    context, appWidgetId, refreshIntent,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
+                    context,
+                    appWidgetId,
+                    refreshIntent,
+                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or
+                    (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) 
+                        android.app.PendingIntent.FLAG_IMMUTABLE else 0)
                 )
                 views.setOnClickPendingIntent(R.id.widget_btn_refresh, refreshPending)
-                
-                // Load countries synchronously
-                val db = WaymarkDatabase.get(context)
-                val (watchlistIds, cards) = runBlocking {
-                    val ids = db.watchlistDao().getAll().map { it.countryId }
-                    val cardList = AdvisoryRepository(db).countryCardsByIds(ids)
-                    ids to cardList
-                }
-                
-                if (cards.isEmpty()) {
-                    views.setTextViewText(R.id.widget_status, "Watchlist empty")
-                } else {
-                    views.setTextViewText(R.id.widget_status, "Updated · ${cards.size} countries")
-                    
-                    views.removeAllViews(R.id.widget_stack)
-                    
-                    for (card in cards.take(10)) {
-                        val itemView = RemoteViews(context.packageName, R.layout.widget_country_item)
-                        itemView.setTextViewText(R.id.item_name, card.name)
-                        itemView.setTextViewText(R.id.item_flag, flagEmoji(card.isoAlpha2))
-                        
-                        val levelText = "Level ${card.level?.number ?: "?"}" +
-                            if (card.containsHigherRiskAreas) " · Higher risk" else ""
-                        itemView.setTextViewText(R.id.item_level, levelText)
-                        
-                        val levelColor = when (card.level?.number) {
-                            4 -> 0xFFB3261E.toInt()
-                            3 -> 0xFFC77700.toInt()
-                            2 -> 0xFF7A6A00.toInt()
-                            1 -> 0xFF2E6B4F.toInt()
-                            else -> 0xFF6E6E6E.toInt()
-                        }
-                        itemView.setTextColor(R.id.item_level, levelColor)
-                        
-                        val clickIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
-                            action = ACTION_WIDGET_COUNTRY_CLICK
-                            putExtra(EXTRA_COUNTRY_ID, card.id)
-                        }
-                        val clickPending = android.app.PendingIntent.getBroadcast(
-                            context, card.id.hashCode(), clickIntent,
-                            android.app.PendingIntent.FLAG_UPDATE_CURRENT or
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
-                        )
-                        itemView.setOnClickPendingIntent(R.id.item_root, clickPending)
-                        views.addView(R.id.widget_stack, itemView)
-                    }
-                }
-                
-                appWidgetManager.updateAppWidget(appWidgetId, views)
-                Log.d(TAG, "Widget updated sync")
             } catch (e: Exception) {
-                Log.e(TAG, "Update sync failed", e)
+                Log.e(TAG, "Failed to setup refresh button", e)
             }
-        }
-        
-        fun updateAppWidget(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int,
-        ) {
-            Log.d(TAG, "updateAppWidget id=$appWidgetId (async)")
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val views = RemoteViews(context.packageName, R.layout.widget_watchlist)
-                    
-                    val isDark = isSystemDarkTheme(context)
-                    val fgColor = if (isDark) 0xFFE8F0EB.toInt() else 0xFF16201B.toInt()
-                    val mutedColor = if (isDark) 0xFFA4B4AB.toInt() else 0xFF5E6E66.toInt()
-                    
-                    views.setInt(R.id.widget_title, "setTextColor", fgColor)
-                    views.setInt(R.id.widget_status, "setTextColor", mutedColor)
-                    
-                    // Refresh button
-                    val refreshIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
-                        action = ACTION_WIDGET_REFRESH
-                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                    }
-                    val refreshPending = android.app.PendingIntent.getBroadcast(
-                        context, appWidgetId, refreshIntent,
-                        android.app.PendingIntent.FLAG_UPDATE_CURRENT or 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
-                    )
-                    views.setOnClickPendingIntent(R.id.widget_btn_refresh, refreshPending)
-                    
-                    // Load countries - we're in a coroutine so suspend calls are fine
-                    val db = WaymarkDatabase.get(context)
-                    val watchlistIds = db.watchlistDao().getAll().map { it.countryId }
-                    val cards = AdvisoryRepository(db).countryCardsByIds(watchlistIds)
-                    
-                    if (cards.isEmpty()) {
-                        views.setTextViewText(R.id.widget_status, "Watchlist empty")
-                    } else {
-                        views.setTextViewText(R.id.widget_status, "Updated · ${cards.size} countries")
-                        
-                        views.removeAllViews(R.id.widget_stack)
-                        
-                        for (card in cards.take(10)) {
-                            val itemView = RemoteViews(context.packageName, R.layout.widget_country_item)
-                            itemView.setTextViewText(R.id.item_name, card.name)
-                            itemView.setTextViewText(R.id.item_flag, flagEmoji(card.isoAlpha2))
-                            
-                            val levelText = "Level ${card.level?.number ?: "?"}" +
-                                if (card.containsHigherRiskAreas) " · Higher risk" else ""
-                            itemView.setTextViewText(R.id.item_level, levelText)
-                            
-                            val levelColor = when (card.level?.number) {
-                                4 -> 0xFFB3261E.toInt()
-                                3 -> 0xFFC77700.toInt()
-                                2 -> 0xFF7A6A00.toInt()
-                                1 -> 0xFF2E6B4F.toInt()
-                                else -> 0xFF6E6E6E.toInt()
-                            }
-                            itemView.setTextColor(R.id.item_level, levelColor)
-                            
-                            val clickIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
-                                action = ACTION_WIDGET_COUNTRY_CLICK
-                                putExtra(EXTRA_COUNTRY_ID, card.id)
-                            }
-                            val clickPending = android.app.PendingIntent.getBroadcast(
-                                context, card.id.hashCode(), clickIntent,
-                                android.app.PendingIntent.FLAG_UPDATE_CURRENT or
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
-                            )
-                            itemView.setOnClickPendingIntent(R.id.item_root, clickPending)
-                            views.addView(R.id.widget_stack, itemView)
-                        }
-                    }
-                    
-                    appWidgetManager.updateAppWidget(appWidgetId, views)
-                    Log.d(TAG, "Widget updated async")
-                } catch (e: Exception) {
-                    Log.e(TAG, "Update async failed", e)
-                }
-            }
-        }
-        
-        private fun isSystemDarkTheme(context: Context): Boolean {
-            val config = context.resources.configuration
-            return (config.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-                android.content.res.Configuration.UI_MODE_NIGHT_YES
         }
     }
 }

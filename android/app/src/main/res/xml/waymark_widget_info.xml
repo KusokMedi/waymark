@@ -7,7 +7,7 @@
     android:targetCellWidth="2"
     android:targetCellHeight="2"
     android:updatePeriodMillis="0"
-    android:initialLayout="@layout/widget_initial_loading"
+    android:initialLayout="@layout/widget_watchlist_simple"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:description="@string/widget_watchlist_description" />
