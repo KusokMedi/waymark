@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         deepLinkCountry = intent?.getStringExtra(EXTRA_COUNTRY_ID)
-        syncOnStart = intent?.getStringExtra("action") == "sync" || intent?.action == "com.kusokmedi.waymark.WIDGET_SYNC_REQUEST"
+        syncOnStart = intent?.getStringExtra("action") == "sync"
         val container = application.waymarkContainer()
         setContent {
             WaymarkAppRoot(
@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         deepLinkCountry = intent.getStringExtra(EXTRA_COUNTRY_ID)
-        syncOnStart = intent.getStringExtra("action") == "sync" || intent.action == "com.kusokmedi.waymark.WIDGET_SYNC_REQUEST"
+        syncOnStart = intent.getStringExtra("action") == "sync"
     }
 }
 

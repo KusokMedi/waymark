@@ -3,12 +3,7 @@ package com.kusokmedi.waymark.widget
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.util.Log
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.glance.appwidget.GlanceAppWidgetManager
-import androidx.glance.appwidget.state.updateAppWidgetState
-import androidx.glance.appwidget.updateAll
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,8 +23,6 @@ private sealed class UpdateState {
 
 object WaymarkWidgetUpdater {
     private const val TAG = "WaymarkWidgetUpdater"
-    private const val PREFS = "waymark_widget_prefs"
-    private const val KEY_LAST_WIDGET_REFRESH_AT = "last_widget_refresh_at"
     private const val MIN_UPDATE_INTERVAL_MS = 500L
     private const val FORCE_THROTTLE_MS = 200L
 
@@ -48,9 +41,8 @@ object WaymarkWidgetUpdater {
         val now = System.currentTimeMillis()
         val timeSinceLastForce = now - lastForceAt.get()
         
-        // Apply minimal throttling even for force updates to prevent excessive widget refreshes
         if (timeSinceLastForce < FORCE_THROTTLE_MS) {
-            Log.d(TAG, "forceUpdateAll throttled, requesting coalesced update instead")
+            Log.d(TAG, "forceUpdateAll throttled")
             requestUpdate(app, force = true)
             return
         }
@@ -68,38 +60,20 @@ object WaymarkWidgetUpdater {
         }
     }
 
-    fun markWidgetRefreshed(context: Context, at: Long = System.currentTimeMillis()) {
-        context.applicationContext
-            .getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .edit()
-            .putLong(KEY_LAST_WIDGET_REFRESH_AT, at)
-            .apply()
-    }
-
-    fun lastWidgetRefreshAt(context: Context): Long? {
-        val value = context.applicationContext
-            .getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getLong(KEY_LAST_WIDGET_REFRESH_AT, 0L)
-        return value.takeIf { it > 0L }
-    }
-
     private fun requestUpdate(app: Context, force: Boolean) {
-        // Check current state and determine if we need to start update loop
         val shouldStartLoop = updateState.value is UpdateState.Idle
         
-        // Update state without side effects
         updateState.update { current ->
             when (current) {
                 is UpdateState.Idle -> UpdateState.Pending(force)
                 is UpdateState.Pending -> UpdateState.Pending(force || current.force)
                 is UpdateState.Running -> {
-                    Log.d(TAG, "update coalesced during running force=${force || current.force}")
+                    Log.d(TAG, "update coalesced")
                     UpdateState.Running(dirty = true, force = force || current.force)
                 }
             }
         }
         
-        // Start update loop outside of state update to avoid CAS retry side effects
         if (shouldStartLoop) {
             startUpdateLoop(app, force)
         }
@@ -135,14 +109,13 @@ object WaymarkWidgetUpdater {
                         lastUpdateAt.set(System.currentTimeMillis())
                     }
 
-                    // Absorb bursts into one trailing pass
                     delay(MIN_UPDATE_INTERVAL_MS)
                     
                     shouldContinue = updateState.value.let { state ->
                         when (state) {
                             is UpdateState.Running -> {
                                 if (state.dirty) {
-                                    Log.d(TAG, "trailing widget update dirty=true force=${state.force}")
+                                    Log.d(TAG, "trailing update")
                                     true
                                 } else {
                                     updateState.value = UpdateState.Idle
@@ -165,43 +138,21 @@ object WaymarkWidgetUpdater {
 
     private suspend fun doUpdate(context: Context) {
         try {
-            val manager = GlanceAppWidgetManager(context)
-            val glanceIds = manager.getGlanceIds(WatchlistWidget::class.java)
-            Log.i(TAG, "doUpdate glanceIds=${glanceIds.size}")
-
-            // Bump Glance state to force recomposition even when only our DB changed.
-            val tickKey = intPreferencesKey("refresh_tick")
-            glanceIds.forEach { glanceId ->
-                runCatching {
-                    updateAppWidgetState(context, glanceId) { prefs ->
-                        val current = prefs[tickKey] ?: 0
-                        val next = ((current.toLong() + 1) % Long.MAX_VALUE).toInt()
-                        prefs[tickKey] = next
-                    }
-                    WatchlistWidget().update(context, glanceId)
-                }.onFailure { Log.e(TAG, "state bump/update failed for $glanceId", it) }
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val component = ComponentName(context, WaymarkAppWidgetProvider::class.java)
+            val ids = appWidgetManager.getAppWidgetIds(component)
+            
+            Log.i(TAG, "doUpdate widgets=${ids.size}")
+            
+            for (id in ids) {
+                try {
+                    WaymarkAppWidgetProvider.updateAppWidget(context, appWidgetManager, id)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to update widget $id", e)
+                }
             }
-
-            sendAppWidgetUpdateBroadcast(context)
         } catch (e: Exception) {
             Log.e(TAG, "doUpdate failed", e)
-            runCatching { WatchlistWidget().updateAll(context) }
-                .onFailure { Log.e(TAG, "fallback updateAll failed", it) }
         }
-    }
-
-    private fun sendAppWidgetUpdateBroadcast(context: Context) {
-        runCatching {
-            val appWidgetManager = AppWidgetManager.getInstance(context)
-            val component = ComponentName(context, WatchlistWidgetReceiver::class.java)
-            val ids = appWidgetManager.getAppWidgetIds(component)
-            if (ids.isEmpty()) return
-            val intent = Intent(context, WatchlistWidgetReceiver::class.java).apply {
-                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-            }
-            context.sendBroadcast(intent)
-            Log.i(TAG, "sent APPWIDGET_UPDATE broadcast ids=${ids.toList()}")
-        }.onFailure { Log.e(TAG, "broadcast update failed", it) }
     }
 }

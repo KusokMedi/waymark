@@ -9,4 +9,6 @@
     <string name="notification_channel_sync_description">Reports synchronization problems.</string>
     <string name="backup_mime">application/json</string>
     <string name="backup_zip_mime">application/zip</string>
+    <string name="widget_refresh_button">Refresh</string>
+    <string name="widget_open_button">Open app</string>
 </resources>

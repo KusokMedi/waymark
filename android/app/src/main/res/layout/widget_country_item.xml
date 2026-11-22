@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:gravity="center_vertical"
+    android:background="#212B26"
+    android:layout_marginBottom="4dp">
+
+    <!-- Flag -->
+    <FrameLayout
+        android:id="@+id/item_flag_bg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#27332D"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:id="@+id/item_flag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="🌍"
+            android:textSize="16sp"
+            android:gravity="center" />
+    </FrameLayout>
+
+    <!-- Country info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#E8F0EB" />
+
+        <TextView
+            android:id="@+id/item_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Level 1"
+            android:textSize="12sp"
+            android:textColor="#2E6B4F" />
+    </LinearLayout>
+
+</LinearLayout>

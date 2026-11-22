@@ -48,7 +48,6 @@ class SyncWorker(
                 Result.failure()
             }
             is SyncOutcome.Success -> {
-                if (fromWidget) WaymarkWidgetUpdater.markWidgetRefreshed(applicationContext)
                 WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
                 Result.success()
             }
