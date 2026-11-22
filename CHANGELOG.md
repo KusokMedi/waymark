@@ -5,6 +5,16 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-22
+
+### Changed
+
+- Reverted dynamic Material You colors to fixed color palette
+- Widget background: dark (#171717)
+- Country items: light gray (#303030)
+- Text: white (#FFFFFF) and light gray (#B0B0B0)
+- Cleaner, simpler, more reliable color scheme
+
 ## [2.3.0] - 2026-11-22
 
 ### Added
