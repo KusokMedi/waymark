@@ -180,10 +180,18 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
                     views.setTextColor(R.id.widget_last_updated, COLOR_TEXT_SECONDARY)
                     views.removeAllViews(R.id.widget_countries_container)
                     
-                    // Add country items (all visible via scroll)
-                    for (card in cards) {
+                    // Add country items (limit to 5 for widget space)
+                    val displayLimit = 5
+                    for (card in cards.take(displayLimit)) {
                         val itemView = buildCountryItemView(context, card, appWidgetId)
                         views.addView(R.id.widget_countries_container, itemView)
+                    }
+                    
+                    // Show "... and X more" if there are more countries
+                    if (cards.size > displayLimit) {
+                        val moreView = RemoteViews(context.packageName, R.layout.widget_state_more)
+                        moreView.setTextViewText(R.id.more_text, "... and ${cards.size - displayLimit} more")
+                        views.addView(R.id.widget_countries_container, moreView)
                     }
                     
                     setupRefreshButton(context, views, appWidgetId)
