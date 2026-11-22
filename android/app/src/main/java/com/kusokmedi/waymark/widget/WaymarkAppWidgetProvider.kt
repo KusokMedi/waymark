@@ -172,83 +172,30 @@ class WaymarkAppWidgetProvider : AppWidgetProvider() {
                         return@launch
                     }
                     
-                    // Build widget with data
+                    // Build widget with RemoteViewsService
                     val views = RemoteViews(context.packageName, R.layout.widget_watchlist_simple)
                     
                     views.setTextViewText(R.id.widget_last_updated, getFormattedUpdateTime())
                     views.setTextColor(R.id.widget_title, COLOR_TEXT_PRIMARY)
                     views.setTextColor(R.id.widget_last_updated, COLOR_TEXT_SECONDARY)
-                    views.removeAllViews(R.id.widget_countries_container)
                     
-                    // Add country items (limit to 5 for widget space)
-                    val displayLimit = 5
-                    for (card in cards.take(displayLimit)) {
-                        val itemView = buildCountryItemView(context, card, appWidgetId)
-                        views.addView(R.id.widget_countries_container, itemView)
-                    }
-                    
-                    // Show "... and X more" if there are more countries
-                    if (cards.size > displayLimit) {
-                        val moreView = RemoteViews(context.packageName, R.layout.widget_state_more)
-                        moreView.setTextViewText(R.id.more_text, "... and ${cards.size - displayLimit} more")
-                        views.addView(R.id.widget_countries_container, moreView)
-                    }
+                    // Set RemoteViewsService adapter for ListView
+                    val serviceIntent = Intent(context, WaymarkRemoteViewsService::class.java)
+                    serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                    views.setRemoteAdapter(R.id.widget_countries_container, serviceIntent)
                     
                     setupRefreshButton(context, views, appWidgetId)
                     appWidgetManager.updateAppWidget(appWidgetId, views)
                     
-                    Log.d(TAG, "Widget $appWidgetId updated with ${cards.size} countries")
+                    // Notify ListView to refresh data
+                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_countries_container)
+                    
+                    Log.d(TAG, "Widget $appWidgetId updated with RemoteViewsService (${cards.size} countries)")
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load and update widget $appWidgetId", e)
                     showErrorState(context, appWidgetManager, appWidgetId)
                 }
             }
-        }
-
-        /**
-         * Build a single country item
-         */
-        private fun buildCountryItemView(
-            context: Context,
-            card: com.kusokmedi.waymark.domain.CountryCard,
-            appWidgetId: Int,
-        ): RemoteViews {
-            val itemView = RemoteViews(context.packageName, R.layout.widget_country_item)
-            
-            itemView.setTextViewText(R.id.item_flag, flagEmoji(card.isoAlpha2))
-            itemView.setTextViewText(R.id.item_name, card.name)
-            itemView.setTextColor(R.id.item_name, COLOR_TEXT_PRIMARY)
-            
-            val levelText = "Level ${card.level?.number ?: "?"}" +
-                if (card.containsHigherRiskAreas) " · Higher risk" else ""
-            itemView.setTextViewText(R.id.item_level, levelText)
-            
-            val levelColor = when (card.level?.number) {
-                4 -> 0xFFB3261E.toInt()
-                3 -> 0xFFC77700.toInt()
-                2 -> 0xFF7A6A00.toInt()
-                1 -> 0xFF2E6B4F.toInt()
-                else -> 0xFF6E6E6E.toInt()
-            }
-            itemView.setTextColor(R.id.item_level, levelColor)
-            
-            // Click handler
-            val clickIntent = Intent(context, WaymarkAppWidgetProvider::class.java).apply {
-                action = ACTION_WIDGET_COUNTRY_CLICK
-                putExtra(EXTRA_COUNTRY_ID, card.id)
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            }
-            val clickPending = android.app.PendingIntent.getBroadcast(
-                context,
-                card.id.hashCode(),
-                clickIntent,
-                android.app.PendingIntent.FLAG_UPDATE_CURRENT or
-                (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) 
-                    android.app.PendingIntent.FLAG_IMMUTABLE else 0)
-            )
-            itemView.setOnClickPendingIntent(R.id.item_root, clickPending)
-            
-            return itemView
         }
 
         /**
