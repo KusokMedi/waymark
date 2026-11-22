@@ -21,6 +21,15 @@ import {
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
+
+  const screenshots = [
+    { src: "./watchlist.png", title: "Watchlist", description: "Your tracked countries with advisory levels and updates" },
+    { src: "./explore.png", title: "Explore", description: "Browse all countries and manage your watchlist" },
+    { src: "./settings.png", title: "Settings", description: "Customize notifications, sync, and app preferences" },
+    { src: "./aboutmenu.png", title: "History & About", description: "Track advisory changes and app information" },
+    { src: "./widget.png", title: "Widget", description: "Resizable home-screen widget with live advisories" },
+  ];
 
   return (
     <div className="site">
@@ -159,27 +168,22 @@ export default function App() {
             </div>
           </div>
           <div className="screenshot-grid">
-            <figure className="screenshot-item">
-              <img src="./watchlist.png" alt="Waymark watchlist showing tracked countries with advisory levels" loading="lazy" />
-              <figcaption><strong>Watchlist</strong><small>Your tracked countries with advisory levels and updates</small></figcaption>
-            </figure>
-            <figure className="screenshot-item">
-              <img src="./explore.png" alt="Country catalog for browsing and adding to watchlist" loading="lazy" />
-              <figcaption><strong>Explore</strong><small>Browse all countries and manage your watchlist</small></figcaption>
-            </figure>
-            <figure className="screenshot-item">
-              <img src="./settings.png" alt="Settings screen with notifications and sync options" loading="lazy" />
-              <figcaption><strong>Settings</strong><small>Customize notifications, sync, and app preferences</small></figcaption>
-            </figure>
-            <figure className="screenshot-item">
-              <img src="./aboutmenu.png" alt="About and history screens showing advisory changes over time" loading="lazy" />
-              <figcaption><strong>History & About</strong><small>Track advisory changes and app information</small></figcaption>
-            </figure>
-            <figure className="screenshot-item screenshot-widget">
-              <img src="./widget.png" alt="Real Android home-screen widget showing countries and advisory levels" loading="lazy" />
-              <figcaption><strong>Widget</strong><small>Resizable home-screen widget with live advisories</small></figcaption>
-            </figure>
+            {screenshots.map((screenshot) => (
+              <figure key={screenshot.src} className="screenshot-item" onClick={() => setSelectedScreenshot(screenshot.src)}>
+                <img src={screenshot.src} alt={screenshot.title} loading="lazy" />
+                <figcaption><strong>{screenshot.title}</strong><small>{screenshot.description}</small></figcaption>
+              </figure>
+            ))}
           </div>
+
+          {selectedScreenshot && (
+            <div className="screenshot-modal" onClick={() => setSelectedScreenshot(null)}>
+              <div className="screenshot-modal-content" onClick={(e) => e.stopPropagation()}>
+                <button className="screenshot-close" onClick={() => setSelectedScreenshot(null)} aria-label="Close">×</button>
+                <img src={selectedScreenshot} alt="Screenshot fullscreen" />
+              </div>
+            </div>
+          )}
         </section>
 
         <section id="data" className="section data-section">
