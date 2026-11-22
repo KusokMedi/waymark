@@ -62,19 +62,21 @@ class MainActivity : ComponentActivity() {
 
     private var deepLinkCountry by mutableStateOf<String?>(null)
     private var syncOnStart by mutableStateOf(false)
+    private var widgetRefreshRequested by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         deepLinkCountry = intent?.getStringExtra(EXTRA_COUNTRY_ID)
         syncOnStart = intent?.getStringExtra("action") == "sync"
+        widgetRefreshRequested = intent?.getBooleanExtra("widgetRefresh", false) ?: false
         val container = application.waymarkContainer()
         setContent {
             WaymarkAppRoot(
                 container = container,
                 deepLinkCountry = deepLinkCountry,
                 onDeepLinkHandled = { deepLinkCountry = null },
-                syncOnStart = syncOnStart,
+                syncOnStart = syncOnStart || widgetRefreshRequested,
             )
         }
     }
@@ -84,6 +86,7 @@ class MainActivity : ComponentActivity() {
         setIntent(intent)
         deepLinkCountry = intent.getStringExtra(EXTRA_COUNTRY_ID)
         syncOnStart = intent.getStringExtra("action") == "sync"
+        widgetRefreshRequested = intent.getBooleanExtra("widgetRefresh", false)
     }
 }
 

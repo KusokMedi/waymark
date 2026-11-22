@@ -55,6 +55,7 @@ import com.kusokmedi.waymark.domain.AdvisoryLevels
 import com.kusokmedi.waymark.domain.CountryCard
 import com.kusokmedi.waymark.domain.flagEmoji
 import com.kusokmedi.waymark.R
+import com.kusokmedi.waymark.SyncScheduler
 import com.kusokmedi.waymark.ui.MainActivity
 import com.kusokmedi.waymark.waymarkContainer
 import java.time.Instant
@@ -65,6 +66,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 internal val COUNTRY_ID_KEY = ActionParameters.Key<String>("countryId")
+internal val WIDGET_REFRESH_ACTION_KEY = ActionParameters.Key<Boolean>("widgetRefresh")
 
 class WatchlistWidget : GlanceAppWidget() {
 
@@ -241,6 +243,8 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
     val statusSize = if (compact) 9.sp else 11.sp
     val progressSize = if (compact) 16.dp else 20.dp
     val isSyncing = snapshot.syncState?.let { effectiveStatus(it) == "running" } ?: false
+    val context = androidx.glance.LocalContext.current
+    
     Row(
         modifier = GlanceModifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -269,7 +273,7 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
             Spacer(GlanceModifier.width(if (compact) 4.dp else 6.dp))
         } else {
             IconButton(iconRes = R.drawable.ic_widget_refresh, contentDescription = "Refresh", colors = colors, compact = compact) { 
-                actionStartActivity<MainActivity>()
+                actionStartActivity<MainActivity>(actionParametersOf(WIDGET_REFRESH_ACTION_KEY to true))
             }
             Spacer(GlanceModifier.width(if (compact) 2.dp else 4.dp))
         }
