@@ -5,6 +5,14 @@ All notable changes to Waymark are documented here. The project follows
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-11-22
+
+### Fixed
+
+- Widget refresh button now correctly triggers synchronization instead of just opening the app
+- Simplified refresh flow: both widget and app refresh buttons use the same standard SyncScheduler path
+- All countries now properly reload when refresh button is tapped on widget
+
 ## [1.5.0] - 2026-11-22
 
 ### Added
