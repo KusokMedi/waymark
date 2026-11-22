@@ -2,6 +2,7 @@ package com.kusokmedi.waymark
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.work.WorkManager
 import com.kusokmedi.waymark.backup.BackupManager
 import com.kusokmedi.waymark.data.AdvisoryRepository
@@ -47,14 +48,25 @@ class WaymarkApp : Application() {
         // even if a WorkManager job fires before settings are loaded.
         container.notifier.initialize("", "high")
         appScope.launch {
-            val settings = container.settings.settings.first()
-            container.notifier.applySettings(settings.notificationSoundUri, settings.notificationImportance)
-            if (settings.automaticSync) {
-                SyncScheduler.schedulePeriodic(this@WaymarkApp, settings.syncIntervalHours, settings.allowMobileData)
-            } else {
-                SyncScheduler.cancelPeriodic(this@WaymarkApp)
+            try {
+                val settings = container.settings.settings.first()
+                container.notifier.applySettings(settings.notificationSoundUri, settings.notificationImportance)
+                
+                // Schedule periodic sync if enabled
+                if (settings.automaticSync) {
+                    SyncScheduler.schedulePeriodic(this@WaymarkApp, settings.syncIntervalHours, settings.allowMobileData)
+                    Log.d("WaymarkApp", "Periodic sync scheduled")
+                } else {
+                    SyncScheduler.cancelPeriodic(this@WaymarkApp)
+                    Log.d("WaymarkApp", "Periodic sync cancelled")
+                }
+                
+                // Always trigger immediate sync on app start (once per process)
+                Log.d("WaymarkApp", "Triggering sync on app start")
+                SyncScheduler.syncNow(this@WaymarkApp, settings.allowMobileData)
+            } catch (e: Exception) {
+                Log.e("WaymarkApp", "Failed to initialize sync settings", e)
             }
-            SyncScheduler.syncNow(this@WaymarkApp, settings.allowMobileData)
         }
     }
 }

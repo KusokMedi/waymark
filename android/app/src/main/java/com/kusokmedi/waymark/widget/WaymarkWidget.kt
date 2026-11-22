@@ -267,6 +267,11 @@ private fun Header(snapshot: WidgetSnapshot, colors: WidgetColors, compact: Bool
                 colors.foreground,
             )
             Spacer(GlanceModifier.width(if (compact) 4.dp else 6.dp))
+        } else {
+            IconButton(iconRes = R.drawable.ic_widget_refresh, contentDescription = "Refresh", colors = colors, compact = compact) { 
+                actionStartActivity<MainActivity>()
+            }
+            Spacer(GlanceModifier.width(if (compact) 2.dp else 4.dp))
         }
         IconButton(iconRes = R.drawable.ic_widget_open, contentDescription = "Open app", colors = colors, compact = compact) { actionStartActivity<MainActivity>() }
     }

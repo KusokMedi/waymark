@@ -61,17 +61,20 @@ class MainActivity : ComponentActivity() {
     }
 
     private var deepLinkCountry by mutableStateOf<String?>(null)
+    private var syncOnStart by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         deepLinkCountry = intent?.getStringExtra(EXTRA_COUNTRY_ID)
+        syncOnStart = intent?.getStringExtra("action") == "sync"
         val container = application.waymarkContainer()
         setContent {
             WaymarkAppRoot(
                 container = container,
                 deepLinkCountry = deepLinkCountry,
                 onDeepLinkHandled = { deepLinkCountry = null },
+                syncOnStart = syncOnStart,
             )
         }
     }
@@ -80,6 +83,7 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         deepLinkCountry = intent.getStringExtra(EXTRA_COUNTRY_ID)
+        syncOnStart = intent.getStringExtra("action") == "sync"
     }
 }
 
@@ -88,6 +92,7 @@ fun WaymarkAppRoot(
     container: AppContainer,
     deepLinkCountry: String?,
     onDeepLinkHandled: () -> Unit,
+    syncOnStart: Boolean = false,
 ) {
     val viewModel: AppViewModel = viewModel(factory = AppViewModelFactory(container))
     val settings by viewModel.settings.collectAsState()
@@ -97,6 +102,13 @@ fun WaymarkAppRoot(
         ThemeMode.LIGHT -> false
         ThemeMode.DARK -> true
     }
+    
+    LaunchedEffect(syncOnStart) {
+        if (syncOnStart) {
+            viewModel.syncNow()
+        }
+    }
+    
     WaymarkTheme(darkTheme = dark, dynamicColor = settings.dynamicColor) {
         if (!settings.onboardingCompleted) {
             OnboardingScreen(

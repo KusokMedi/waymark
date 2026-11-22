@@ -44,17 +44,24 @@ class SyncWorker(
             null -> {
                 Log.w(TAG, "doWork timed out")
                 markFailedIfRunning(app, "Synchronization timed out")
+                WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
                 Result.failure()
             }
             is SyncOutcome.Success -> {
                 if (fromWidget) WaymarkWidgetUpdater.markWidgetRefreshed(applicationContext)
+                WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
                 Result.success()
             }
-            is SyncOutcome.Offline -> if (runAttemptCount < 2 && !fromWidget) Result.retry() else Result.success()
-            is SyncOutcome.Failure -> if (runAttemptCount < 3 && !fromWidget) Result.retry() else Result.failure()
+            is SyncOutcome.Offline -> {
+                WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
+                if (runAttemptCount < 2 && !fromWidget) Result.retry() else Result.success()
+            }
+            is SyncOutcome.Failure -> {
+                WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
+                if (runAttemptCount < 3 && !fromWidget) Result.retry() else Result.failure()
+            }
         }
 
-        WaymarkWidgetUpdater.forceUpdateAll(applicationContext)
         Log.d(TAG, "doWork finished result=$result outcome=$outcome")
         return result
     }
@@ -93,13 +100,14 @@ object SyncScheduler {
         val interval = intervalHours.coerceIn(6, 24).toLong()
         val periodic = PeriodicWorkRequestBuilder<SyncWorker>(interval, TimeUnit.HOURS)
             .setConstraints(constraints(allowMobileData))
-            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.MINUTES)
+            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 15, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             UNIQUE_PERIODIC,
-            ExistingPeriodicWorkPolicy.UPDATE,
+            ExistingPeriodicWorkPolicy.KEEP,  // Don't replace if already scheduled
             periodic,
         )
+        Log.d(TAG, "Scheduled periodic sync every $interval hours")
     }
 
     fun cancelPeriodic(context: Context) {
@@ -109,13 +117,14 @@ object SyncScheduler {
     fun syncNow(context: Context, allowMobileData: Boolean = false) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
             .setConstraints(constraints(allowMobileData))
-            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 30, TimeUnit.MINUTES)
+            .setBackoffCriteria(androidx.work.BackoffPolicy.EXPONENTIAL, 15, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(context).enqueueUniqueWork(
             UNIQUE_ONE_TIME,
             ExistingWorkPolicy.REPLACE,
             request,
         )
+        Log.d(TAG, "Enqueued one-time sync")
     }
 
     fun syncNowFromWidget(context: Context, initialDelayMs: Long = 0L, forceSync: Boolean = false) {
